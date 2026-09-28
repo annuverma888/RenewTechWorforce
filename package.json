@@ -3,12 +3,17 @@
   "version": "1.0.0",
   "description": "RenewTech Workforce - Connecting Verified Renewable Energy Talent with EPC Projects",
   "main": "server/server.js",
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "server": "node --watch server/server.js",
     "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "seed": "node server/scripts/seed.js",
     "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "build": "npm run build --prefix client",
     "build:client": "npm run build --prefix client"
   },
   "keywords": [
@@ -23,6 +28,9 @@
   ],
   "author": "RenewTech Team",
   "license": "MIT",
+  "dependencies": {
+    "vite": "^5.2.13"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2"
   }
