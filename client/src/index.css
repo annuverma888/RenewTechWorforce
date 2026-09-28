@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  body, #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    @apply bg-slate-50 text-slate-900 antialiased selection:bg-emerald-600 selection:text-white font-sans;
+  }
+}
+
+.safe-top {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+/* Opening Intro & Homepage Separation */
+#homepage.homepage-hidden,
+.homepage-hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  user-select: none !important;
+}
+
+#homepage.homepage-transitioning,
+.homepage-transitioning {
+  display: flex !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  height: auto !important;
+  animation: homepageTransitionIn 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+#homepage.homepage-visible,
+.homepage-visible {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  height: auto !important;
+}
+
+@keyframes homepageTransitionIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body.intro-active {
+  overflow: hidden !important;
+}
+
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Printable Digital Skill Passport Styles */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-passport, #printable-passport * {
+    visibility: visible;
+  }
+  #printable-passport {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
