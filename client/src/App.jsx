@@ -124,34 +124,25 @@ function App() {
                 </PublicOnlyRoute>
               }
             />
+            <Route path="/signup" element={<Navigate to="/register" replace />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/projects" element={<ProjectListingPage />} />
             <Route path="/find-projects" element={<Navigate to="/projects" replace />} />
             <Route path="/projects/:id" element={<ProjectDetailsPage />} />
             <Route path="/technicians/:id" element={<TechnicianProfilePage />} />
-            <Route
-              path="/passport/:id"
-              element={
-                <ErrorBoundary>
-                  <SkillPassportVerificationPage />
-                </ErrorBoundary>
-              }
-            />
+
+            {/* Completely PUBLIC Skill Passport Verification Route (NO ProtectedRoute, NO Auth Guard, NO Login redirect) */}
             <Route
               path="/verify/skill-passport/:technicianId"
-              element={
-                <ErrorBoundary>
-                  <SkillPassportVerificationPage />
-                </ErrorBoundary>
-              }
+              element={<SkillPassportVerificationPage />}
             />
             <Route
               path="/verify/skill-passport"
-              element={
-                <ErrorBoundary>
-                  <SkillPassportVerificationPage />
-                </ErrorBoundary>
-              }
+              element={<SkillPassportVerificationPage />}
+            />
+            <Route
+              path="/passport/:id"
+              element={<SkillPassportVerificationPage />}
             />
 
             {/* Role Selection Route (For first-time Google sign-ins or registrations) */}

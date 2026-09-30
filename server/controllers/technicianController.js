@@ -335,31 +335,80 @@ exports.getTechnicianSkills = async (req, res) => {
   }
 };
 
-// @desc    Get Digital Skill Passport data for technician
-// @route   GET /api/technicians/:id/passport
-// @access  Public / Protected
+// @desc    Get Digital Skill Passport data for technician (Public & Verified)
+// @route   GET /api/technicians/:id/passport OR GET /api/technicians/verify/:id
+// @access  Public
 exports.getDigitalSkillPassport = async (req, res) => {
   try {
     const { id } = req.params;
 
-    let profile;
-    if (id === 'demo' || id === 'sample') {
-      profile = await TechnicianProfile.findOne({}).populate('user', 'name email phone profilePhoto createdAt');
-    } else if (mongoose.Types.ObjectId.isValid(id)) {
-      profile = await TechnicianProfile.findOne({
-        $or: [{ _id: id }, { user: id }],
-      }).populate('user', 'name email phone profilePhoto createdAt');
-    } else {
+    if (!id || typeof id !== 'string') {
       return res.status(404).json({
         success: false,
-        message: 'Invalid technician ID format.',
+        notFound: true,
+        message: 'Skill Passport Not Found. The passport could not be verified. Please check the QR code and try again.',
       });
     }
 
+    let profile = null;
+
+    if (id === 'demo' || id === 'sample') {
+      profile = await TechnicianProfile.findOne({}).populate('user', 'name email phone profilePhoto createdAt status');
+    } else if (mongoose.Types.ObjectId.isValid(id)) {
+      profile = await TechnicianProfile.findOne({
+        $or: [{ _id: id }, { user: id }],
+      }).populate('user', 'name email phone profilePhoto createdAt status');
+    }
+
+    // If not found by direct ObjectId, try finding by passportId suffix or RT-PASS format
     if (!profile) {
+      const cleanId = id.trim().replace(/^RT-PASS-/i, '');
+      const allProfiles = await TechnicianProfile.find({}).populate('user', 'name email phone profilePhoto createdAt status');
+      
+      profile = allProfiles.find((p) => {
+        if (!p.user) return false;
+        const uidStr = p.user._id ? p.user._id.toString() : '';
+        const profIdStr = p._id ? p._id.toString() : '';
+        const shortSuffix = uidStr.length >= 6 ? uidStr.substring(uidStr.length - 6).toUpperCase() : '';
+        const passportCode = `RT-PASS-${shortSuffix}`;
+        const searchUpper = cleanId.toUpperCase();
+        const fullSearchUpper = id.trim().toUpperCase();
+
+        return (
+          passportCode === fullSearchUpper ||
+          shortSuffix === searchUpper ||
+          uidStr.toUpperCase().endsWith(searchUpper) ||
+          profIdStr.toUpperCase().endsWith(searchUpper) ||
+          uidStr.toLowerCase() === id.trim().toLowerCase() ||
+          profIdStr.toLowerCase() === id.trim().toLowerCase()
+        );
+      });
+    }
+
+    if (!profile || !profile.user) {
       return res.status(404).json({
         success: false,
-        message: 'Technician profile not found for Skill Passport generation.',
+        notFound: true,
+        message: 'Skill Passport Not Found. The passport could not be verified. Please check the QR code and try again.',
+      });
+    }
+
+    // Verification status check
+    const isUserActive = profile.user.status === 'active';
+    if (!isUserActive) {
+      return res.status(200).json({
+        success: true,
+        isVerified: false,
+        verificationFailed: true,
+        message: 'Passport Verification Failed. This skill passport is currently suspended or unverified.',
+        data: {
+          passportId: `RT-PASS-${profile.user._id.toString().substring(18).toUpperCase()}`,
+          isVerified: false,
+          technician: {
+            name: profile.user.name,
+            profession: profile.profession,
+          },
+        },
       });
     }
 
@@ -392,11 +441,11 @@ exports.getDigitalSkillPassport = async (req, res) => {
 
     if (reviews.length > 0) {
       const count = reviews.length;
-      factorAverages.technicalSkill = +(reviews.reduce((acc, r) => acc + r.technicalSkill, 0) / count).toFixed(1);
-      factorAverages.safety = +(reviews.reduce((acc, r) => acc + r.safety, 0) / count).toFixed(1);
-      factorAverages.punctuality = +(reviews.reduce((acc, r) => acc + r.punctuality, 0) / count).toFixed(1);
-      factorAverages.qualityOfWork = +(reviews.reduce((acc, r) => acc + r.qualityOfWork, 0) / count).toFixed(1);
-      factorAverages.overall = +(reviews.reduce((acc, r) => acc + r.overallRating, 0) / count).toFixed(1);
+      factorAverages.technicalSkill = +(reviews.reduce((acc, r) => acc + (r.technicalSkill || 5), 0) / count).toFixed(1);
+      factorAverages.safety = +(reviews.reduce((acc, r) => acc + (r.safety || 5), 0) / count).toFixed(1);
+      factorAverages.punctuality = +(reviews.reduce((acc, r) => acc + (r.punctuality || 5), 0) / count).toFixed(1);
+      factorAverages.qualityOfWork = +(reviews.reduce((acc, r) => acc + (r.qualityOfWork || 5), 0) / count).toFixed(1);
+      factorAverages.overall = +(reviews.reduce((acc, r) => acc + (r.overallRating || 5), 0) / count).toFixed(1);
     }
 
     // Platform workforce deployments
@@ -404,16 +453,48 @@ exports.getDigitalSkillPassport = async (req, res) => {
       technician: userId,
     }).populate('project', 'projectName projectType location budget companyName');
 
-    // Digital Passport Payload
+    const shortId = profile.user._id.toString().substring(18).toUpperCase();
+    const passportId = `RT-PASS-${shortId}`;
+
+    // Combine completed projects from previous projects and platform assignments
+    const completedProjectsList = [
+      ...(profile.previousProjects || []).map((p) => ({
+        projectName: p.title || p.projectName,
+        projectType: p.projectType || 'Solar',
+        role: p.role || 'Technician',
+        capacity: p.capacity || '',
+        location: p.location || `${profile.city}, ${profile.state}`,
+        duration: p.durationMonths ? `${p.durationMonths} Months` : 'Completed',
+        year: p.completionYear || '',
+        verified: true,
+      })),
+      ...platformAssignments
+        .filter((a) => a.assignmentStatus === 'Completed')
+        .map((a) => ({
+          projectName: a.project?.projectName || 'RenewTech Clean Energy Project',
+          projectType: a.project?.projectType || 'Solar',
+          role: a.roleAssigned || 'Technician',
+          location: a.project?.location || '',
+          duration: 'Completed',
+          verified: true,
+        })),
+    ];
+
+    // Digital Passport Payload (Sanitized and Public-Safe: NO sensitive tokens or passwords)
     const passport = {
-      passportId: `RT-PASS-${profile.user._id.toString().substring(18).toUpperCase()}`,
+      passportId,
+      isVerified: true,
       issuedDate: profile.user.createdAt,
-      lastUpdated: profile.updatedAt,
+      lastUpdated: profile.updatedAt || new Date().toISOString(),
+      scanDate: new Date().toISOString(),
+      verifiedBy: 'RenewTech Workforce',
       technician: {
+        _id: profile.user._id,
+        id: profile.user._id,
         name: profile.user.name,
         email: profile.user.email,
         phone: profile.user.phone,
-        profilePhoto: profile.user.profilePhoto,
+        profilePhoto: profile.user.profilePhoto || null,
         profession: profile.profession,
         city: profile.city,
         state: profile.state,
@@ -425,7 +506,9 @@ exports.getDigitalSkillPassport = async (req, res) => {
         categoryMastery: assessmentResults.length > 0 ? assessmentResults[0].categoryBreakdown : [],
         skillLevel: assessmentResults.length > 0 ? assessmentResults[0].skillLevel : 'Proficient',
       },
-      verifiedSkills: profile.renewableSkills,
+      verifiedSkills: profile.renewableSkills || [],
+      skills: (profile.renewableSkills || []).map((s) => s.name || s),
+      verifiedCertificatesCount: verifiedCertificates.length,
       verifiedCertificates: verifiedCertificates.map((c) => ({
         name: c.certificateName,
         issuingOrganization: c.issuingOrganization,
@@ -434,6 +517,7 @@ exports.getDigitalSkillPassport = async (req, res) => {
         expiryDate: c.expiryDate,
         status: 'Verified',
       })),
+      completedProjects: completedProjectsList,
       assessmentsTaken: assessmentResults.map((a) => ({
         title: a.assessmentTitle,
         category: a.category,
@@ -442,7 +526,7 @@ exports.getDigitalSkillPassport = async (req, res) => {
         skillLevel: a.skillLevel,
       })),
       projectWorkforceSummary: {
-        projectsCompleted: Math.max(profile.projectsCompleted || 0, platformAssignments.filter((a) => a.assignmentStatus === 'Completed').length),
+        projectsCompleted: Math.max(profile.projectsCompleted || 0, completedProjectsList.length),
         activeProjectsCount: platformAssignments.filter((a) => a.assignmentStatus === 'Active').length,
         previousProjects: profile.previousProjects,
         platformDeployments: platformAssignments.map((a) => ({
@@ -456,12 +540,17 @@ exports.getDigitalSkillPassport = async (req, res) => {
       },
       ratingBreakdown: factorAverages,
       reviewsCount: reviews.length,
-      reviewsSample: reviews.slice(0, 3),
+      reviewsSample: reviews.slice(0, 3).map((r) => ({
+        feedbackComment: r.feedbackComment,
+        companyName: r.company?.name || 'Verified EPC Contractor',
+        rating: r.overallRating,
+      })),
       verificationSeal: 'RenewTech Verified Renewable Workforce Authority',
     };
 
     res.status(200).json({
       success: true,
+      isVerified: true,
       data: passport,
     });
   } catch (error) {

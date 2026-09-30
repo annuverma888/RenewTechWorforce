@@ -61,6 +61,7 @@ export const technicianAPI = {
   getMyCertificates: () => api.get('/technicians/my-certificates'),
   uploadCertificate: (data) => api.post('/technicians/certificates', data),
   getDigitalPassport: (id) => api.get(`/technicians/${id}/passport`),
+  getPublicVerification: (id) => api.get(`/technicians/verify/${id}`),
 };
 
 export const assessmentAPI = {
