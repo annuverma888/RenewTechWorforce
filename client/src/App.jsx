@@ -24,6 +24,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import EPCDashboard from './pages/epc/EPCDashboard';
 import PostProjectPage from './pages/epc/PostProjectPage';
 import TechnicianSearchPage from './pages/epc/TechnicianSearchPage';
+import EPCProjectsPage from './pages/epc/ProjectsPage';
 import EPCProjectDetailsPage from './pages/epc/ProjectDetailsPage';
 import ApplicationsPage from './pages/epc/ApplicationsPage';
 import WorkforcePage from './pages/epc/WorkforcePage';
@@ -288,6 +289,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['epc_company', 'admin']}>
                   <TechnicianSearchPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/epc/projects"
+              element={
+                <ProtectedRoute allowedRoles={['epc_company', 'admin']}>
+                  <EPCProjectsPage />
                 </ProtectedRoute>
               }
             />

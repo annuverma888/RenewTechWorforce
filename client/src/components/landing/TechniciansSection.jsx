@@ -1,52 +1,44 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  UserCheck,
-  FileCheck,
-  Award,
-  Compass,
-  Briefcase,
-  History,
+  User,
   ShieldCheck,
+  Award,
+  Search,
+  Send,
   ArrowRight,
   CheckCircle2,
-  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const TechniciansSection = () => {
   const { isTechnician, isAuthenticated } = useAuth();
 
-  const features = [
+  const capabilities = [
     {
-      title: 'Build Professional Profile',
-      desc: 'Showcase specialized competencies in Solar PV DC stringing, inverter commissioning, Wind turbine hydraulics, and site mobilization radius.',
-      icon: UserCheck,
+      title: 'Create professional profile',
+      desc: 'Set up your verified industry profile highlighting technical specializations, regional mobility, and contact credentials.',
+      icon: User,
     },
     {
-      title: 'Verify Certifications',
-      desc: 'Submit SCGJ, NSDC Level 4, GWO Working at Heights, and State Electrical wireman accreditations for rapid digital verification.',
-      icon: FileCheck,
+      title: 'Showcase verified skills',
+      desc: 'Display certified proficiencies in Solar PV DC cabling, inverter systems, Wind turbine hydraulics, and electrical safety.',
+      icon: ShieldCheck,
     },
     {
-      title: 'Take Skill Assessments',
-      desc: 'Test your practical and theoretical mastery with timed standardized exams designed by industry experts with instant scoring.',
+      title: 'Build Digital Skill Passport',
+      desc: 'Consolidate government certifications, assessment scores, and audited field experience into a tamper-evident digital credential.',
       icon: Award,
     },
     {
-      title: 'Find Relevant Projects',
-      desc: 'Receive algorithmic recommendations matching your verified skills, experience level, location proximity, and wage criteria.',
-      icon: Compass,
+      title: 'Find relevant opportunities',
+      desc: 'Discover active renewable projects matched specifically to your verified competency levels and geographical availability.',
+      icon: Search,
     },
     {
-      title: 'Apply & Get Hired',
-      desc: 'Apply in one click directly to leading EPC contractors with transparent daily/monthly rates, mobilization support, and guaranteed terms.',
-      icon: Briefcase,
-    },
-    {
-      title: 'Track Work History',
-      desc: 'Maintain a verifiable log of commissioned megawatts, utility project milestones, safety compliance records, and contractor reviews.',
-      icon: History,
+      title: 'Apply to projects',
+      desc: 'Submit your verified credentials directly to EPC contractors with one-click applications and clear engagement terms.',
+      icon: Send,
     },
   ];
 
@@ -56,65 +48,68 @@ const TechniciansSection = () => {
       className="py-16 sm:py-24 bg-slate-50 text-slate-900 scroll-mt-[70px] border-b border-slate-200"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/60 px-3 py-1 rounded-full border border-emerald-200">
+        <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/70 px-3 py-1 rounded-full border border-emerald-200">
             For Technicians
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-3 tracking-tight">
-            Build Your Clean Energy Career
+            Build Your Career
           </h2>
           <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
-            Get verified, earn digital skill credentials, and connect directly with top solar and wind EPC companies across India.
+            Connect your verified technical expertise directly with trusted renewable-energy project contractors.
           </p>
         </div>
 
-        {/* Feature Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((item, idx) => {
+        {/* 5 Capability Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {capabilities.map((item, idx) => {
             const Icon = item.icon;
             return (
               <div
                 key={idx}
-                className="bg-white p-6 rounded-xl border border-slate-200 hover:border-emerald-300 shadow-xs transition-colors flex flex-col justify-between"
+                className="bg-white p-6 rounded-2xl border border-slate-200 hover:border-emerald-300 shadow-2xs hover:shadow-sm transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4">
                     <Icon size={20} />
                   </div>
-                  <h3 className="text-base font-bold text-slate-900">
+                  <h3 className="text-base font-bold text-slate-900 tracking-tight">
                     {item.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
-                <div className="mt-6 pt-3 border-t border-slate-100 flex items-center gap-1 text-xs text-emerald-700 font-semibold">
-                  <CheckCircle2 size={13} />
-                  <span>Standardized Credential</span>
+                <div className="mt-5 pt-3 border-t border-slate-100 flex items-center gap-1.5 text-xs text-emerald-700 font-semibold">
+                  <CheckCircle2 size={13} className="shrink-0" />
+                  <span>Verified Standard</span>
                 </div>
               </div>
             );
           })}
-        </div>
 
-        {/* Action Callout */}
-        <div className="mt-12 bg-white rounded-xl p-6 sm:p-8 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
-          <div className="space-y-1 text-center sm:text-left">
-            <h4 className="text-lg font-bold text-slate-900">
-              Ready to verify your renewable skills?
-            </h4>
-            <p className="text-xs sm:text-sm text-slate-600">
-              Create your profile, upload certifications, and receive recommended EPC projects immediately.
-            </p>
-          </div>
-          <div className="flex items-center gap-3 shrink-0">
-            <Link
-              to={isAuthenticated && isTechnician ? '/technician/dashboard' : '/register?role=technician'}
-              className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs sm:text-sm font-bold shadow-xs transition-all flex items-center gap-2"
-            >
-              <span>{isAuthenticated && isTechnician ? 'Open Dashboard' : 'Join as Technician'}</span>
-              <ArrowRight size={15} />
-            </Link>
+          {/* Action Card to fill the 6th slot cleanly */}
+          <div className="bg-gradient-to-br from-emerald-800 to-teal-900 text-white p-6 sm:p-7 rounded-2xl flex flex-col justify-between shadow-xs">
+            <div>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-emerald-200 bg-emerald-700/50 px-2.5 py-0.5 rounded">
+                Get Started
+              </span>
+              <h3 className="text-lg sm:text-xl font-bold mt-3 leading-snug">
+                Ready to showcase your credentials?
+              </h3>
+              <p className="text-xs sm:text-sm text-emerald-100/90 mt-2 leading-relaxed">
+                Build your verified profile today and start matching with active EPC project contracts across India.
+              </p>
+            </div>
+            <div className="mt-6 pt-4 border-t border-emerald-700/60">
+              <Link
+                to={isAuthenticated && isTechnician ? '/technician/dashboard' : '/register?role=technician'}
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white hover:bg-emerald-50 text-slate-900 font-bold rounded-xl text-xs sm:text-sm transition-colors shadow-2xs"
+              >
+                <span>Build Your Profile</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

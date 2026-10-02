@@ -1,66 +1,60 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   Wrench,
   Building2,
-  GraduationCap,
   ArrowRight,
+  ArrowLeft,
   CheckCircle2,
   Loader2,
-  Shield,
+  ShieldCheck,
   Zap,
 } from 'lucide-react';
 
 const ChooseRolePage = () => {
   const { user, selectRole, getDashboardPath } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const roleParam = searchParams.get('role');
 
-  const [selectedRole, setSelectedRole] = useState(null);
+  const [selectedRole, setSelectedRole] = useState(
+    roleParam === 'epc_company' ? 'epc_company' : 'technician'
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (roleParam === 'epc_company' || roleParam === 'technician') {
+      setSelectedRole(roleParam);
+    }
+  }, [roleParam]);
 
   const roles = [
     {
       id: 'technician',
       title: 'Technician',
       tagline: 'Solar & Wind Field Specialist',
-      description: 'Find renewable-energy projects and opportunities',
+      description: 'Build your skills, create your Skill Passport and discover renewable-energy opportunities.',
+      cta: 'Continue as Technician',
       icon: Wrench,
-      accentColor: 'border-emerald-500 ring-emerald-500 bg-emerald-50/50',
-      badgeColor: 'bg-emerald-100 text-emerald-800',
       features: [
-        'Verified Skill Passport & QR code verification',
-        'Direct access to Solar, Wind & BESS projects',
-        'Transparent hourly & contract payouts',
+        'Verified Skill Passport & tamper-evident QR verification',
+        'Direct connection to Solar PV, Wind & BESS sites',
+        'Standardized competency assessments & transparent hiring',
       ],
     },
     {
       id: 'epc_company',
       title: 'EPC Company',
       tagline: 'Contractor & Project Developer',
-      description: 'Find verified technicians and build project teams',
+      description: 'Find verified technicians and build your project workforce.',
+      cta: 'Continue as EPC Company',
       icon: Building2,
-      accentColor: 'border-blue-500 ring-blue-500 bg-blue-50/50',
-      badgeColor: 'bg-blue-100 text-blue-800',
       features: [
         'Hire pre-screened & certified field specialists',
-        'Post and manage multi-MW renewable sites',
-        'Milestone tracking & streamlined project rosters',
-      ],
-    },
-    {
-      id: 'admin',
-      title: 'Institute / Admin',
-      tagline: 'Certification Body & Ecosystem Lead',
-      description: 'Manage workforce and skill ecosystem',
-      icon: GraduationCap,
-      accentColor: 'border-indigo-500 ring-indigo-500 bg-indigo-50/50',
-      badgeColor: 'bg-indigo-100 text-indigo-800',
-      features: [
-        'Audit renewable energy technical certifications',
-        'Administer national skill assessments',
-        'Platform-wide compliance & workforce analytics',
+        'Post and manage multi-MW renewable energy sites',
+        'Real-time workforce rosters & milestone tracking',
       ],
     },
   ];
@@ -71,7 +65,7 @@ const ChooseRolePage = () => {
     setError(null);
 
     try {
-      console.log('[AUTH] User role:', roleId);
+      console.log('[AUTH] Selecting user role:', roleId);
       await selectRole(roleId);
       const destination = getDashboardPath(roleId);
       console.log('[AUTH] Redirecting to dashboard:', destination);
@@ -84,36 +78,54 @@ const ChooseRolePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-8 px-3 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-8 px-4 sm:px-6 lg:px-8">
+      {/* Top Back to Home */}
+      <div className="max-w-4xl mx-auto w-full mb-4">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-emerald-700 transition-colors focus-ring rounded-lg py-1 px-2"
+          aria-label="Back to Home"
+        >
+          <ArrowLeft size={14} className="shrink-0" />
+          <span>Back to Home</span>
+        </Link>
+      </div>
+
       <div className="max-w-4xl mx-auto w-full">
         {/* Header */}
-        <div className="text-center mb-8 sm:mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold uppercase tracking-wider mb-3">
-            <Zap className="w-3.5 h-3.5" />
-            Account Setup
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200/80 mb-3 shadow-2xs">
+            <Zap size={14} className="text-emerald-600" />
+            <span>Account Onboarding</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Choose your role
+
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            How will you use RenewTech Workforce?
           </h1>
-          <p className="mt-2 sm:mt-3 text-sm sm:text-lg text-slate-600 max-w-2xl mx-auto">
-            {user?.name ? `Welcome, ${user.name}! ` : 'Welcome to RenewTech! '}
-            Select how you would like to participate in the renewable energy workforce network.
+
+          <p className="mt-2.5 text-xs sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
+            {user?.name ? `Welcome, ${user.name}! ` : 'Welcome to RenewTech Workforce! '}
+            Select your account type to personalize your verified clean energy experience.
           </p>
+
           {user?.email && (
-            <p className="mt-1 text-xs text-slate-500">
-              Signed in as <span className="font-medium text-slate-700">{user.email}</span>
+            <p className="mt-1 text-xs text-slate-400">
+              Signed in as <span className="font-semibold text-slate-600">{user.email}</span>
             </p>
           )}
         </div>
 
         {error && (
-          <div className="mb-6 p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700 flex items-start gap-2">
-            <span className="font-semibold">Notice:</span> {error}
+          <div
+            role="alert"
+            className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-300 text-xs sm:text-sm text-rose-800 flex items-start gap-2.5 shadow-2xs"
+          >
+            <span className="font-bold">Error:</span> {error}
           </div>
         )}
 
-        {/* Role Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
+        {/* 2 Clear Role Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-8">
           {roles.map((role) => {
             const Icon = role.icon;
             const isSelected = selectedRole === role.id;
@@ -122,59 +134,74 @@ const ChooseRolePage = () => {
               <div
                 key={role.id}
                 id={`role-card-${role.id}`}
-                onClick={() => !loading && handleRoleSelection(role.id)}
-                className={`relative flex flex-col justify-between p-6 bg-white rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-lg ${
+                onClick={() => !loading && setSelectedRole(role.id)}
+                className={`relative flex flex-col justify-between p-6 sm:p-8 bg-white rounded-2xl border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
                   isSelected
-                    ? role.accentColor + ' shadow-md scale-[1.02]'
-                    : 'border-slate-200 hover:border-emerald-300'
+                    ? 'border-emerald-600 ring-2 ring-emerald-600/20 shadow-md scale-[1.01]'
+                    : 'border-slate-200 hover:border-slate-300'
                 } ${loading ? 'opacity-70 pointer-events-none' : ''}`}
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 border border-slate-200">
-                      <Icon className="w-6 h-6 text-slate-800" />
+                  <div className="flex items-center justify-between mb-5">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                      isSelected ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700'
+                    }`}>
+                      <Icon size={24} />
                     </div>
-                    {isSelected && (
-                      <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                    {isSelected ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                        <CheckCircle2 size={14} /> Selected
+                      </span>
+                    ) : (
+                      <span className="text-xs text-slate-400 font-medium">Click to select</span>
                     )}
                   </div>
 
-                  <span className={`inline-block px-2.5 py-0.5 rounded text-xs font-semibold mb-2 ${role.badgeColor}`}>
+                  <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200/80 mb-2">
                     {role.tagline}
                   </span>
 
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">{role.title}</h3>
-                  <p className="text-sm text-slate-600 mb-4">{role.description}</p>
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 mb-2">
+                    {role.title}
+                  </h2>
 
-                  <div className="pt-4 border-t border-slate-100 space-y-2">
+                  <p className="text-xs sm:text-sm text-slate-600 mb-5 leading-relaxed">
+                    {role.description}
+                  </p>
+
+                  <div className="pt-4 border-t border-slate-100 space-y-2.5">
                     {role.features.map((feature, idx) => (
                       <div key={idx} className="flex items-start gap-2 text-xs text-slate-600">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                        <span>{feature}</span>
+                        <CheckCircle2 size={14} className="text-emerald-600 shrink-0 mt-0.5" />
+                        <span className="leading-snug">{feature}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4">
+                <div className="mt-8 pt-4">
                   <button
                     type="button"
                     disabled={loading}
-                    className={`w-full py-2.5 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-colors ${
-                      isSelected && loading
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-slate-900 hover:bg-emerald-700 text-white'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRoleSelection(role.id);
+                    }}
+                    className={`w-full py-3 px-4 min-h-[44px] rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-2xs focus-ring cursor-pointer ${
+                      isSelected
+                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md'
+                        : 'bg-slate-900 hover:bg-slate-800 text-white'
                     }`}
                   >
-                    {isSelected && loading ? (
+                    {loading && isSelected ? (
                       <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Setting up...
+                        <Loader2 size={16} className="animate-spin" />
+                        <span>Setting up your account...</span>
                       </>
                     ) : (
                       <>
-                        Select {role.title}
-                        <ArrowRight className="w-4 h-4" />
+                        <span>{role.cta}</span>
+                        <ArrowRight size={15} />
                       </>
                     )}
                   </button>
@@ -186,8 +213,8 @@ const ChooseRolePage = () => {
 
         {/* Security / Trust footer */}
         <div className="text-center text-xs text-slate-500 flex items-center justify-center gap-2">
-          <Shield className="w-4 h-4 text-emerald-600" />
-          <span>RenewTech Workforce uses enterprise role-based security & skill credentialing.</span>
+          <ShieldCheck size={16} className="text-emerald-600 shrink-0" />
+          <span>RenewTech Workforce uses role-based security & government accredited credential standards.</span>
         </div>
       </div>
     </div>

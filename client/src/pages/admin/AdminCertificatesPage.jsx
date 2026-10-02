@@ -360,10 +360,35 @@ const AdminCertificatesPage = () => {
                         </div>
 
                         <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
-                          <span className="font-semibold text-slate-800 flex items-center gap-1">
-                            <User size={13} className="text-slate-400" />
-                            {cert.technician?.name}
-                          </span>
+                          {cert.technician?._id ? (
+                            <Link
+                              to={`/technicians/${cert.technician._id}`}
+                              className="font-semibold text-slate-800 hover:text-emerald-700 flex items-center gap-1 hover:underline transition-colors"
+                              title="View Technician Profile"
+                            >
+                              <User size={13} className="text-slate-400" />
+                              {cert.technician.name || 'Technician'}
+                            </Link>
+                          ) : (
+                            <span className="font-semibold text-slate-800 flex items-center gap-1">
+                              <User size={13} className="text-slate-400" />
+                              {cert.technician?.name || 'Technician'}
+                            </span>
+                          )}
+                          {cert.technician?._id && (
+                            <>
+                              <span>•</span>
+                              <Link
+                                to={`/verify/skill-passport/${cert.technician._id}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[11px] font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 hover:underline"
+                                title="Open Public Skill Passport Verification"
+                              >
+                                <ShieldCheck size={12} /> Skill Passport <ExternalLink size={10} />
+                              </Link>
+                            </>
+                          )}
                           <span>•</span>
                           <span className="text-slate-600 font-medium">
                             {cert.issuingOrganization}

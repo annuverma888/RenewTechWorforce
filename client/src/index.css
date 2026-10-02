@@ -24,6 +24,37 @@
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 
+@layer components {
+  /* Reusable Layout Container */
+  .renew-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full;
+  }
+
+  /* Accessible Focus Rings */
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2;
+  }
+
+  /* Standard Reusable Card Base */
+  .renew-card {
+    @apply bg-white rounded-2xl border border-slate-200/80 shadow-2xs;
+  }
+  .renew-card-interactive {
+    @apply bg-white rounded-2xl border border-slate-200/80 shadow-2xs hover:border-emerald-300 hover:shadow-card-hover transition-all duration-200;
+  }
+
+  /* Standard Component Buttons */
+  .renew-btn-primary {
+    @apply inline-flex items-center justify-center font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-2xs hover:shadow transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer;
+  }
+  .renew-btn-secondary {
+    @apply inline-flex items-center justify-center font-semibold rounded-xl bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-700 border border-slate-200 hover:border-slate-300 shadow-2xs transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer;
+  }
+  .renew-btn-ghost {
+    @apply inline-flex items-center justify-center font-semibold rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors duration-150 cursor-pointer;
+  }
+}
+
 /* Opening Intro & Homepage Separation */
 #homepage.homepage-hidden,
 .homepage-hidden {

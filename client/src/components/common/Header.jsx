@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, ChevronDown, Check, Clock, AlertCircle, User, ShieldCheck, LogOut } from 'lucide-react';
+import { Menu, ChevronDown, Check, Clock, AlertCircle, User, ShieldCheck, LogOut, LayoutDashboard, Users, Building } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { technicianAPI } from '../../services/api';
 import NotificationDropdown from './NotificationDropdown';
@@ -9,7 +9,7 @@ import Badge from './Badge';
 const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick }) => {
   const navigate = useNavigate();
   const handleMenuToggle = onMenuToggle || onMenuClick || (() => {});
-  const { user, profile, isTechnician, updateProfileState, logout } = useAuth();
+  const { user, profile, isTechnician, isCompany, isAdmin, updateProfileState, logout } = useAuth();
   const [availabilityDropdown, setAvailabilityDropdown] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [updatingAvail, setUpdatingAvail] = useState(false);
@@ -214,7 +214,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
                   >
                     <User size={14} className="text-slate-400" />
-                    <span>Skill Profile</span>
+                    <span>Profile</span>
                   </Link>
                 )}
                 {isTechnician && (
@@ -225,6 +225,66 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                   >
                     <ShieldCheck size={14} className="text-slate-400" />
                     <span>Skill Passport</span>
+                  </Link>
+                )}
+                {isCompany && (
+                  <Link
+                    to="/epc/dashboard"
+                    onClick={() => setProfileMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
+                  >
+                    <LayoutDashboard size={14} className="text-slate-400" />
+                    <span>Dashboard</span>
+                  </Link>
+                )}
+                {isCompany && (
+                  <Link
+                    to="/epc/workforce"
+                    onClick={() => setProfileMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
+                  >
+                    <Users size={14} className="text-slate-400" />
+                    <span>Active Workforce</span>
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link
+                    to="/admin/dashboard"
+                    onClick={() => setProfileMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
+                  >
+                    <LayoutDashboard size={14} className="text-slate-400" />
+                    <span>Admin Dashboard</span>
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link
+                    to="/admin/certificates"
+                    onClick={() => setProfileMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
+                  >
+                    <ShieldCheck size={14} className="text-slate-400" />
+                    <span>Certificate Audits</span>
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link
+                    to="/admin/technicians"
+                    onClick={() => setProfileMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
+                  >
+                    <Users size={14} className="text-slate-400" />
+                    <span>Technicians</span>
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link
+                    to="/admin/companies"
+                    onClick={() => setProfileMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
+                  >
+                    <Building size={14} className="text-slate-400" />
+                    <span>EPC Companies</span>
                   </Link>
                 )}
               </div>

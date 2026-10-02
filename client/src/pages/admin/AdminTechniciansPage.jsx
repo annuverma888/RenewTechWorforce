@@ -283,14 +283,18 @@ const AdminTechniciansPage = () => {
                                 className="w-9 h-9 rounded-xl object-cover border border-slate-200 shrink-0"
                               />
                               <div>
-                                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                                <Link
+                                  to={`/technicians/${u._id}`}
+                                  className="font-bold text-slate-900 hover:text-emerald-700 hover:underline transition-colors flex items-center gap-1.5"
+                                  title="View Full Profile"
+                                >
                                   <span>{u.name}</span>
                                   {item.verifiedCertificatesCount > 0 && (
                                     <span title="Verified Credentials" className="text-emerald-600">
                                       <ShieldCheck size={14} />
                                     </span>
                                   )}
-                                </div>
+                                </Link>
                                 <div className="text-[11px] text-slate-400 font-mono">{u.email}</div>
                               </div>
                             </div>
@@ -353,10 +357,10 @@ const AdminTechniciansPage = () => {
                           <td className="py-3.5 px-4 text-right">
                             <div className="flex items-center justify-end gap-1.5">
                               <Link
-                                to={`/passport/${u._id}`}
+                                to={`/verify/skill-passport/${u._id}`}
                                 target="_blank"
                                 rel="noreferrer"
-                                title="Inspect Digital Skill Passport"
+                                title="Inspect Public Digital Skill Passport"
                                 className="p-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors"
                               >
                                 <ExternalLink size={15} />
@@ -475,16 +479,26 @@ const AdminTechniciansPage = () => {
               )}
             </div>
 
-            <div className="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between">
-              <Link
-                to={`/passport/${selectedTech.user._id}`}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800"
-              >
-                <span>Open Verified Skill Passport</span>
-                <ExternalLink size={13} />
-              </Link>
+            <div className="mt-6 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-3">
+                <Link
+                  to={`/technicians/${selectedTech.user._id}`}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-slate-700 hover:text-emerald-700 hover:underline"
+                >
+                  <span>Full Profile</span>
+                  <ExternalLink size={12} />
+                </Link>
+                <Link
+                  to={`/verify/skill-passport/${selectedTech.user._id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline"
+                >
+                  <ShieldCheck size={13} />
+                  <span>Public Skill Passport</span>
+                  <ExternalLink size={12} />
+                </Link>
+              </div>
 
               <button
                 onClick={() => setSelectedTech(null)}

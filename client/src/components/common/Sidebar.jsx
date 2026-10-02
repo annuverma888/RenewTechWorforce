@@ -51,30 +51,26 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
 
   const technicianLinks = [
     { to: '/technician/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/technician/recommended', label: 'Find Projects', icon: Compass },
-    { to: '/technician/applications', label: 'Applications', icon: FileText },
-    { to: '/technician/profile', label: 'Skill Profile', icon: User },
+    { to: '/technician/profile', label: 'Profile', icon: User },
     { to: '/technician/certificates', label: 'Certificates', icon: FileCheck },
-    { to: '/technician/assessments', label: 'Skill Assessment', icon: Award },
+    { to: '/technician/assessments', label: 'Assessments', icon: Award },
+    { to: '/technician/recommended', label: 'Recommended Projects', icon: Compass },
+    { to: '/technician/applications', label: 'Applications', icon: FileText },
     { to: '/technician/skill-passport', label: 'Skill Passport', icon: ShieldCheck },
-    { to: '/technician/profile#work-history', label: 'Work History', icon: History },
-    { to: '/technician/profile', label: 'Settings', icon: Settings },
   ];
 
   const epcLinks = [
     { to: '/epc/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { to: '/epc/post-project', label: 'Post Project', icon: PlusCircle },
-    { to: '/epc/dashboard#projects', label: 'My Projects', icon: Briefcase },
+    { to: '/epc/projects', label: 'Projects', icon: Briefcase },
     { to: '/epc/technicians', label: 'Find Technicians', icon: Compass },
     { to: '/epc/applications', label: 'Applications', icon: FileText },
     { to: '/epc/workforce', label: 'Workforce', icon: Users },
-    { to: '/epc/workforce#completed', label: 'Completed Projects', icon: CheckCircle2 },
-    { to: '/epc/dashboard#settings', label: 'Settings', icon: Settings },
   ];
 
   const adminLinks = [
     { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/admin/certificates', label: 'Pending Certificates', icon: FileCheck },
+    { to: '/admin/certificates', label: 'Certificates & Audits', icon: FileCheck },
     { to: '/admin/technicians', label: 'Technicians', icon: Users },
     { to: '/admin/companies', label: 'EPC Companies', icon: Briefcase },
     { to: '/projects', label: 'All Projects', icon: Compass },
@@ -117,7 +113,7 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
                 RenewTech
               </span>
               <span className="block text-[9px] uppercase tracking-wider text-emerald-400 font-semibold">
-                {isTechnician ? 'Technician Portal' : isCompany ? 'EPC Portal' : 'Admin Panel'}
+                {isTechnician ? 'Technician Portal' : isCompany ? 'EPC Portal' : 'Admin Portal'}
               </span>
             </div>
           </div>
@@ -144,7 +140,7 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
           <div className="overflow-hidden min-w-0">
             <h4 className="text-xs font-bold text-white truncate">{user?.name}</h4>
             <p className="text-[10px] text-emerald-400 truncate capitalize font-medium">
-              {user?.role === 'epc_company' ? 'EPC Contractor' : user?.role}
+              {user?.role === 'epc_company' ? 'EPC Contractor' : user?.role === 'admin' ? 'Administrator' : user?.role}
             </p>
           </div>
         </div>

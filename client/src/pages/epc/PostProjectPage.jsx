@@ -328,18 +328,27 @@ const PostProjectPage = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
-        <Header onMenuClick={() => setSidebarOpen(true)} />
+        <Header
+          title="Post New Project"
+          subtitle="Publish clean-energy installations & mobilize certified workforce"
+          onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
+          onMenuClick={() => setSidebarOpen(true)}
+        />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-8">
           {/* Breadcrumb & Navigation */}
           <div className="flex items-center justify-between">
-            <Link
-              to="/epc/dashboard"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors"
-            >
-              <ChevronLeft size={16} />
-              <span>Back to EPC Dashboard</span>
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                to="/epc/projects"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors"
+              >
+                <ChevronLeft size={16} />
+                <span>Projects</span>
+              </Link>
+              <span className="text-slate-300">/</span>
+              <span className="text-xs font-semibold text-slate-700">Post New Project</span>
+            </div>
             <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
               EPC Project Publishing Studio
             </span>
@@ -384,13 +393,20 @@ const PostProjectPage = () => {
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-bold shadow-lg shadow-emerald-600/25 transition-all"
                 >
                   <Sparkles size={16} />
-                  <span>View AI Matched Candidates</span>
+                  <span>View Project & Candidates</span>
+                </Link>
+                <Link
+                  to="/epc/projects"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all border border-slate-200"
+                >
+                  <Briefcase size={15} />
+                  <span>View Projects Portfolio</span>
                 </Link>
                 <Link
                   to="/epc/dashboard"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs font-bold transition-all border border-slate-200"
                 >
-                  <span>Go to EPC Dashboard</span>
+                  <span>Dashboard</span>
                 </Link>
               </div>
             </div>

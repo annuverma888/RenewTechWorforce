@@ -415,10 +415,10 @@ const AdminCompaniesPage = () => {
                   </p>
                 </div>
                 <Link
-                  to="/epc/technicians"
+                  to="/projects"
                   className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold"
                 >
-                  View Directory
+                  Browse Projects
                 </Link>
               </div>
             </div>

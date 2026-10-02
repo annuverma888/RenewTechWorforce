@@ -20,6 +20,7 @@ import {
   Edit,
   Trash2,
   UserCheck,
+  ExternalLink,
 } from 'lucide-react';
 import { projectAPI, matchingAPI, applicationAPI, workforceAPI } from '../../services/api';
 import Header from '../../components/common/Header';
@@ -224,10 +225,34 @@ const ProjectDetailsPage = () => {
     }
   };
 
-  if (loading || !project) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-3">
         <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+        <p className="text-sm font-semibold text-slate-500">Loading project details...</p>
+      </div>
+    );
+  }
+
+  if (!project) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl border border-slate-200 p-8 max-w-md w-full text-center space-y-4 shadow-sm">
+          <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+            <AlertCircle size={24} />
+          </div>
+          <h2 className="text-lg font-bold text-slate-900">Project Not Found</h2>
+          <p className="text-sm text-slate-600">The requested renewable energy project could not be found or you may not have authorization to view it.</p>
+          <div className="pt-2 flex justify-center gap-3">
+            <Link
+              to="/epc/projects"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors"
+            >
+              <Briefcase size={16} />
+              <span>Back to Projects</span>
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
@@ -243,7 +268,12 @@ const ProjectDetailsPage = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
-        <Header onMenuClick={() => setSidebarOpen(true)} />
+        <Header
+          title={project?.projectName || 'Project Details'}
+          subtitle={project ? `${project.projectType || 'Renewable'} • ${project.location?.city ? `${project.location.city}, ${project.location.state || ''}` : 'Site Operations'}` : 'Site Operations & Resource Hub'}
+          onMenuClick={() => setSidebarOpen(true)}
+          onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
+        />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
           {/* Toast */}
@@ -266,13 +296,19 @@ const ProjectDetailsPage = () => {
 
           {/* Navigation & Actions */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <Link
-              to="/epc/dashboard"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors"
-            >
-              <ChevronLeft size={16} />
-              <span>Back to EPC Dashboard</span>
-            </Link>
+            <div className="flex items-center gap-2 text-xs font-semibold">
+              <Link
+                to="/epc/projects"
+                className="inline-flex items-center gap-1.5 font-bold text-slate-500 hover:text-slate-800 transition-colors"
+              >
+                <ChevronLeft size={16} />
+                <span>Projects</span>
+              </Link>
+              <span className="text-slate-300">/</span>
+              <span className="text-slate-900 font-bold truncate max-w-[200px] sm:max-w-md">
+                {project?.projectName || 'Project Details'}
+              </span>
+            </div>
 
             <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
               <button
@@ -284,7 +320,7 @@ const ProjectDetailsPage = () => {
                 <span>Edit Project</span>
               </button>
               <Link
-                to="/epc/technicians"
+                to={`/epc/technicians?projectId=${project?._id}`}
                 className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition-colors"
               >
                 <Users size={14} />
@@ -625,6 +661,15 @@ const ProjectDetailsPage = () => {
                 <h3 className="text-lg font-bold text-slate-900">
                   Applications Received ({applications.length})
                 </h3>
+                {project?._id && (
+                  <Link
+                    to={`/epc/applications?projectId=${project._id}`}
+                    className="text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline inline-flex items-center gap-1"
+                  >
+                    <span>Open Pipeline View</span>
+                    <ExternalLink size={12} />
+                  </Link>
+                )}
               </div>
 
               {applications.length === 0 ? (
@@ -832,6 +877,15 @@ const ProjectDetailsPage = () => {
                     Technicians actively deployed on-site for this project
                   </p>
                 </div>
+                {project?._id && (
+                  <Link
+                    to={`/epc/workforce?projectId=${project._id}`}
+                    className="text-xs font-bold text-blue-700 hover:text-blue-800 hover:underline inline-flex items-center gap-1"
+                  >
+                    <span>Open Workforce Operations</span>
+                    <ExternalLink size={12} />
+                  </Link>
+                )}
               </div>
 
               {workforce.length === 0 ? (
