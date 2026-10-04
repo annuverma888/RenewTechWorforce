@@ -319,7 +319,7 @@ const TechnicianAssessmentsPage = () => {
                 <button
                   key={tab.label}
                   onClick={() => setActiveTab(tab.label)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     activeTab === tab.label
                       ? 'bg-emerald-600 text-white shadow-xs font-bold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -327,7 +327,7 @@ const TechnicianAssessmentsPage = () => {
                 >
                   <span>{tab.label}</span>
                   <span
-                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                    className={`text-[10px] font-mono px-1.5 py-0.5 rounded-full ${
                       activeTab === tab.label
                         ? 'bg-emerald-700/80 text-white'
                         : 'bg-slate-100 text-slate-600'
@@ -346,7 +346,7 @@ const TechnicianAssessmentsPage = () => {
                 <button
                   key={domain}
                   onClick={() => setDomainFilter(domain)}
-                  className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer border ${
+                  className={`min-h-[36px] px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer border ${
                     domainFilter === domain
                       ? 'bg-slate-800 text-white border-slate-800 font-bold'
                       : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
@@ -443,7 +443,7 @@ const TechnicianAssessmentsPage = () => {
                 return (
                   <div
                     key={test._id}
-                    className={`bg-white rounded-xl border p-5 sm:p-6 shadow-xs flex flex-col justify-between transition-all hover:shadow-sm space-y-4 ${
+                    className={`bg-white rounded-2xl border p-4 sm:p-6 shadow-xs flex flex-col justify-between transition-all hover:shadow-sm space-y-4 ${
                       hasPassed
                         ? 'border-emerald-200/80 bg-white'
                         : attempt
@@ -501,24 +501,24 @@ const TechnicianAssessmentsPage = () => {
                       {/* Technical Specs: Duration, Questions, Passing */}
                       <div className="grid grid-cols-3 gap-2 text-xs pt-2 border-t border-slate-100">
                         <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
-                          <span className="text-[10px] text-slate-500 block">Duration</span>
-                          <span className="font-semibold text-slate-800 mt-0.5 block flex items-center gap-1">
+                          <span className="text-[10px] text-slate-500 block font-semibold">Duration</span>
+                          <span className="font-bold text-slate-800 mt-0.5 block flex items-center gap-1">
                             <Clock size={12} className="text-slate-400" />
                             <span>{test.durationMinutes} Mins</span>
                           </span>
                         </div>
 
                         <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
-                          <span className="text-[10px] text-slate-500 block">Questions</span>
-                          <span className="font-semibold text-slate-800 mt-0.5 block flex items-center gap-1">
+                          <span className="text-[10px] text-slate-500 block font-semibold">Questions</span>
+                          <span className="font-bold text-slate-800 mt-0.5 block flex items-center gap-1">
                             <HelpCircle size={12} className="text-slate-400" />
                             <span>{test.totalQuestions || test.questions?.length || 10} Qs</span>
                           </span>
                         </div>
 
                         <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
-                          <span className="text-[10px] text-slate-500 block">Passing Mark</span>
-                          <span className="font-semibold text-slate-800 mt-0.5 block font-mono">
+                          <span className="text-[10px] text-slate-500 block font-semibold">Passing Mark</span>
+                          <span className="font-bold text-slate-800 mt-0.5 block font-mono">
                             {test.passingPercentage}%
                           </span>
                         </div>
@@ -544,33 +544,33 @@ const TechnicianAssessmentsPage = () => {
                       )}
                     </div>
 
-                    {/* SECTION 4 & 5: ACTION BUTTONS */}
+                    {/* SECTION 4 & 5: ACTION BUTTONS (min-h-[44px] on mobile) */}
                     <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
                       {attempt ? (
                         <>
                           <button
                             onClick={() => setViewResultModal(attempt)}
-                            className="flex-1 py-2 px-3 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg font-semibold border border-slate-200 inline-flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                            className="flex-1 min-h-[44px] py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold border border-slate-200 inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer focus-ring"
                           >
-                            <BarChart2 size={13} />
+                            <BarChart2 size={14} />
                             <span>View Result</span>
                           </button>
 
                           <Link
                             to={`/technician/assessments/${test._id}/take`}
-                            className="flex-1 py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition-colors inline-flex items-center justify-center gap-1 shadow-xs"
+                            className="flex-1 min-h-[44px] py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-colors inline-flex items-center justify-center gap-1.5 shadow-xs focus-ring"
                           >
-                            <RotateCcw size={13} />
+                            <RotateCcw size={14} />
                             <span>Retake</span>
                           </Link>
                         </>
                       ) : (
                         <Link
                           to={`/technician/assessments/${test._id}/take`}
-                          className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition-colors inline-flex items-center justify-center gap-1.5 shadow-xs"
+                          className="w-full min-h-[44px] py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-colors inline-flex items-center justify-center gap-2 shadow-xs focus-ring"
                         >
                           <span>Take Assessment</span>
-                          <ArrowRight size={14} />
+                          <ArrowRight size={15} />
                         </Link>
                       )}
                     </div>
@@ -585,7 +585,7 @@ const TechnicianAssessmentsPage = () => {
       {/* ================= SECTION 6: ASSESSMENT RESULT MODAL ================= */}
       {viewResultModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 border border-slate-200 shadow-xl space-y-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 border border-slate-200 shadow-xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
@@ -598,9 +598,10 @@ const TechnicianAssessmentsPage = () => {
               </div>
               <button
                 onClick={() => setViewResultModal(null)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                aria-label="Close modal"
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
 

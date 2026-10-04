@@ -5,16 +5,17 @@ import {
   Building2,
   ArrowRight,
   CheckCircle2,
+  Users,
+  Compass,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
+import TwoSidedValueSection from '../components/landing/TwoSidedValueSection';
 import WorkflowSection from '../components/landing/WorkflowSection';
 import TechniciansSection from '../components/landing/TechniciansSection';
 import EPCCompaniesSection from '../components/landing/EPCCompaniesSection';
 import VerifiedSkillsSection from '../components/landing/VerifiedSkillsSection';
-import RenewableSectorsSection from '../components/landing/RenewableSectorsSection';
-import WhyRenewTechSection from '../components/landing/WhyRenewTechSection';
 import FinalCTASection from '../components/landing/FinalCTASection';
 import heroImg from '../assets/renewable-hero.jpg';
 import OpeningExperience from '../components/landing/OpeningExperience';
@@ -84,7 +85,7 @@ const LandingPage = () => {
         <Navbar />
 
         <main className="flex-1 w-full">
-          {/* HERO SECTION */}
+          {/* 1. HERO SECTION */}
           <section className="relative w-full bg-white border-b border-slate-200 overflow-hidden">
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
@@ -96,34 +97,34 @@ const LandingPage = () => {
                     <span>Renewable Energy Workforce Platform</span>
                   </div>
 
-                  {/* Main Heading */}
+                  {/* Main Headline */}
                   <h1 className="text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
-                    Build Skills.{' '}
-                    <span className="text-slate-900">Get Verified.</span>{' '}
-                    <span className="text-emerald-600 block sm:inline">Get Hired.</span>
+                    Connecting Renewable Energy Talent{' '}
+                    <span className="text-emerald-600">with the Right Projects</span>
                   </h1>
 
-                  {/* Short Supporting Description */}
+                  {/* Supporting Description */}
                   <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal max-w-2xl">
-                    Connect skilled renewable-energy technicians with verified opportunities and trusted EPC companies.
+                    Technicians build verified profiles and find opportunities. EPC companies discover skilled workers and build project-ready teams.
                   </p>
 
                   {/* Primary & Secondary CTAs */}
                   <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
                     <Link
                       to="/projects"
-                      className="px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 focus-ring"
+                      className="px-6 py-3.5 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 focus-ring"
                     >
+                      <Compass size={17} />
                       <span>Find Opportunities</span>
                       <ArrowRight size={16} />
                     </Link>
 
                     <Link
-                      to={isAuthenticated && isCompany ? '/epc/dashboard' : '/register?role=epc_company'}
-                      className="px-6 py-3.5 bg-white hover:bg-slate-50 text-slate-800 rounded-xl text-sm font-semibold border border-slate-300 shadow-2xs hover:border-slate-400 transition-all flex items-center justify-center gap-2 focus-ring"
+                      to={isAuthenticated && isCompany ? '/epc/technicians' : '/register?role=epc_company'}
+                      className="px-6 py-3.5 min-h-[44px] bg-white hover:bg-slate-50 text-slate-800 rounded-xl text-sm font-semibold border border-slate-300 shadow-2xs hover:border-slate-400 transition-all flex items-center justify-center gap-2 focus-ring"
                     >
-                      <Building2 size={16} className="text-slate-500" />
-                      <span>For EPC Companies</span>
+                      <Building2 size={17} className="text-slate-500" />
+                      <span>Hire Skilled Technicians</span>
                     </Link>
                   </div>
 
@@ -131,15 +132,15 @@ const LandingPage = () => {
                   <div className="pt-2 flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-slate-500 font-medium">
                     <div className="flex items-center gap-1.5">
                       <CheckCircle2 size={14} className="text-emerald-600" />
-                      <span>Government Council Aligned</span>
+                      <span>Standardized Technical Skills</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <CheckCircle2 size={14} className="text-emerald-600" />
-                      <span>QR-Verified Passports</span>
+                      <span>QR-Verified Skill Passports</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <CheckCircle2 size={14} className="text-emerald-600" />
-                      <span>Direct Contractor Hiring</span>
+                      <span>Direct Project Mobilization</span>
                     </div>
                   </div>
                 </div>
@@ -163,11 +164,11 @@ const LandingPage = () => {
                         </div>
                         <div>
                           <div className="font-bold text-slate-900">Verified Field Workforce</div>
-                          <div className="text-[11px] text-slate-500">Solar PV, Wind & Substation Crews</div>
+                          <div className="text-[11px] text-slate-500">Solar PV, Wind & Substation Specialists</div>
                         </div>
                       </div>
                       <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                        100% Audited
+                        Verified Credentials
                       </span>
                     </div>
                   </div>
@@ -176,49 +177,22 @@ const LandingPage = () => {
             </div>
           </section>
 
-          {/* TRUST / QUICK STATS */}
-          <section className="bg-slate-50 border-b border-slate-200 py-6 sm:py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-200">
-                <div className="pt-2 sm:pt-0 sm:px-4 text-center">
-                  <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-mono">100%</div>
-                  <div className="text-xs text-slate-600 font-medium mt-0.5">Verified Accreditations</div>
-                </div>
-                <div className="pt-2 sm:pt-0 sm:px-4 text-center">
-                  <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 font-mono">96.8%</div>
-                  <div className="text-xs text-slate-600 font-medium mt-0.5">Match Accuracy</div>
-                </div>
-                <div className="pt-2 sm:pt-0 sm:px-4 text-center">
-                  <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-mono">10,000+</div>
-                  <div className="text-xs text-slate-600 font-medium mt-0.5">Solar & Wind Techs</div>
-                </div>
-                <div className="pt-2 sm:pt-0 sm:px-4 text-center">
-                  <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-mono">Zero</div>
-                  <div className="text-xs text-slate-600 font-medium mt-0.5">Fake Credentials Policy</div>
-                </div>
-              </div>
-            </div>
-          </section>
+          {/* 2. WHO IS IT FOR? (Two-Sided Value Section) */}
+          <TwoSidedValueSection />
 
-          {/* PLATFORM FLOW (Section ID: #how-it-works) */}
+          {/* 3. HOW IT WORKS (Simple Two-Sided Workflow: EPC & Technician Journeys) */}
           <WorkflowSection />
 
-          {/* TECHNICIAN SECTION (Section ID: #technicians) */}
+          {/* 4. TECHNICIAN BENEFITS (Build profile, verify skills, find opportunities) */}
           <TechniciansSection />
 
-          {/* EPC COMPANIES SECTION (Section ID: #epc-companies) */}
+          {/* 5. EPC BENEFITS (Find, match, review, hire and manage) */}
           <EPCCompaniesSection />
 
-          {/* SKILL PASSPORT SECTION (Section ID: #verified-skills) */}
+          {/* 6. SKILL PASSPORT / TRUST (Verified professional information and public QR verification) */}
           <VerifiedSkillsSection />
 
-          {/* RENEWABLE ENERGY SECTORS */}
-          <RenewableSectorsSection />
-
-          {/* WHY RENEWTECH */}
-          <WhyRenewTechSection />
-
-          {/* FINAL CTA */}
+          {/* 7. FINAL CTA (Two clear actions: Find Opportunities, Hire Skilled Technicians) */}
           <FinalCTASection />
         </main>
 

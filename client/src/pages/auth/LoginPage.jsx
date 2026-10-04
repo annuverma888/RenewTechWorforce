@@ -93,12 +93,6 @@ const LoginPage = () => {
     }
   };
 
-  const fillDemoAccount = (demoEmail, demoPassword) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    setErrorMessage('');
-  };
-
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
       {/* Top Navigation Bar: Back to Home */}
@@ -310,46 +304,17 @@ const LoginPage = () => {
               </button>
             </form>
 
-            {/* Quick 1-Click Demo Accounts */}
-            <div className="pt-4 border-t border-slate-100">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block text-center mb-2.5">
-                Quick Demo Access
-              </span>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  onClick={() => fillDemoAccount('rahul.kumar@gmail.com', 'Tech@123')}
-                  className="text-left p-2.5 rounded-xl border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/40 transition-all text-xs focus-ring"
-                >
-                  <span className="font-bold text-slate-800 block truncate">Rahul Kumar</span>
-                  <span className="text-[10px] text-slate-500 block truncate">Technician (Solar)</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => fillDemoAccount('contact@greenvolt.in', 'Company@123')}
-                  className="text-left p-2.5 rounded-xl border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/40 transition-all text-xs focus-ring"
-                >
-                  <span className="font-bold text-slate-800 block truncate">GreenVolt Energy</span>
-                  <span className="text-[10px] text-slate-500 block truncate">EPC Company</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => fillDemoAccount('admin@renewtech.com', 'Admin@123')}
-                  className="text-left p-2.5 rounded-xl border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/40 transition-all text-xs focus-ring"
-                >
-                  <span className="font-bold text-slate-800 block truncate">RenewTech Admin</span>
-                  <span className="text-[10px] text-slate-500 block truncate">Platform Admin</span>
-                </button>
-              </div>
-            </div>
-
             <div className="text-center pt-2 text-xs text-slate-500">
               Don't have an account?{' '}
               <Link to="/register" className="font-bold text-emerald-600 hover:underline">
                 Create one
               </Link>
+            </div>
+
+            {/* Enterprise Security Footer */}
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-center gap-2 text-[11px] text-slate-400">
+              <ShieldCheck size={14} className="text-emerald-600 shrink-0" />
+              <span>Enterprise Grade Security • 256-bit SSL Encryption</span>
             </div>
           </div>
         </div>

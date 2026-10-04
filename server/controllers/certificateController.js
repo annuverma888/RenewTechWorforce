@@ -154,6 +154,21 @@ exports.verifyCertificate = async (req, res) => {
     const techProfile = await TechnicianProfile.findOne({ user: cert.technician._id });
     if (techProfile) {
       techProfile.verifiedCertificatesCount = verifiedCount;
+      if (status === 'Verified') {
+        const certName = (cert.certificateName || '').toLowerCase();
+        let updatedAny = false;
+        (techProfile.renewableSkills || []).forEach((sk) => {
+          if (sk.name && certName.includes(sk.name.toLowerCase())) {
+            sk.isVerified = true;
+            sk.verificationSource = 'Certificate';
+            sk.verifiedAt = new Date();
+            updatedAny = true;
+          }
+        });
+        if (updatedAny) {
+          techProfile.markModified('renewableSkills');
+        }
+      }
       techProfile.calculateProfileCompletion();
       await techProfile.save();
     }

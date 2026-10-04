@@ -330,7 +330,7 @@ const PostProjectPage = () => {
       <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
         <Header
           title="Post New Project"
-          subtitle="Publish clean-energy installations & mobilize certified workforce"
+          subtitle="Tell us what your project needs, and use the platform to find suitable technicians"
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
           onMenuClick={() => setSidebarOpen(true)}
         />
@@ -419,9 +419,8 @@ const PostProjectPage = () => {
                     <h1 className="text-2xl font-extrabold text-slate-900">
                       Post a Renewable Energy Project
                     </h1>
-                    <p className="text-xs text-slate-500 mt-1">
-                      Define project specifications, skills required, and dispatch requisitions to
-                      certified solar & wind technicians.
+                    <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                      Tell us what your project needs, and use the platform to find suitable technicians.
                     </p>
                   </div>
 

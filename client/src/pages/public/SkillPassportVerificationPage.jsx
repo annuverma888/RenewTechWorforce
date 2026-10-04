@@ -228,14 +228,14 @@ const SkillPassportVerificationPage = () => {
           <div className="pt-2 flex flex-col sm:flex-row gap-2 justify-center">
             <button
               onClick={() => setScannerModalOpen(true)}
-              className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors"
+              className="min-h-[44px] px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
               <Camera size={14} />
               <span>Scan Another QR</span>
             </button>
             <button
               onClick={fetchPublicVerification}
-              className="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors"
+              className="min-h-[44px] px-4 py-2.5 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
               <RefreshCw size={13} />
               <span>Retry Search</span>
@@ -271,7 +271,7 @@ const SkillPassportVerificationPage = () => {
             A credential record exists for this identifier, but active verification status is currently pending, suspended, or awaiting renewal.
           </p>
           {passport?.passportId && (
-            <div className="p-3 bg-slate-50 rounded-xl font-mono text-xs text-slate-600 border border-slate-200">
+            <div className="p-3 bg-slate-50 rounded-xl font-mono text-xs text-slate-600 border border-slate-200 break-all">
               Passport ID: <span className="font-bold text-slate-900">{passport.passportId}</span>
             </div>
           )}
@@ -297,7 +297,7 @@ const SkillPassportVerificationPage = () => {
           <p className="text-xs text-slate-600 leading-relaxed">{error}</p>
           <button
             onClick={fetchPublicVerification}
-            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+            className="min-h-[44px] px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <RefreshCw size={13} />
             <span>Try Again</span>
@@ -331,10 +331,10 @@ const SkillPassportVerificationPage = () => {
       `}</style>
 
       {/* Official Registry Public Header */}
-      <header className="bg-slate-900 text-white px-6 py-4 border-b border-slate-800 shadow-sm no-print">
+      <header className="bg-slate-900 text-white px-4 sm:px-6 py-4 border-b border-slate-800 shadow-sm no-print">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
+            <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-xs shrink-0">
               ⚡
             </div>
             <div>
@@ -347,33 +347,33 @@ const SkillPassportVerificationPage = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-3 sm:flex items-center gap-2 w-full sm:w-auto">
             <button
               type="button"
               onClick={() => setScannerModalOpen(true)}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors"
+              className="min-h-[44px] px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               title="Scan another QR"
             >
-              <Camera size={13} />
+              <Camera size={14} className="shrink-0" />
               <span>Scan QR</span>
             </button>
             <button
               type="button"
               onClick={handleCopyLink}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors"
+              className="min-h-[44px] px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               title="Copy verification link"
             >
-              {copiedLink ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
+              {copiedLink ? <Check size={14} className="text-emerald-400 shrink-0" /> : <Copy size={14} className="shrink-0" />}
               <span>{copiedLink ? 'Copied' : 'Share'}</span>
             </button>
             <button
               type="button"
               onClick={handlePrint}
-              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
+              className="min-h-[44px] px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
               title="Print official audit copy"
             >
-              <Download size={13} />
-              <span>Print / PDF</span>
+              <Download size={14} className="shrink-0" />
+              <span>Print</span>
             </button>
           </div>
         </div>
@@ -387,17 +387,17 @@ const SkillPassportVerificationPage = () => {
           className="bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden"
         >
           {/* SECTION 1: VERIFICATION STATUS HERO */}
-          <div className="bg-gradient-to-r from-emerald-900 via-teal-950 to-slate-900 p-6 sm:p-7 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-400 shadow-inner shrink-0">
-                <CheckCircle2 size={32} />
+          <div className="bg-gradient-to-r from-emerald-900 via-teal-950 to-slate-900 p-4 sm:p-6 lg:p-7 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5 sm:gap-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-400 shadow-inner shrink-0">
+                <CheckCircle2 size={28} className="sm:w-8 sm:h-8" />
               </div>
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300 bg-emerald-500/30 px-2 py-0.5 rounded border border-emerald-400/30">
                     Official Public Record
                   </span>
-                  <span className="text-xs text-slate-300 font-mono font-bold">
+                  <span className="text-xs text-slate-300 font-mono font-bold break-all">
                     {passportId}
                   </span>
                 </div>
@@ -412,7 +412,7 @@ const SkillPassportVerificationPage = () => {
 
             <div className="text-left sm:text-right border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-800 text-xs">
               <div className="font-semibold text-emerald-300 flex items-center gap-1.5 sm:justify-end">
-                <ShieldCheck size={14} />
+                <ShieldCheck size={14} className="shrink-0" />
                 <span>Verified Authority Record</span>
               </div>
               <div className="text-[11px] text-slate-400 font-mono mt-0.5">
@@ -422,8 +422,8 @@ const SkillPassportVerificationPage = () => {
           </div>
 
           {/* SECTION 2: TECHNICIAN IDENTITY */}
-          <div className="p-6 sm:p-7 border-b border-slate-100 bg-slate-50/70">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
+          <div className="p-4 sm:p-6 lg:p-7 border-b border-slate-100 bg-slate-50/70">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 text-center sm:text-left">
               <img
                 src={
                   technician.profilePhoto ||
@@ -436,7 +436,7 @@ const SkillPassportVerificationPage = () => {
               />
               <div className="flex-1 min-w-0 space-y-1">
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                  <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
                     {technician.name || 'Certified Technician'}
                   </h2>
                   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
@@ -468,7 +468,7 @@ const SkillPassportVerificationPage = () => {
           </div>
 
           {/* SECTION 3: KEY METRICS STRIP */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5 sm:p-6 bg-white border-b border-slate-100 text-center">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 p-3.5 sm:p-6 bg-white border-b border-slate-100 text-center">
             <div className="p-3 bg-emerald-50/60 rounded-2xl border border-emerald-100">
               <span className="text-[10px] uppercase font-bold text-emerald-800 tracking-wider block">
                 Skill Index
@@ -516,7 +516,7 @@ const SkillPassportVerificationPage = () => {
           </div>
 
           {/* SECTION 4: VERIFIED SKILLS */}
-          <div className="p-6 border-b border-slate-100">
+          <div className="p-4 sm:p-6 border-b border-slate-100">
             <div className="flex items-center justify-between mb-3.5">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
                 <Award size={15} className="text-emerald-600" />
@@ -556,7 +556,7 @@ const SkillPassportVerificationPage = () => {
           </div>
 
           {/* SECTION 5: VERIFIED CERTIFICATIONS */}
-          <div className="p-6 border-b border-slate-100">
+          <div className="p-4 sm:p-6 border-b border-slate-100">
             <div className="flex items-center justify-between mb-3.5">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
                 <FileCheck size={15} className="text-emerald-600" />
@@ -602,12 +602,53 @@ const SkillPassportVerificationPage = () => {
             )}
           </div>
 
-          {/* SECTION 6: WORK HISTORY & COMPLETED PROJECTS */}
-          <div className="p-6 border-b border-slate-100">
+          {/* SECTION 6 (PRIORITY 5): ASSESSMENT RESULTS */}
+          {assessmentsTaken.length > 0 && (
+            <div className="p-4 sm:p-6 border-b border-slate-100">
+              <div className="flex items-center justify-between mb-3.5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+                  <GraduationCap size={15} className="text-blue-600" />
+                  <span>Verified Assessment Results ({assessmentsTaken.length})</span>
+                </h3>
+                <span className="text-[11px] text-blue-700 font-semibold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                  Standardized Testing
+                </span>
+              </div>
+
+              <div className="space-y-2 text-xs">
+                {assessmentsTaken.map((ass, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-3"
+                  >
+                    <div className="space-y-0.5">
+                      <span className="font-bold text-slate-900">{ass.title}</span>
+                      <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                        <span>{ass.category}</span>
+                        <span>•</span>
+                        <span>Level: {ass.skillLevel}</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-sm font-bold font-mono text-emerald-700 block">
+                        {ass.scorePercentage}%
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        {formatDate(ass.completedAt)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* SECTION 7 (PRIORITY 6): PROJECT HISTORY & COMPLETED DEPLOYMENTS */}
+          <div className="p-4 sm:p-6 border-b border-slate-100">
             <div className="flex items-center justify-between mb-3.5">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
                 <Briefcase size={15} className="text-emerald-600" />
-                <span>Completed Field Projects ({completedProjects.length})</span>
+                <span>Project History & Completed Deployments ({completedProjects.length})</span>
               </h3>
               <span className="text-[11px] text-slate-400 font-medium">Verified Deployments</span>
             </div>
@@ -656,49 +697,8 @@ const SkillPassportVerificationPage = () => {
             )}
           </div>
 
-          {/* SECTION 7: ASSESSMENT EVIDENCE (If available) */}
-          {assessmentsTaken.length > 0 && (
-            <div className="p-6 border-b border-slate-100">
-              <div className="flex items-center justify-between mb-3.5">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-                  <GraduationCap size={15} className="text-blue-600" />
-                  <span>Verified Assessment Benchmarks ({assessmentsTaken.length})</span>
-                </h3>
-                <span className="text-[11px] text-blue-700 font-semibold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                  Standardized Testing
-                </span>
-              </div>
-
-              <div className="space-y-2 text-xs">
-                {assessmentsTaken.map((ass, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-3"
-                  >
-                    <div className="space-y-0.5">
-                      <span className="font-bold text-slate-900">{ass.title}</span>
-                      <div className="flex items-center gap-2 text-[11px] text-slate-400">
-                        <span>{ass.category}</span>
-                        <span>•</span>
-                        <span>Level: {ass.skillLevel}</span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-sm font-bold font-mono text-emerald-700 block">
-                        {ass.scorePercentage}%
-                      </span>
-                      <span className="text-[10px] text-slate-400 font-mono">
-                        {formatDate(ass.completedAt)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* SECTION 8: TECHNICAL VERIFICATION AUDIT TRAIL */}
-          <div className="p-6 bg-slate-50/80 border-b border-slate-200 text-xs space-y-3">
+          <div className="p-4 sm:p-6 bg-slate-50/80 border-b border-slate-200 text-xs space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
               <ShieldCheck size={15} className="text-emerald-600" />
               <span>Technical Verification & Compliance Audit</span>
@@ -707,7 +707,7 @@ const SkillPassportVerificationPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-slate-600">
               <div className="p-3 bg-white rounded-xl border border-slate-200">
                 <span className="text-[10px] text-slate-400 block font-medium">Passport Identifier</span>
-                <span className="font-mono font-bold text-slate-900 mt-0.5 block">{passportId}</span>
+                <span className="font-mono font-bold text-slate-900 mt-0.5 block break-all">{passportId}</span>
               </div>
               <div className="p-3 bg-white rounded-xl border border-slate-200">
                 <span className="text-[10px] text-slate-400 block font-medium">Verification Authority</span>
@@ -726,7 +726,7 @@ const SkillPassportVerificationPage = () => {
           </div>
 
           {/* SECTION 9: BOTTOM AUTHORITY GUARANTEE SEAL */}
-          <div className="p-6 bg-slate-900 text-white text-center space-y-1.5">
+          <div className="p-4 sm:p-6 bg-slate-900 text-white text-center space-y-1.5">
             <div className="text-xs font-bold text-emerald-400 flex items-center justify-center gap-1.5">
               <ShieldCheck size={16} />
               <span>✓ Certified Clean Energy Workforce Authority</span>

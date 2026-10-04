@@ -332,7 +332,7 @@ const MyApplicationsPage = () => {
             </div>
 
             {/* Filter Tabs with real live counts */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5 scrollbar-thin">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-thin">
               {[
                 { id: 'ALL', label: 'All', count: tabCounts.ALL },
                 { id: 'Applied', label: 'Applied', count: tabCounts.Applied },
@@ -346,7 +346,7 @@ const MyApplicationsPage = () => {
                   <button
                     key={tab.id}
                     onClick={() => setSelectedStatusTab(tab.id)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+                    className={`min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
                       isActive
                         ? 'bg-slate-900 text-white'
                         : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200'
@@ -354,7 +354,7 @@ const MyApplicationsPage = () => {
                   >
                     <span>{tab.label}</span>
                     <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
                         isActive
                           ? 'bg-slate-800 text-slate-200'
                           : 'bg-slate-200/80 text-slate-600'
@@ -481,16 +481,16 @@ const MyApplicationsPage = () => {
                 const appliedDate = formatDate(app.appliedAt || app.createdAt);
 
                 // Progress pipeline definition
-                const pipelineStages = ['Applied', 'Under Review', 'Shortlisted', 'Accepted / Hired'];
+                const pipelineStages = ['Applied', 'Under Review', 'Shortlisted', 'Accepted'];
                 const isRejected = app.status === 'Rejected';
 
                 return (
                   <div
                     key={app._id}
-                    className="bg-white rounded-xl border border-slate-200 hover:border-slate-300 transition-all shadow-2xs hover:shadow-xs p-4 sm:p-5 flex flex-col gap-4"
+                    className="bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition-all shadow-2xs hover:shadow-xs p-4 sm:p-5 flex flex-col gap-3.5"
                   >
-                    {/* Header Row: Title, Company, Status Badge */}
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                    {/* Header Row: Title, Company, Status Badge & Match Score */}
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
                       <div className="space-y-1 flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="p-1 rounded-md bg-slate-100 border border-slate-200">
@@ -509,9 +509,10 @@ const MyApplicationsPage = () => {
                           )}
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 pt-0.5">
+                        {/* Company & Location & Date */}
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 pt-0.5">
                           {proj.companyName && (
-                            <span className="flex items-center gap-1 font-medium text-slate-700">
+                            <span className="flex items-center gap-1 font-semibold text-slate-700">
                               <Building2 size={13} className="text-slate-400" />
                               {proj.companyName}
                             </span>
@@ -519,20 +520,18 @@ const MyApplicationsPage = () => {
                           {proj.location && (
                             <span className="flex items-center gap-1">
                               <MapPin size={13} className="text-slate-400" />
-                              {proj.location.city || ''}
-                              {proj.location.city && proj.location.state ? ', ' : ''}
-                              {proj.location.state || ''}
+                              {[proj.location.city, proj.location.state].filter(Boolean).join(', ')}
                             </span>
                           )}
                           <span className="flex items-center gap-1 text-slate-500">
                             <Calendar size={13} className="text-slate-400" />
-                            Applied on {appliedDate}
+                            Applied {appliedDate}
                           </span>
                         </div>
                       </div>
 
                       {/* Status Badge & Match score */}
-                      <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+                      <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto shrink-0">
                         {matchScore !== null && matchScore > 0 && (
                           <div
                             className={`px-2 py-1 rounded-lg border text-xs font-mono font-bold flex items-center gap-1 ${
@@ -559,22 +558,21 @@ const MyApplicationsPage = () => {
                     </div>
 
                     {/* Status Progress Visualization */}
-                    <div className="bg-slate-50/80 rounded-lg p-3 border border-slate-100">
+                    <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-100">
                       {isRejected ? (
                         <div className="flex items-center gap-2 text-xs text-rose-700">
                           <XCircle size={15} className="shrink-0" />
                           <span>
                             <strong>Application Closed:</strong> Not selected for this assignment.
-                            Your credentials remain active for other matching opportunities.
                           </span>
                         </div>
                       ) : (
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-center text-[11px] text-slate-500 font-medium">
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between items-center text-xs text-slate-500 font-medium">
                             <span className="text-slate-700 font-semibold">
                               Stage {statusMeta.stepIndex + 1} of 4: {statusMeta.label}
                             </span>
-                            <span className="text-slate-400 hidden sm:inline">
+                            <span className="text-slate-400 hidden sm:inline text-[11px]">
                               {statusMeta.description}
                             </span>
                           </div>
@@ -586,7 +584,7 @@ const MyApplicationsPage = () => {
                               const isCurrent = idx === statusMeta.stepIndex;
 
                               return (
-                                <div key={stage} className="space-y-1">
+                                <div key={stage} className="space-y-0.5">
                                   <div
                                     className={`h-1.5 rounded-full transition-all ${
                                       isCompleted
@@ -598,7 +596,7 @@ const MyApplicationsPage = () => {
                                     title={stage}
                                   />
                                   <span
-                                    className={`text-[10px] block truncate ${
+                                    className={`text-[10px] hidden sm:block truncate ${
                                       isCurrent
                                         ? 'text-emerald-700 font-bold'
                                         : isCompleted
@@ -616,55 +614,22 @@ const MyApplicationsPage = () => {
                       )}
                     </div>
 
-                    {/* Compact Project Details Bar & Card Footer Actions */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1 border-t border-slate-100 text-xs">
-                      {/* Project Specs */}
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-500">
-                        {proj.budget && (
-                          <span>
-                            Budget:{' '}
-                            <strong className="text-slate-800 font-mono">
-                              {formatCurrency(proj.budget)}
-                            </strong>
-                          </span>
-                        )}
-                        {proj.durationDays && (
-                          <span>
-                            Duration:{' '}
-                            <strong className="text-slate-800">{proj.durationDays} Days</strong>
-                          </span>
-                        )}
-                        {proj.startDate && (
-                          <span>
-                            Starts:{' '}
-                            <strong className="text-slate-800">{formatDate(proj.startDate)}</strong>
-                          </span>
-                        )}
-                        {proj.projectStatus && (
-                          <span>
-                            Status:{' '}
-                            <strong className="text-slate-800">{proj.projectStatus}</strong>
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Card Actions */}
-                      <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
-                        <button
-                          onClick={() => setSelectedApp(app)}
-                          className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-xs inline-flex items-center gap-1.5 transition-colors"
-                        >
-                          <Eye size={13} />
-                          <span>View Details</span>
-                        </button>
-                        <Link
-                          to={`/projects/${proj._id}`}
-                          className="px-3 py-1.5 border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 rounded-lg font-bold text-xs inline-flex items-center gap-1.5 transition-colors"
-                        >
-                          <span>Project Page</span>
-                          <ArrowUpRight size={13} />
-                        </Link>
-                      </div>
+                    {/* Card Actions (min-h-[44px] on mobile) */}
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                      <button
+                        onClick={() => setSelectedApp(app)}
+                        className="min-h-[44px] px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-colors cursor-pointer focus-ring"
+                      >
+                        <Eye size={15} />
+                        <span>View Details</span>
+                      </button>
+                      <Link
+                        to={`/projects/${proj._id}`}
+                        className="min-h-[44px] px-3.5 py-2 border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-800 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-colors focus-ring"
+                      >
+                        <span>Project Page</span>
+                        <ArrowUpRight size={15} />
+                      </Link>
                     </div>
                   </div>
                 );
@@ -696,35 +661,36 @@ const ApplicationDetailsModal = ({ application, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fade-in"
+      className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fade-in"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl max-w-2xl w-full border border-slate-200 shadow-xl overflow-hidden my-8"
+        className="bg-white rounded-2xl max-w-2xl w-full border border-slate-200 shadow-xl overflow-hidden my-4 sm:my-8"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="p-5 border-b border-slate-100 flex items-start justify-between gap-4 bg-slate-50/50">
+        <div className="p-4 sm:p-5 border-b border-slate-100 flex items-start justify-between gap-3 bg-slate-50/50">
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="p-1 rounded-md bg-white border border-slate-200 shadow-2xs">
+              <span className="p-1 rounded-md bg-white border border-slate-200 shadow-2xs shrink-0">
                 {getTechIcon(proj.projectType)}
               </span>
               <h3 className="text-base sm:text-lg font-bold text-slate-900 truncate">
                 {proj.projectName || 'Project Application'}
               </h3>
             </div>
-            <p className="text-xs text-slate-500 flex items-center gap-2">
-              <span>{proj.companyName || 'EPC Contractor'}</span>
+            <p className="text-xs text-slate-500 flex items-center gap-2 truncate">
+              <span className="truncate">{proj.companyName || 'EPC Contractor'}</span>
               <span>•</span>
-              <span className="font-mono">ID: {application._id}</span>
+              <span className="font-mono text-[11px] truncate">ID: {application._id}</span>
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors shrink-0"
+            aria-label="Close modal"
           >
-            <X size={18} />
+            <X size={20} />
           </button>
         </div>
 

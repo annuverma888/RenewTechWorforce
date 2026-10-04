@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -31,9 +31,11 @@ import {
   ExternalLink,
   Layers,
   Award,
+  Edit3,
+  Save,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { projectAPI, applicationAPI, technicianAPI, workforceAPI } from '../../services/api';
+import { projectAPI, applicationAPI, technicianAPI, workforceAPI, authAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
 
@@ -85,7 +87,7 @@ const getApplicationStatusBadge = (status) => {
 };
 
 const EPCDashboard = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, updateProfileState, refreshUser } = useAuth();
   const navigate = useNavigate();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -98,11 +100,105 @@ const EPCDashboard = () => {
   const [activeTab, setActiveTab] = useState('All');
   const [projectSearch, setProjectSearch] = useState('');
   const [toastMessage, setToastMessage] = useState(null);
+  const toastTimeoutRef = useRef(null);
+  const redirectTimeoutRef = useRef(null);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [profileForm, setProfileForm] = useState({
+    companyName: '',
+    city: '',
+    state: '',
+    officeAddress: '',
+    registrationNumber: '',
+    primaryDomain: 'Solar EPC',
+    website: '',
+    description: '',
+  });
 
-  const showToast = (text, type = 'success') => {
+  useEffect(() => {
+    if (profile) {
+      setProfileForm({
+        companyName: profile.companyName || user?.name || '',
+        city: profile.city || '',
+        state: profile.state || '',
+        officeAddress: profile.officeAddress || '',
+        registrationNumber: profile.registrationNumber || '',
+        primaryDomain: profile.primaryDomain || 'Solar EPC',
+        website: profile.website || '',
+        description: profile.description || '',
+      });
+    } else if (user) {
+      setProfileForm((prev) => ({
+        ...prev,
+        companyName: user.name ? `${user.name} Renewable EPC` : '',
+      }));
+    }
+  }, [profile, user]);
+
+  const showToast = useCallback((text, type = 'success') => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
     setToastMessage({ text, type });
-    setTimeout(() => setToastMessage(null), 4000);
+    toastTimeoutRef.current = setTimeout(() => {
+      setToastMessage(null);
+    }, type === 'success' ? 3000 : 4000);
+  }, []);
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+      if (redirectTimeoutRef.current) clearTimeout(redirectTimeoutRef.current);
+    };
+  }, []);
+
+  const handleSaveProfile = async (e) => {
+    if (e) e.preventDefault();
+    setSavingProfile(true);
+    try {
+      const payload = {
+        companyName: profileForm.companyName,
+        city: profileForm.city,
+        state: profileForm.state,
+        officeAddress: profileForm.officeAddress,
+        registrationNumber: profileForm.registrationNumber,
+        primaryDomain: profileForm.primaryDomain,
+        website: profileForm.website,
+        description: profileForm.description,
+      };
+      const res = await authAPI.updateCompanyProfile(payload);
+      if (res.data?.success && res.data?.profile) {
+        // 1. Immediately update auth profile state so dashboard displays updated values (e.g. location)
+        updateProfileState(res.data.profile);
+        if (typeof refreshUser === 'function') {
+          refreshUser();
+        }
+
+        // 2. Immediately close the Edit Profile modal
+        setIsEditProfileOpen(false);
+
+        // 3. Show small, clean, professional success toast
+        showToast('Profile updated successfully', 'success');
+
+        // 4. Automatically redirect / land on EPC Dashboard route after 1.5–2s delay
+        if (redirectTimeoutRef.current) {
+          clearTimeout(redirectTimeoutRef.current);
+        }
+        redirectTimeoutRef.current = setTimeout(() => {
+          navigate('/epc/dashboard');
+        }, 1600);
+      } else {
+        showToast(res.data?.message || 'Failed to save profile. Please try again.', 'error');
+      }
+    } catch (err) {
+      console.error('Error saving company profile:', err);
+      showToast(err.response?.data?.message || err.message || 'Failed to save company profile', 'error');
+    } finally {
+      setSavingProfile(false);
+    }
   };
+
 
   const loadDashboardData = async () => {
     try {
@@ -273,7 +369,7 @@ const EPCDashboard = () => {
 
   const companyName = profile?.companyName || user?.name || 'EPC Enterprise Partner';
   const companyDomain = profile?.primaryDomain || 'Renewable Energy EPC Contractor';
-  const companyLocation = [profile?.city, profile?.state].filter(Boolean).join(', ');
+  const companyLocation = [profile?.city, profile?.state].map((s) => (s || '').trim()).filter(Boolean).join(', ');
   const companyStatus = profile?.verifiedStatus || 'Verified';
 
   return (
@@ -290,13 +386,6 @@ const EPCDashboard = () => {
         />
 
         <main className="p-4 sm:p-6 lg:p-8 space-y-6 flex-1 max-w-7xl w-full mx-auto">
-          {/* Toast Notification */}
-          {toastMessage && (
-            <div className="p-4 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded-xl text-xs font-semibold flex items-center gap-2 shadow-xs animate-in fade-in">
-              <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
-              <span>{toastMessage.text}</span>
-            </div>
-          )}
 
           {/* Error Banner with Retry */}
           {error && (
@@ -330,15 +419,15 @@ const EPCDashboard = () => {
               </div>
               <p className="text-xs sm:text-sm text-slate-500 font-medium flex flex-wrap items-center gap-x-2 gap-y-1">
                 <span>{companyDomain}</span>
-                {companyLocation && (
-                  <>
-                    <span className="text-slate-300">•</span>
-                    <span className="inline-flex items-center gap-1 text-slate-600">
-                      <MapPin size={13} className="text-slate-400" />
-                      {companyLocation}
-                    </span>
-                  </>
-                )}
+                <span className="text-slate-300">•</span>
+                <span className="inline-flex items-center gap-1">
+                  <MapPin size={13} className={companyLocation ? "text-slate-400" : "text-slate-300"} />
+                  {companyLocation ? (
+                    <span className="text-slate-700 font-semibold">{companyLocation}</span>
+                  ) : (
+                    <span className="text-slate-400 italic font-normal">Location not added</span>
+                  )}
+                </span>
                 {profile?.registrationNumber && (
                   <>
                     <span className="text-slate-300">•</span>
@@ -350,27 +439,44 @@ const EPCDashboard = () => {
               </p>
             </div>
 
-            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 shrink-0 pt-2 lg:pt-0">
+            <div className="flex flex-wrap items-center gap-2.5 shrink-0 pt-2 lg:pt-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsEditProfileOpen(true);
+                }}
+                className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer focus-ring"
+              >
+                <Edit3 size={15} className="text-slate-500" />
+                <span>Edit Profile</span>
+              </button>
               <Link
                 to="/epc/post-project"
-                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-2xs transition-colors flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-2xs transition-colors flex items-center gap-2 cursor-pointer focus-ring"
               >
                 <PlusCircle size={16} />
-                <span>Post Project</span>
+                <span>Post a Project</span>
               </Link>
               <Link
                 to="/epc/technicians"
-                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer shadow-2xs focus-ring"
               >
                 <Compass size={16} className="text-slate-500" />
                 <span>Find Technicians</span>
               </Link>
               <Link
                 to="/epc/applications"
-                className="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer shadow-2xs"
+                className="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer shadow-2xs focus-ring"
               >
                 <FileText size={16} className="text-slate-500" />
-                <span>Applications ({applications.length})</span>
+                <span>Review Applications ({applications.length})</span>
+              </Link>
+              <Link
+                to="/epc/workforce"
+                className="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer shadow-2xs focus-ring"
+              >
+                <Users size={16} className="text-slate-500" />
+                <span>Manage Workforce ({workforce.length})</span>
               </Link>
             </div>
           </div>
@@ -624,19 +730,42 @@ const EPCDashboard = () => {
                 <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400">
                   <Briefcase size={22} />
                 </div>
-                <h3 className="text-sm font-bold text-slate-700">No projects found</h3>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                  {projectSearch || activeTab !== 'All'
-                    ? 'No projects match your current search or tab filters.'
-                    : 'Publish your first clean energy installation to mobilize technician crews.'}
-                </p>
-                <Link
-                  to="/epc/post-project"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
-                >
-                  <PlusCircle size={14} />
-                  <span>Post Project</span>
-                </Link>
+                {projects.length === 0 ? (
+                  <>
+                    <h3 className="text-base font-bold text-slate-900">No projects yet</h3>
+                    <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                      Create your first project to start finding skilled technicians.
+                    </p>
+                    <div className="pt-1">
+                      <Link
+                        to="/epc/post-project"
+                        className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors focus-ring"
+                      >
+                        <PlusCircle size={14} />
+                        <span>Post a Project</span>
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="text-sm font-bold text-slate-700">No matching projects found</h3>
+                    <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                      No projects match your current search or tab filters.
+                    </p>
+                    <div className="pt-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setProjectSearch('');
+                          setActiveTab('All');
+                        }}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                      >
+                        <span>Reset Filters</span>
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -1144,10 +1273,22 @@ const EPCDashboard = () => {
                   Verified company credentials and project mobilization authorization
                 </p>
               </div>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 self-start sm:self-auto">
-                <Check size={13} className="stroke-[3]" />
-                <span>Verified Entity</span>
-              </span>
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditProfileOpen(true);
+                  }}
+                  className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Edit3 size={13} />
+                  <span>Edit Profile</span>
+                </button>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <Check size={13} className="stroke-[3]" />
+                  <span>Verified Entity</span>
+                </span>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
@@ -1182,14 +1323,214 @@ const EPCDashboard = () => {
                 <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
                   Corporate Headquarters
                 </span>
-                <span className="text-sm font-bold text-slate-900 block">
-                  {companyLocation || 'New Delhi, India'}
+                <span className={`text-sm font-bold block ${companyLocation ? 'text-slate-900' : 'text-slate-400 italic font-normal'}`}>
+                  {companyLocation || 'Location not added'}
                 </span>
               </div>
             </div>
           </div>
         </main>
       </div>
+
+      {/* Edit Company Profile & Location Modal */}
+      {isEditProfileOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                  <Building size={18} className="text-emerald-600" />
+                  <span>Edit Company Profile</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Update your organization details and company headquarters location
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditProfileOpen(false)}
+                className="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveProfile} className="space-y-4 text-xs">
+              <div className="space-y-1">
+                <label className="font-bold text-slate-700 block">
+                  Company Name <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={profileForm.companyName}
+                  onChange={(e) => setProfileForm({ ...profileForm, companyName: e.target.value })}
+                  placeholder="e.g. Tata Power Renewable EPC"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none text-slate-900 font-medium"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 block">
+                    City
+                  </label>
+                  <input
+                    type="text"
+                    value={profileForm.city}
+                    onChange={(e) => setProfileForm({ ...profileForm, city: e.target.value })}
+                    placeholder="e.g. Noida, Jaipur, Delhi"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none text-slate-900 font-medium"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 block">
+                    State
+                  </label>
+                  <input
+                    type="text"
+                    value={profileForm.state}
+                    onChange={(e) => setProfileForm({ ...profileForm, state: e.target.value })}
+                    placeholder="e.g. Uttar Pradesh, Rajasthan"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none text-slate-900 font-medium"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-bold text-slate-700 block">
+                  Office / Registered Address
+                </label>
+                <input
+                  type="text"
+                  value={profileForm.officeAddress}
+                  onChange={(e) => setProfileForm({ ...profileForm, officeAddress: e.target.value })}
+                  placeholder="e.g. Expressway Tower, Sector 132"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none text-slate-900 font-medium"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 block">
+                    Corporate Registration / GSTIN
+                  </label>
+                  <input
+                    type="text"
+                    value={profileForm.registrationNumber}
+                    onChange={(e) => setProfileForm({ ...profileForm, registrationNumber: e.target.value })}
+                    placeholder="e.g. 09AAACE1234F1Z5"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none text-slate-900 font-medium uppercase font-mono"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 block">
+                    Primary Domain
+                  </label>
+                  <select
+                    value={profileForm.primaryDomain}
+                    onChange={(e) => setProfileForm({ ...profileForm, primaryDomain: e.target.value })}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none text-slate-900 font-medium"
+                  >
+                    <option value="Solar EPC">Solar EPC</option>
+                    <option value="Wind EPC">Wind EPC</option>
+                    <option value="Hybrid Renewable EPC">Hybrid Renewable EPC</option>
+                    <option value="Solar Rooftop">Solar Rooftop</option>
+                    <option value="Solar Utility Scale">Solar Utility Scale</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-bold text-slate-700 block">
+                  Website
+                </label>
+                <input
+                  type="url"
+                  value={profileForm.website}
+                  onChange={(e) => setProfileForm({ ...profileForm, website: e.target.value })}
+                  placeholder="https://example.com"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none text-slate-900 font-medium"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-bold text-slate-700 block">
+                  Company Description
+                </label>
+                <textarea
+                  rows={3}
+                  value={profileForm.description}
+                  onChange={(e) => setProfileForm({ ...profileForm, description: e.target.value })}
+                  placeholder="Brief summary of company EPC operations, capacity, and specialization..."
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none text-slate-900 font-medium resize-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsEditProfileOpen(false)}
+                  className="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingProfile}
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold shadow-xs transition-all flex items-center gap-2 cursor-pointer disabled:opacity-85 bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20"
+                >
+                  {savingProfile ? (
+                    <>
+                      <RefreshCw size={14} className="animate-spin" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save size={14} />
+                      <span>Save Profile</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Small Professional Toast Notification */}
+      {toastMessage && (
+        <div
+          role="status"
+          aria-live="polite"
+          id="epc-profile-toast"
+          data-testid="epc-profile-toast"
+          className={`fixed top-4 left-4 right-4 sm:left-auto sm:right-6 sm:top-5 z-[999999] max-w-[calc(100vw-2rem)] sm:max-w-sm px-4 py-2.5 rounded-xl shadow-lg border flex items-center gap-2.5 animate-in slide-in-from-top-2 fade-in duration-200 transition-all ${
+            toastMessage.type === 'error'
+              ? 'bg-rose-900/95 text-white border-rose-700'
+              : 'bg-emerald-900/95 text-white border-emerald-700'
+          }`}
+        >
+          {toastMessage.type === 'error' ? (
+            <AlertCircle size={16} className="text-rose-300 shrink-0" />
+          ) : (
+            <Check size={16} className="text-emerald-300 stroke-[2.5] shrink-0" />
+          )}
+          <span className="text-xs sm:text-sm font-semibold tracking-tight text-white truncate flex-1 min-w-0">
+            {toastMessage.text}
+          </span>
+          <button
+            type="button"
+            onClick={() => setToastMessage(null)}
+            className="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors ml-auto cursor-pointer shrink-0"
+            aria-label="Dismiss notification"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

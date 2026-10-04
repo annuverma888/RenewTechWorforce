@@ -592,17 +592,17 @@ const TechnicianSearchPage = () => {
 
             {/* Active Matching Context Banner */}
             {selectedProjectId && (
-              <div className="pt-2 border-t border-emerald-900/50 flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div className="pt-2 border-t border-emerald-900/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-mono font-bold text-[11px] border border-emerald-500/30">
-                    Active Match
+                    Project Matching Active
                   </span>
                   <span className="text-slate-200 font-semibold truncate max-w-md">
                     {matchingProjectData?.projectName || 'Project Candidate Evaluation'}
                   </span>
                 </div>
-                <span className="text-emerald-400 font-mono text-[11px]">
-                  {isMatchingLoading ? 'Scoring candidates...' : `${sortedCandidates.length} Candidates Scored by AI`}
+                <span className="text-emerald-300 text-[11px]">
+                  {isMatchingLoading ? 'Evaluating match scores...' : `${sortedCandidates.length} Candidates Matched by Skills & Experience`}
                 </span>
               </div>
             )}
@@ -678,7 +678,7 @@ const TechnicianSearchPage = () => {
                     className="text-xs font-semibold py-2.5 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-xl focus:outline-emerald-600 cursor-pointer text-slate-700"
                   >
                     {selectedProjectId ? (
-                      <option value="default">Sort: Best AI Match</option>
+                      <option value="default">Sort: Best Match</option>
                     ) : (
                       <option value="default">Sort: Highest Skill Score</option>
                     )}
@@ -918,7 +918,7 @@ const TechnicianSearchPage = () => {
               ) : (
                 <span>
                   Showing <strong className="text-slate-900">{sortedCandidates.length}</strong>{' '}
-                  {selectedProjectId ? 'AI-scored candidates' : 'technicians'}{' '}
+                  {selectedProjectId ? 'matched candidates' : 'technicians'}{' '}
                   {activeFiltersCount > 0 && `(filtered from ${normalizedCandidates.length} total)`}
                 </span>
               )}
@@ -926,7 +926,7 @@ const TechnicianSearchPage = () => {
 
             {selectedProjectId && (
               <span className="hidden sm:inline-flex items-center gap-1 text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                <Sparkles size={12} /> AI Scoring Enabled
+                <Sparkles size={12} /> Skill-Based Matching Active
               </span>
             )}
           </div>

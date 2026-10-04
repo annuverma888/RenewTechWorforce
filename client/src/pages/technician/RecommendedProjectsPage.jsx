@@ -440,52 +440,31 @@ const RecommendedProjectsPage = () => {
                 const missingSkills = breakdown.missingSkills || [];
                 const reasons = breakdown.reasons || [];
                 const companyName = proj.companyName || proj.company?.name || 'EPC Partner';
-
-                const startDateFormatted = proj.startDate
-                  ? new Date(proj.startDate).toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })
-                  : null;
-
-                const endDateFormatted = proj.endDate
-                  ? new Date(proj.endDate).toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })
-                  : null;
+                const isWind = proj.projectType?.toLowerCase().includes('wind');
+                const locationStr = proj.location?.city
+                  ? `${proj.location.city}, ${proj.location.state || ''}`
+                  : 'On-Site';
+                const keySkills = (proj.requiredSkills && proj.requiredSkills.length > 0)
+                  ? proj.requiredSkills
+                  : matchedSkills.map((s) => s.name || s.matchedRequirement).filter(Boolean);
 
                 return (
                   <div
                     key={proj._id}
-                    className="p-5 sm:p-6 rounded-xl border border-slate-200 hover:border-emerald-300 transition-all bg-white shadow-xs space-y-4"
+                    className="p-4 sm:p-6 rounded-2xl border border-slate-200 hover:border-emerald-300 transition-all bg-white shadow-xs space-y-3 sm:space-y-4"
                   >
-                    {/* Top Row: Meta Badges + Match Score + Budget */}
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                      <div className="space-y-1.5">
+                    {/* Top Header: Title, Sector Tag & Match Score */}
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5 sm:gap-4">
+                      <div className="space-y-1.5 min-w-0">
+                        {/* Tags: Sector, Company */}
                         <div className="flex flex-wrap items-center gap-2">
-                          {/* Technology Badge */}
-                          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200">
-                            {proj.projectType || 'Solar'} Project
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
+                            {isWind ? '💨 Wind' : '☀️ Solar'}
                           </span>
 
-                          {/* SECTION 5: REAL MATCH SCORE BADGE */}
-                          <MatchScoreBadge
-                            score={rec.matchScore}
-                            onClick={() =>
-                              setSelectedMatch({
-                                ...rec,
-                                projectName: proj.projectName,
-                              })
-                            }
-                          />
-
-                          {/* EPC Company */}
-                          <div className="flex items-center gap-1 text-xs text-slate-600 font-medium">
+                          <div className="flex items-center gap-1 text-xs text-slate-600 font-medium truncate">
                             <Building size={13} className="text-slate-400 shrink-0" />
-                            <span>{companyName}</span>
+                            <span className="truncate">{companyName}</span>
                           </div>
                         </div>
 
@@ -494,176 +473,152 @@ const RecommendedProjectsPage = () => {
                           {proj.projectName}
                         </h3>
 
-                        {/* Description */}
-                        <p className="text-xs text-slate-600 leading-relaxed max-w-3xl">
-                          {proj.description}
-                        </p>
-                      </div>
-
-                      {/* Budget / Compensation */}
-                      <div className="text-left sm:text-right shrink-0 p-3 sm:p-0 bg-slate-50 sm:bg-transparent rounded-lg border sm:border-0 border-slate-100">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                          Contract Budget / Rate
-                        </span>
-                        <span className="text-lg sm:text-xl font-bold text-slate-900 font-mono">
-                          {proj.budget ? `₹${proj.budget.toLocaleString()}` : 'Negotiable'}
-                        </span>
-                        <span className="text-[11px] text-slate-500 block">
-                          {proj.workType || 'Contract Deployment'}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Metadata Grid: Location, Capacity, Duration, Schedule, Required Experience */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3 border-t border-slate-100 text-xs text-slate-600">
-                      <div>
-                        <span className="text-[10px] font-semibold text-slate-400 block">Location</span>
-                        <span className="font-bold text-slate-800 flex items-center gap-1 mt-0.5 truncate">
-                          <MapPin size={12} className="text-slate-400 shrink-0" />
-                          <span className="truncate">
-                            {proj.location?.city ? `${proj.location.city}, ${proj.location.state}` : 'On-Site'}
-                          </span>
-                        </span>
-                      </div>
-
-                      <div>
-                        <span className="text-[10px] font-semibold text-slate-400 block">Duration / Schedule</span>
-                        <span className="font-bold text-slate-800 flex items-center gap-1 mt-0.5">
-                          <Calendar size={12} className="text-slate-400 shrink-0" />
-                          <span>
-                            {proj.durationDays ? `${proj.durationDays} Days` : 'Project Duration'}
-                          </span>
-                        </span>
-                      </div>
-
-                      <div>
-                        <span className="text-[10px] font-semibold text-slate-400 block">Required Experience</span>
-                        <span className="font-bold text-slate-800 block mt-0.5">
-                          {proj.minimumExperience ? `${proj.minimumExperience}+ Years` : 'Open Experience'}
-                        </span>
-                      </div>
-
-                      <div>
-                        <span className="text-[10px] font-semibold text-slate-400 block">Required Certifications</span>
-                        <span className="font-bold text-emerald-800 block mt-0.5 truncate">
-                          {proj.requiredCertifications && proj.requiredCertifications.length > 0
-                            ? proj.requiredCertifications.join(', ')
-                            : 'Standard Credential'}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* SECTION 7: WHY YOU MATCH */}
-                    {reasons.length > 0 && (
-                      <div className="p-3 bg-emerald-50/60 rounded-lg border border-emerald-100 space-y-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-900 block">
-                          Why you're a match
-                        </span>
-                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-emerald-800">
-                          {reasons.slice(0, 4).map((r, i) => (
-                            <span key={i} className="flex items-center gap-1 font-medium">
-                              <CheckCircle2 size={12} className="text-emerald-600 shrink-0" />
-                              <span>{r.replace(/^[✓•]\s*/, '')}</span>
+                        {/* Location */}
+                        <div className="flex items-center gap-1 text-xs text-slate-600 font-medium">
+                          <MapPin size={13} className="text-slate-400 shrink-0" />
+                          <span>{locationStr}</span>
+                          {proj.budget && (
+                            <span className="ml-2 font-bold text-slate-800">
+                              • ₹{proj.budget.toLocaleString()}
                             </span>
-                          ))}
+                          )}
                         </div>
                       </div>
-                    )}
 
-                    {/* Matched Skills vs Missing Skills Comparison */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1">
-                      {/* Matched Skills */}
-                      <div className="p-3 bg-slate-50/70 rounded-lg border border-slate-200/80 space-y-1.5">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
-                          Matched Skills ({matchedSkills.length})
-                        </span>
-                        {matchedSkills.length > 0 ? (
-                          <div className="flex flex-wrap gap-1.5">
-                            {matchedSkills.map((sk, skIdx) => (
-                              <span
-                                key={skIdx}
-                                className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-md font-medium"
-                              >
-                                <Check size={10} className="text-emerald-600 stroke-[3]" />
-                                <span>{sk.name || sk.matchedRequirement}</span>
-                              </span>
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="text-[11px] text-slate-400 block">
-                            General technical fit
-                          </span>
-                        )}
-                      </div>
-
-                      {/* SECTION 8: SKILL GAP / MISSING SKILLS */}
-                      <div className="p-3 bg-slate-50/70 rounded-lg border border-slate-200/80 space-y-1.5">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
-                          Skills to Improve
-                        </span>
-                        {missingSkills.length > 0 ? (
-                          <div className="space-y-1">
-                            <div className="flex flex-wrap gap-1.5">
-                              {missingSkills.map((sk, skIdx) => (
-                                <span
-                                  key={skIdx}
-                                  className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-200 rounded-md font-medium"
-                                >
-                                  <span>○</span>
-                                  <span>{sk}</span>
-                                </span>
-                              ))}
-                            </div>
-                            <span className="text-[10px] text-slate-400 block">
-                              Adding these skills may improve your suitability for similar opportunities.
-                            </span>
-                          </div>
-                        ) : (
-                          <span className="text-[11px] text-emerald-700 font-medium block">
-                            ✓ Your current profile covers the listed requirements.
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* SECTION 9, 10, 11: CARD FOOTER ACTIONS */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100 text-xs">
-                      <div className="flex items-center gap-3">
-                        <button
+                      {/* Match Score Badge */}
+                      <div className="self-start sm:self-auto shrink-0">
+                        <MatchScoreBadge
+                          score={rec.matchScore}
                           onClick={() =>
                             setSelectedMatch({
                               ...rec,
                               projectName: proj.projectName,
                             })
                           }
-                          className="text-xs text-emerald-700 font-bold hover:underline inline-flex items-center gap-1 cursor-pointer"
-                        >
-                          <Sparkles size={12} className="text-emerald-600" />
-                          <span>Inspect Match Rationale</span>
-                        </button>
+                        />
+                      </div>
+                    </div>
 
-                        <span className="text-slate-300">•</span>
+                    {/* Key Skills */}
+                    {keySkills.length > 0 && (
+                      <div className="pt-1">
+                        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                          Key Skills
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {keySkills.slice(0, 4).map((sk, sIdx) => (
+                            <span
+                              key={sIdx}
+                              className="text-xs font-medium bg-slate-50 text-slate-700 px-2.5 py-1 rounded-md border border-slate-200"
+                            >
+                              {typeof sk === 'object' ? sk.name : sk}
+                            </span>
+                          ))}
+                          {keySkills.length > 4 && (
+                            <span className="text-xs font-medium text-slate-400 px-1 py-1">
+                              +{keySkills.length - 4} more
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
 
-                        {/* SECTION 9: VIEW OPPORTUNITY DETAILS LINK */}
-                        <Link
-                          to={`/projects/${proj._id}`}
-                          className="text-xs text-slate-600 hover:text-slate-900 font-semibold inline-flex items-center gap-1"
-                        >
-                          <span>View Opportunity</span>
-                          <ExternalLink size={12} className="text-slate-400" />
-                        </Link>
+                    {/* Collapsible / Expandable Details for mobile, inline for desktop */}
+                    <details className="sm:hidden group pt-1 border-t border-slate-100 text-xs">
+                      <summary className="font-semibold text-emerald-700 cursor-pointer py-1.5 flex items-center justify-between">
+                        <span>View Requirements & Match Rationale</span>
+                        <ChevronRight size={14} className="group-open:rotate-90 transition-transform" />
+                      </summary>
+                      <div className="space-y-3 pt-2">
+                        {proj.description && (
+                          <p className="text-slate-600 leading-relaxed">{proj.description}</p>
+                        )}
+                        <div className="grid grid-cols-2 gap-2 text-[11px]">
+                          <div>
+                            <span className="text-slate-400 block font-semibold">Duration:</span>
+                            <span className="font-bold text-slate-700">{proj.durationDays ? `${proj.durationDays} Days` : 'Standard'}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block font-semibold">Min Experience:</span>
+                            <span className="font-bold text-slate-700">{proj.minimumExperience ? `${proj.minimumExperience}+ Years` : 'Open'}</span>
+                          </div>
+                        </div>
+                        {reasons.length > 0 && (
+                          <div className="p-2.5 bg-emerald-50/70 rounded-lg text-emerald-900 space-y-1">
+                            <span className="font-bold block text-[10px] uppercase">Why you match:</span>
+                            {reasons.slice(0, 2).map((r, i) => (
+                              <p key={i} className="text-xs flex items-center gap-1">
+                                <Check size={12} className="text-emerald-600" />
+                                <span>{r.replace(/^[✓•]\s*/, '')}</span>
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </details>
+
+                    {/* Desktop Details Grid (Visible sm+) */}
+                    <div className="hidden sm:block space-y-3 pt-2 border-t border-slate-100 text-xs">
+                      {proj.description && (
+                        <p className="text-xs text-slate-600 leading-relaxed max-w-3xl">
+                          {proj.description}
+                        </p>
+                      )}
+
+                      <div className="grid grid-cols-4 gap-2.5 text-slate-600">
+                        <div>
+                          <span className="text-[10px] font-semibold text-slate-400 block">Duration</span>
+                          <span className="font-bold text-slate-800">{proj.durationDays ? `${proj.durationDays} Days` : 'Project Duration'}</span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-semibold text-slate-400 block">Experience</span>
+                          <span className="font-bold text-slate-800">{proj.minimumExperience ? `${proj.minimumExperience}+ Years` : 'Open'}</span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-semibold text-slate-400 block">Work Type</span>
+                          <span className="font-bold text-slate-800">{proj.workType || 'Contract'}</span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-semibold text-slate-400 block">Certifications</span>
+                          <span className="font-bold text-emerald-800 truncate block">
+                            {proj.requiredCertifications && proj.requiredCertifications.length > 0
+                              ? proj.requiredCertifications.join(', ')
+                              : 'Standard'}
+                          </span>
+                        </div>
                       </div>
 
-                      {/* SECTION 10 & 11: APPLY NOW / ALREADY APPLIED BUTTON */}
+                      {reasons.length > 0 && (
+                        <div className="p-2.5 bg-emerald-50/60 rounded-lg border border-emerald-100 flex flex-wrap gap-x-4 gap-y-1 text-xs text-emerald-800">
+                          {reasons.slice(0, 3).map((r, i) => (
+                            <span key={i} className="flex items-center gap-1 font-medium">
+                              <CheckCircle2 size={12} className="text-emerald-600 shrink-0" />
+                              <span>{r.replace(/^[✓•]\s*/, '')}</span>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Card Actions (min-h-[44px] on mobile) */}
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                      <Link
+                        to={`/projects/${proj._id}`}
+                        className="min-h-[44px] px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-xl text-xs sm:text-sm border border-slate-300 transition-colors flex items-center justify-center gap-1 focus-ring"
+                      >
+                        <span>View Details</span>
+                        <ExternalLink size={13} className="text-slate-400" />
+                      </Link>
+
                       {rec.hasApplied ? (
-                        <span className="px-4 py-2 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-2xs">
-                          <CheckCircle2 size={13} className="text-emerald-600" />
-                          <span>Applied: {rec.applicationStatus || 'Under Review'}</span>
+                        <span className="min-h-[44px] px-3 py-2 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 shadow-2xs">
+                          <CheckCircle2 size={14} className="text-emerald-600" />
+                          <span>Applied</span>
                         </span>
                       ) : (
                         <button
                           onClick={() => setApplyModalProject(proj)}
-                          className="w-full sm:w-auto px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-xs transition-colors cursor-pointer text-center"
+                          className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer flex items-center justify-center focus-ring"
                         >
                           Apply Now
                         </button>
@@ -692,9 +647,10 @@ const RecommendedProjectsPage = () => {
               </div>
               <button
                 onClick={() => setApplyModalProject(null)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 rounded-lg focus-ring cursor-pointer"
+                aria-label="Close modal"
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
 
@@ -708,7 +664,7 @@ const RecommendedProjectsPage = () => {
                   value={coverNote}
                   onChange={(e) => setCoverNote(e.target.value)}
                   placeholder="State your renewable experience, hands-on field readiness, and availability date..."
-                  className="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:outline-emerald-600 focus:bg-white text-slate-900 leading-relaxed"
+                  className="w-full text-sm sm:text-xs p-2.5 border border-slate-300 rounded-lg focus:outline-emerald-600 focus:bg-white text-slate-900 leading-relaxed"
                 />
               </div>
 
@@ -727,14 +683,14 @@ const RecommendedProjectsPage = () => {
                 <button
                   type="button"
                   onClick={() => setApplyModalProject(null)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 cursor-pointer"
+                  className="min-h-[44px] px-4 py-2 border border-slate-300 text-slate-700 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 cursor-pointer flex items-center justify-center"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={applying}
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold shadow-xs transition-colors cursor-pointer"
+                  className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer flex items-center justify-center"
                 >
                   {applying ? 'Submitting...' : 'Submit Application'}
                 </button>

@@ -21,6 +21,22 @@ const skillItemSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    verificationSource: {
+      type: String,
+      enum: [
+        'Assessment',
+        'Certificate',
+        'Admin',
+        'Added by technician',
+        'None',
+        '',
+      ],
+      default: 'Added by technician',
+    },
+    verifiedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { _id: false }
 );
@@ -49,12 +65,11 @@ const technicianProfileSchema = new mongoose.Schema(
     },
     profession: {
       type: String,
-      required: [true, 'Please specify your primary renewable profession'],
-      default: 'Certified Solar PV Wireman',
+      default: '',
+      trim: true,
     },
     yearsOfExperience: {
       type: Number,
-      required: [true, 'Please specify years of experience'],
       default: 0,
       min: 0,
     },
@@ -65,25 +80,25 @@ const technicianProfileSchema = new mongoose.Schema(
     },
     expectedDailyRate: {
       type: Number,
-      default: 1500, // INR per day
+      default: null,
     },
     expectedMonthlyRate: {
       type: Number,
-      default: 35000,
+      default: null,
     },
     city: {
       type: String,
-      default: 'Kanpur',
+      default: '',
       trim: true,
     },
     state: {
       type: String,
-      default: 'Uttar Pradesh',
+      default: '',
       trim: true,
     },
     preferredWorkLocations: {
       type: [String],
-      default: ['Uttar Pradesh', 'Rajasthan', 'Gujarat'],
+      default: [],
     },
     renewableSkills: {
       type: [skillItemSchema],
@@ -119,11 +134,12 @@ const technicianProfileSchema = new mongoose.Schema(
     },
     profileCompletion: {
       type: Number,
-      default: 30, // Percentage
+      default: 20, // Base percentage
     },
     bio: {
       type: String,
-      default: 'Certified renewable energy technician specializing in clean energy installations and O&M.',
+      default: '',
+      trim: true,
     },
   },
   {
@@ -131,12 +147,12 @@ const technicianProfileSchema = new mongoose.Schema(
   }
 );
 
-// Method to recalculate profile completion
+// Method to recalculate profile completion based on actual user-entered data
 technicianProfileSchema.methods.calculateProfileCompletion = function () {
   let score = 20; // Base account creation
-  if (this.profession) score += 10;
+  if (this.profession && this.profession.trim()) score += 10;
   if (this.yearsOfExperience > 0) score += 10;
-  if (this.city && this.state) score += 10;
+  if (this.city && this.city.trim() && this.state && this.state.trim()) score += 10;
   if (this.renewableSkills && this.renewableSkills.length >= 3) score += 20;
   if (this.previousProjects && this.previousProjects.length >= 1) score += 10;
   if (this.verifiedCertificatesCount > 0) score += 10;

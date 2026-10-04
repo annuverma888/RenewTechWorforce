@@ -324,8 +324,8 @@ const WorkforcePage = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
         <Header
-          title="Workforce Operations"
-          subtitle="Manage deployed technicians across your renewable-energy projects"
+          title="Workforce Management"
+          subtitle="Manage the technicians you have hired for your projects"
           onMenuClick={() => setSidebarOpen(true)}
         />
 
@@ -356,11 +356,10 @@ const WorkforcePage = () => {
                 <span>On-Site Crew Management</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Workforce Deployment
+                Workforce Management
               </h1>
               <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
-                Monitor deployed technicians, manage on-site attendance, track logged shifts,
-                verify wages, and evaluate field performance across active renewable energy projects.
+                Manage the technicians you have hired for your projects. Track assignment statuses, deployment schedules, and performance evaluations across active renewable energy sites.
               </p>
             </div>
 

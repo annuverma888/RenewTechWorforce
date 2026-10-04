@@ -215,17 +215,50 @@ exports.updateProfile = async (req, res) => {
       phone,
     } = req.body;
 
-    if (profession) profile.profession = profession;
-    if (yearsOfExperience !== undefined) profile.yearsOfExperience = Number(yearsOfExperience);
-    if (currentAvailability) profile.currentAvailability = currentAvailability;
-    if (expectedDailyRate !== undefined) profile.expectedDailyRate = Number(expectedDailyRate);
-    if (expectedMonthlyRate !== undefined) profile.expectedMonthlyRate = Number(expectedMonthlyRate);
-    if (city) profile.city = city;
-    if (state) profile.state = state;
-    if (preferredWorkLocations) profile.preferredWorkLocations = preferredWorkLocations;
-    if (renewableSkills) profile.renewableSkills = renewableSkills;
-    if (previousProjects) profile.previousProjects = previousProjects;
-    if (bio) profile.bio = bio;
+    if (profession !== undefined) profile.profession = profession.trim();
+    if (yearsOfExperience !== undefined) profile.yearsOfExperience = Number(yearsOfExperience) || 0;
+    if (currentAvailability !== undefined) profile.currentAvailability = currentAvailability;
+    if (expectedDailyRate !== undefined) {
+      profile.expectedDailyRate = expectedDailyRate === '' || expectedDailyRate === null ? null : Number(expectedDailyRate);
+    }
+    if (expectedMonthlyRate !== undefined) {
+      profile.expectedMonthlyRate = expectedMonthlyRate === '' || expectedMonthlyRate === null ? null : Number(expectedMonthlyRate);
+    }
+    if (city !== undefined) profile.city = city.trim();
+    if (state !== undefined) profile.state = state.trim();
+    if (preferredWorkLocations !== undefined) profile.preferredWorkLocations = preferredWorkLocations;
+    if (previousProjects !== undefined) profile.previousProjects = previousProjects;
+    if (bio !== undefined) profile.bio = bio.trim();
+
+    if (renewableSkills !== undefined && Array.isArray(renewableSkills)) {
+      // Secure skills against unverified client-side claims:
+      // Keep verified status only if skill already existed and was verified by Assessment / Certificate / Admin.
+      // Newly added or unverified skills are strictly isVerified: false, verificationSource: 'Added by technician'
+      const existingSkills = profile.renewableSkills || [];
+      profile.renewableSkills = renewableSkills.map((incoming) => {
+        const existingMatch = existingSkills.find(
+          (ex) => ex.name && incoming.name && ex.name.trim().toLowerCase() === incoming.name.trim().toLowerCase()
+        );
+        if (existingMatch && existingMatch.isVerified) {
+          return {
+            name: incoming.name.trim(),
+            category: incoming.category || existingMatch.category || 'Solar',
+            proficiency: incoming.proficiency || existingMatch.proficiency || 'Intermediate',
+            isVerified: true,
+            verificationSource: existingMatch.verificationSource || 'Assessment',
+            verifiedAt: existingMatch.verifiedAt || new Date(),
+          };
+        }
+        return {
+          name: incoming.name.trim(),
+          category: incoming.category || 'Solar',
+          proficiency: incoming.proficiency || 'Intermediate',
+          isVerified: false,
+          verificationSource: 'Added by technician',
+          verifiedAt: null,
+        };
+      });
+    }
 
     // Count verified certificates
     const verifiedCertsCount = await Certificate.countDocuments({
@@ -456,17 +489,22 @@ exports.getDigitalSkillPassport = async (req, res) => {
     const shortId = profile.user._id.toString().substring(18).toUpperCase();
     const passportId = `RT-PASS-${shortId}`;
 
-    // Combine completed projects from previous projects and platform assignments
+    const techCity = profile.city ? profile.city.trim() : '';
+    const techState = profile.state ? profile.state.trim() : '';
+    const formattedLocation = techCity && techState ? `${techCity}, ${techState}` : (techCity || techState || '');
+
+    // Combine completed projects: distinguish self-reported projects from verified platform assignments
     const completedProjectsList = [
       ...(profile.previousProjects || []).map((p) => ({
         projectName: p.title || p.projectName,
         projectType: p.projectType || 'Solar',
         role: p.role || 'Technician',
         capacity: p.capacity || '',
-        location: p.location || `${profile.city}, ${profile.state}`,
+        location: p.location || formattedLocation,
         duration: p.durationMonths ? `${p.durationMonths} Months` : 'Completed',
         year: p.completionYear || '',
-        verified: true,
+        verified: false,
+        source: 'Added by technician',
       })),
       ...platformAssignments
         .filter((a) => a.assignmentStatus === 'Completed')
@@ -477,8 +515,21 @@ exports.getDigitalSkillPassport = async (req, res) => {
           location: a.project?.location || '',
           duration: 'Completed',
           verified: true,
+          source: 'RenewTech Platform Deployment',
         })),
     ];
+
+    // Skills transparency: strictly separate verified skills from all skills
+    const rawSkills = profile.renewableSkills || [];
+    const allSkillsList = rawSkills.map((s) => ({
+      name: s.name,
+      category: s.category || 'Solar',
+      proficiency: s.proficiency || 'Intermediate',
+      isVerified: !!s.isVerified,
+      verificationSource: s.verificationSource || (s.isVerified ? 'Assessment' : 'Added by technician'),
+      verifiedAt: s.verifiedAt || null,
+    }));
+    const verifiedSkillsList = allSkillsList.filter((s) => s.isVerified);
 
     // Digital Passport Payload (Sanitized and Public-Safe: NO sensitive tokens or passwords)
     const passport = {
@@ -495,19 +546,20 @@ exports.getDigitalSkillPassport = async (req, res) => {
         email: profile.user.email,
         phone: profile.user.phone,
         profilePhoto: profile.user.profilePhoto || null,
-        profession: profile.profession,
-        city: profile.city,
-        state: profile.state,
-        experienceYears: profile.yearsOfExperience,
-        currentAvailability: profile.currentAvailability,
+        profession: profile.profession || '',
+        city: techCity,
+        state: techState,
+        experienceYears: profile.yearsOfExperience !== undefined ? profile.yearsOfExperience : 0,
+        currentAvailability: profile.currentAvailability || 'Available',
       },
       scores: {
-        overallSkillScore: profile.overallSkillScore,
+        overallSkillScore: profile.overallSkillScore || 0,
         categoryMastery: assessmentResults.length > 0 ? assessmentResults[0].categoryBreakdown : [],
-        skillLevel: assessmentResults.length > 0 ? assessmentResults[0].skillLevel : 'Proficient',
+        skillLevel: assessmentResults.length > 0 ? assessmentResults[0].skillLevel : (profile.overallSkillScore > 0 ? 'Assessed' : 'Not Assessed'),
       },
-      verifiedSkills: profile.renewableSkills || [],
-      skills: (profile.renewableSkills || []).map((s) => s.name || s),
+      verifiedSkills: verifiedSkillsList,
+      allSkills: allSkillsList,
+      skills: allSkillsList.map((s) => s.name),
       verifiedCertificatesCount: verifiedCertificates.length,
       verifiedCertificates: verifiedCertificates.map((c) => ({
         name: c.certificateName,
@@ -528,7 +580,7 @@ exports.getDigitalSkillPassport = async (req, res) => {
       projectWorkforceSummary: {
         projectsCompleted: Math.max(profile.projectsCompleted || 0, completedProjectsList.length),
         activeProjectsCount: platformAssignments.filter((a) => a.assignmentStatus === 'Active').length,
-        previousProjects: profile.previousProjects,
+        previousProjects: profile.previousProjects || [],
         platformDeployments: platformAssignments.map((a) => ({
           projectName: a.project?.projectName,
           projectType: a.project?.projectType,
@@ -538,7 +590,13 @@ exports.getDigitalSkillPassport = async (req, res) => {
           endDate: a.endDate,
         })),
       },
-      ratingBreakdown: factorAverages,
+      ratingBreakdown: reviews.length > 0 ? factorAverages : {
+        overall: profile.averageRating || null,
+        technicalSkill: null,
+        safety: null,
+        punctuality: null,
+        qualityOfWork: null,
+      },
       reviewsCount: reviews.length,
       reviewsSample: reviews.slice(0, 3).map((r) => ({
         feedbackComment: r.feedbackComment,

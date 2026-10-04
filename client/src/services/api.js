@@ -49,7 +49,13 @@ export const authAPI = {
   googleAuth: (data) => api.post('/auth/google', data),
   selectRole: (data) => api.post('/auth/select-role', data),
   getMe: () => api.get('/auth/me'),
+  updateCompanyProfile: (data) => api.put('/auth/company-profile', data),
   forgotPassword: (data) => api.post('/auth/forgot-password', data),
+};
+
+export const companyAPI = {
+  updateProfile: (data) => api.put('/auth/company-profile', data),
+  getProfile: () => api.get('/auth/me'),
 };
 
 export const technicianAPI = {

@@ -239,89 +239,133 @@ const TechnicianDashboard = () => {
             </div>
           )}
 
-          {/* 1. HEADER & PROFILE / VERIFICATION SUMMARY */}
-          <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-5">
-            <div className="flex items-start sm:items-center gap-4">
-              {/* Profile Avatar */}
-              <div className="relative shrink-0">
-                {user?.profilePhoto ? (
-                  <img
-                    src={user.profilePhoto}
-                    alt={technicianName}
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-slate-200 shadow-2xs"
-                  />
-                ) : (
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-extrabold text-xl shadow-2xs">
-                    {technicianName.charAt(0).toUpperCase()}
-                  </div>
-                )}
-                {isVerifiedTechnician && (
-                  <div
-                    title="Verified Technician"
-                    className="absolute -bottom-1 -right-1 bg-emerald-600 text-white p-1 rounded-full border-2 border-white shadow-xs"
-                  >
-                    <ShieldCheck size={12} />
-                  </div>
-                )}
-              </div>
-
-              {/* Identity & Status */}
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                    {greeting}, {technicianName}
-                  </h1>
-                  {isVerifiedTechnician ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      <ShieldCheck size={12} className="text-emerald-600" />
-                      <span>Verified Technician</span>
-                    </span>
+          {/* 1. VERIFICATION / SKILL STATUS SUMMARY (Mobile Priority #1) */}
+          <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-xs space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start sm:items-center gap-3.5">
+                {/* Profile Avatar */}
+                <div className="relative shrink-0">
+                  {user?.profilePhoto ? (
+                    <img
+                      src={user.profilePhoto}
+                      alt={technicianName}
+                      className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-slate-200 shadow-2xs"
+                    />
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
-                      <Clock size={12} />
-                      <span>Audit Pending</span>
-                    </span>
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-extrabold text-xl shadow-2xs">
+                      {technicianName.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  {isVerifiedTechnician && (
+                    <div
+                      title="Verified Technician"
+                      className="absolute -bottom-1 -right-1 bg-emerald-600 text-white p-1 rounded-full border-2 border-white shadow-xs"
+                    >
+                      <ShieldCheck size={12} />
+                    </div>
                   )}
                 </div>
 
-                <p className="text-xs sm:text-sm text-slate-600 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-medium">
-                  <span className="font-semibold text-slate-800">
-                    {profile?.profession || 'Renewable Energy Specialist'}
-                  </span>
-                  {(profile?.city || profile?.state) && (
-                    <span className="inline-flex items-center gap-1 text-slate-500">
-                      <MapPin size={13} className="text-slate-400" />
-                      {[profile.city, profile.state].filter(Boolean).join(', ')}
-                    </span>
-                  )}
-                  <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                    <span>{profile?.currentAvailability || 'Available for Mobilization'}</span>
-                  </span>
-                </p>
+                {/* Identity & Status */}
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
+                      {greeting}, {technicianName}
+                    </h1>
+                    {isVerifiedTechnician ? (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <ShieldCheck size={12} className="text-emerald-600" />
+                        <span>Verified</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+                        <AlertCircle size={12} className="text-amber-600" />
+                        <span>Needs Verification</span>
+                      </span>
+                    )}
+                  </div>
 
-                <p className="text-[11px] text-slate-400 mt-1">
-                  Here's your current workforce and career overview.
-                </p>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-medium">
+                    <span className="font-semibold text-slate-800">
+                      {profile?.profession || 'Renewable Energy Specialist'}
+                    </span>
+                    {(profile?.city || profile?.state) && (
+                      <span className="inline-flex items-center gap-1 text-slate-500">
+                        <MapPin size={13} className="text-slate-400" />
+                        {[profile.city, profile.state].filter(Boolean).join(', ')}
+                      </span>
+                    )}
+                    <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <span>{profile?.currentAvailability || 'Available'}</span>
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Quick Actions (min 44px touch targets on mobile) */}
+              <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 sm:gap-2.5 shrink-0 pt-1 sm:pt-0">
+                <Link
+                  to="/technician/skill-passport"
+                  className="min-h-[44px] px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs hover:shadow transition-all flex items-center justify-center gap-1.5 focus-ring"
+                >
+                  <ShieldCheck size={16} />
+                  <span>Skill Passport</span>
+                </Link>
+                <Link
+                  to="/technician/profile"
+                  className="min-h-[44px] px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center focus-ring"
+                >
+                  Edit Profile
+                </Link>
               </div>
             </div>
 
-            {/* Quick Passport Action */}
-            <div className="flex items-center gap-2.5 shrink-0 self-start md:self-center">
-              <Link
-                to="/technician/skill-passport"
-                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow transition-all flex items-center gap-1.5 focus-ring"
-              >
-                <ShieldCheck size={15} />
-                <span>View Skill Passport</span>
-              </Link>
-              <Link
-                to="/technician/profile"
-                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors focus-ring"
-              >
-                Edit Profile
-              </Link>
-            </div>
+            {/* Profile & Credentials Attention Alert if needed */}
+            {!isVerifiedTechnician ? (
+              <div className="p-3.5 bg-amber-50/80 border border-amber-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div className="flex items-start gap-2 text-amber-900">
+                  <AlertCircle size={16} className="text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-bold">Credentials Need Attention:</span>
+                    <p className="text-amber-800 text-[11px] sm:text-xs mt-0.5">
+                      Upload your GWO, SCGJ or Wireman certificates to obtain verified technician status and unlock top contractor matches.
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  to="/technician/certificates"
+                  className="min-h-[40px] px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shrink-0 self-start sm:self-center flex items-center justify-center transition-colors"
+                >
+                  Upload Certificate
+                </Link>
+              </div>
+            ) : profileCompletion < 80 ? (
+              <div className="p-3.5 bg-emerald-50/80 border border-emerald-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div className="flex items-start gap-2 text-emerald-900">
+                  <CheckCircle2 size={16} className="text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-bold">Profile {profileCompletion}% Complete:</span>
+                    <p className="text-emerald-800 text-[11px] sm:text-xs mt-0.5">
+                      Add your previous project experience and take a skill assessment to reach 100% verified status.
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  to="/technician/profile"
+                  className="min-h-[40px] px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-xs shrink-0 self-start sm:self-center flex items-center justify-center transition-colors"
+                >
+                  Complete Profile
+                </Link>
+              </div>
+            ) : (
+              <div className="p-3 bg-emerald-50/50 border border-emerald-100 rounded-xl flex items-center gap-2 text-xs text-emerald-800">
+                <ShieldCheck size={16} className="text-emerald-600 shrink-0" />
+                <span className="font-medium text-[11px] sm:text-xs">
+                  Your profile and technical credentials are fully audited and ready for direct EPC mobilization.
+                </span>
+              </div>
+            )}
           </div>
 
           {/* 2. TOP KPI CARDS */}
@@ -498,84 +542,81 @@ const TechnicianDashboard = () => {
                         ? [proj.location.city, proj.location.state].filter(Boolean).join(', ')
                         : 'Location on Request';
                       const requiredSkills = proj.requiredSkills || [];
+                      const isWind = proj.projectType?.toLowerCase().includes('wind');
 
                       return (
                         <div
                           key={proj._id || idx}
-                          className="p-4 sm:p-5 rounded-2xl border border-slate-200 hover:border-emerald-300 transition-all bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs hover:shadow-xs"
+                          className="p-4 sm:p-5 rounded-2xl border border-slate-200 hover:border-emerald-300 transition-all bg-white flex flex-col justify-between gap-3 shadow-2xs hover:shadow-xs"
                         >
-                          <div className="space-y-2 flex-1 min-w-0">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <h3 className="text-sm sm:text-base font-bold text-slate-900 truncate">
-                                {proj.projectName || 'Clean Energy Project'}
-                              </h3>
-                              <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded">
-                                {companyName}
-                              </span>
-                              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                          <div className="space-y-2">
+                            {/* Top row: Name & Match Score */}
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                                  {proj.projectName || 'Clean Energy Project'}
+                                </h3>
+                                <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">{companyName}</p>
+                              </div>
+                              <span className="text-xs sm:text-sm font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0">
                                 {matchScore}% Match
                               </span>
-                              {item.hasApplied && (
-                                <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                                  {item.applicationStatus || 'Applied'}
-                                </span>
-                              )}
                             </div>
 
-                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 font-medium">
+                            {/* Location & Sector */}
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-slate-600 font-medium">
                               <span className="flex items-center gap-1">
-                                <MapPin size={13} className="text-slate-400 shrink-0" />
+                                <MapPin size={14} className="text-slate-400 shrink-0" />
                                 <span>{locationStr}</span>
                               </span>
-                              <span>• Type: {proj.projectType || 'Solar PV'}</span>
-                              {proj.minExperienceYears !== undefined && (
-                                <span>• Exp: {proj.minExperienceYears}+ Years</span>
-                              )}
-                              {proj.startDate && (
-                                <span className="flex items-center gap-1">
-                                  <Calendar size={13} className="text-slate-400 shrink-0" />
-                                  <span>Starts {new Date(proj.startDate).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
-                                </span>
-                              )}
+                              <span className="inline-flex items-center gap-1 font-semibold text-slate-700">
+                                {isWind ? '💨 Wind' : '☀️ Solar'}
+                              </span>
                             </div>
 
+                            {/* Key Skills */}
                             {requiredSkills.length > 0 && (
-                              <div className="flex flex-wrap gap-1.5 pt-1">
-                                {requiredSkills.slice(0, 4).map((sk, sIdx) => (
-                                  <span
-                                    key={sIdx}
-                                    className="text-[11px] font-medium bg-slate-50 text-slate-700 px-2 py-0.5 rounded border border-slate-200"
-                                  >
-                                    {sk}
-                                  </span>
-                                ))}
-                                {requiredSkills.length > 4 && (
-                                  <span className="text-[11px] font-medium text-slate-400 px-1 py-0.5">
-                                    +{requiredSkills.length - 4} more
-                                  </span>
-                                )}
+                              <div className="pt-1">
+                                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                                  Key Skills
+                                </div>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {requiredSkills.slice(0, 3).map((sk, sIdx) => (
+                                    <span
+                                      key={sIdx}
+                                      className="text-xs font-medium bg-slate-50 text-slate-700 px-2.5 py-1 rounded-md border border-slate-200"
+                                    >
+                                      {sk}
+                                    </span>
+                                  ))}
+                                  {requiredSkills.length > 3 && (
+                                    <span className="text-xs font-medium text-slate-400 px-1 py-1">
+                                      +{requiredSkills.length - 3} more
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                             )}
                           </div>
 
-                          {/* Action Buttons */}
-                          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0 pt-2 sm:pt-0">
+                          {/* Action Buttons: View Details & Apply (touch target >= 44px) */}
+                          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
                             <Link
                               to={proj._id ? `/projects/${proj._id}` : '/projects'}
-                              className="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-xl text-xs border border-slate-300 transition-colors focus-ring"
+                              className="min-h-[44px] px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-xl text-xs sm:text-sm border border-slate-300 transition-colors flex items-center justify-center focus-ring"
                             >
-                              View Opportunity
+                              View Details
                             </Link>
 
                             {item.hasApplied ? (
-                              <span className="px-3.5 py-2 bg-slate-100 text-slate-500 font-bold rounded-xl text-xs flex items-center gap-1">
-                                <CheckCircle2 size={13} /> Applied
+                              <span className="min-h-[44px] px-3 py-2 bg-slate-100 text-slate-500 font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1">
+                                <CheckCircle2 size={14} /> Applied
                               </span>
                             ) : (
                               <button
                                 type="button"
                                 onClick={() => setApplyModalProject(proj)}
-                                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-xs transition-colors cursor-pointer focus-ring"
+                                className="min-h-[44px] px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs sm:text-sm shadow-xs transition-colors cursor-pointer flex items-center justify-center focus-ring"
                               >
                                 Apply
                               </button>
@@ -588,8 +629,8 @@ const TechnicianDashboard = () => {
                 )}
               </div>
 
-              {/* RECENT APPLICATIONS */}
-              <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-xs space-y-4">
+              {/* RECENT APPLICATIONS (Mobile Priority #3) */}
+              <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-xs space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div>
                     <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
@@ -602,9 +643,9 @@ const TechnicianDashboard = () => {
                   </div>
                   <Link
                     to="/technician/applications"
-                    className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 focus-ring rounded"
+                    className="min-h-[36px] px-2 text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 focus-ring rounded"
                   >
-                    <span>View All Applications</span>
+                    <span>View All</span>
                     <ArrowRight size={13} />
                   </Link>
                 </div>
@@ -621,9 +662,9 @@ const TechnicianDashboard = () => {
                     <p className="text-xs text-slate-500">No applications submitted yet.</p>
                     <Link
                       to="/technician/recommended"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors shadow-2xs"
+                      className="min-h-[44px] inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold transition-colors shadow-2xs"
                     >
-                      <Compass size={13} />
+                      <Compass size={14} />
                       <span>Explore Opportunities</span>
                     </Link>
                   </div>
@@ -653,8 +694,8 @@ const TechnicianDashboard = () => {
                           className="p-3.5 rounded-xl border border-slate-200 hover:border-slate-300 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
                         >
                           <div>
-                            <h3 className="font-bold text-slate-900">{projName}</h3>
-                            <p className="text-slate-500 mt-0.5">
+                            <h3 className="font-bold text-slate-900 text-sm">{projName}</h3>
+                            <p className="text-slate-500 mt-0.5 text-xs">
                               {compName} • Applied on {appDate}
                             </p>
                           </div>
@@ -669,8 +710,91 @@ const TechnicianDashboard = () => {
               </div>
             </div>
 
-            {/* RIGHT 4 COLUMNS: Skills Status, Skill Improvement & Next Actions */}
+            {/* RIGHT 4 COLUMNS: Skill Passport (Priority #4), Next Action (Priority #5), Skills & Gap */}
             <div className="lg:col-span-4 space-y-6">
+              {/* 4. DIGITAL SKILL PASSPORT CARD (Mobile Priority #4) */}
+              <div className="bg-gradient-to-br from-slate-900 via-slate-850 to-slate-900 text-white rounded-2xl p-5 sm:p-6 border border-slate-800 shadow-md space-y-3.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                    Credential Hub
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-300 bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700">
+                    QR Ready
+                  </span>
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-white flex items-center gap-2">
+                    <ShieldCheck size={18} className="text-emerald-400" />
+                    <span>Digital Skill Passport</span>
+                  </h2>
+                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                    Your tamper-proof QR identity and verified competency benchmarks ready to share with hiring EPC contractors.
+                  </p>
+                </div>
+
+                <div className="pt-1">
+                  <Link
+                    to="/technician/skill-passport"
+                    className="w-full min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs transition-colors focus-ring"
+                  >
+                    <ShieldCheck size={16} />
+                    <span>Access Skill Passport</span>
+                  </Link>
+                </div>
+              </div>
+
+              {/* 5. NEXT ACTION / COMPLETE YOUR PROFILE (Mobile Priority #5) */}
+              <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-xs space-y-3.5">
+                <div className="pb-2 border-b border-slate-100">
+                  <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <CheckCircle2 size={16} className="text-emerald-600" />
+                    <span>Next Recommended Action</span>
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Clear steps to increase your contractor match score.
+                  </p>
+                </div>
+
+                {actionItems.length === 0 ? (
+                  <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck size={18} className="text-emerald-600 shrink-0" />
+                      <span className="font-bold">Profile 100% Ready</span>
+                    </div>
+                    <p className="text-slate-600 text-[11px]">
+                      Your credentials are top-tier. Explore new project openings or manage applications.
+                    </p>
+                    <Link
+                      to="/technician/recommended"
+                      className="min-h-[44px] w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold transition-colors shadow-2xs"
+                    >
+                      <Compass size={14} />
+                      <span>View Recommended Projects</span>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-2.5">
+                    {actionItems.slice(0, 3).map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3 rounded-xl border border-slate-200 hover:border-slate-300 transition-colors flex items-center justify-between gap-3 text-xs"
+                      >
+                        <div className="space-y-0.5 min-w-0">
+                          <h3 className="font-bold text-slate-800 text-xs sm:text-sm">{item.title}</h3>
+                          <p className="text-[11px] text-slate-500 leading-snug">{item.desc}</p>
+                        </div>
+                        <Link
+                          to={item.to}
+                          className="shrink-0 min-h-[38px] px-3 py-1.5 bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 rounded-lg text-xs font-bold transition-colors flex items-center justify-center"
+                        >
+                          {item.cta}
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* YOUR SKILLS SECTION */}
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-xs space-y-3.5">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -680,9 +804,9 @@ const TechnicianDashboard = () => {
                   </h2>
                   <Link
                     to="/technician/profile"
-                    className="text-xs font-bold text-emerald-700 hover:text-emerald-800 focus-ring rounded"
+                    className="min-h-[36px] flex items-center text-xs font-bold text-emerald-700 hover:text-emerald-800 focus-ring rounded"
                   >
-                    View All Skills
+                    View All
                   </Link>
                 </div>
 
@@ -696,7 +820,7 @@ const TechnicianDashboard = () => {
                       return (
                         <div
                           key={sIdx}
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border ${
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border ${
                             isVerified
                               ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                               : 'bg-slate-50 text-slate-700 border-slate-200'
@@ -722,7 +846,7 @@ const TechnicianDashboard = () => {
                     <p className="text-xs text-slate-500">No skills added yet.</p>
                     <Link
                       to="/technician/profile"
-                      className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-700"
+                      className="min-h-[40px] inline-flex items-center justify-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-700"
                     >
                       <span>Add Skills</span>
                       <ArrowRight size={12} />
@@ -740,7 +864,7 @@ const TechnicianDashboard = () => {
                   </h2>
                   <Link
                     to="/technician/assessments"
-                    className="text-xs font-bold text-emerald-700 hover:text-emerald-800 focus-ring rounded"
+                    className="min-h-[36px] flex items-center text-xs font-bold text-emerald-700 hover:text-emerald-800 focus-ring rounded"
                   >
                     Take Test
                   </Link>
@@ -915,10 +1039,10 @@ const TechnicianDashboard = () => {
               <button
                 type="button"
                 onClick={() => setApplyModalProject(null)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg focus-ring cursor-pointer"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 rounded-lg focus-ring cursor-pointer"
                 aria-label="Close modal"
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
 
@@ -945,7 +1069,7 @@ const TechnicianDashboard = () => {
                   onChange={(e) => setCoverNote(e.target.value)}
                   placeholder="Mention your relevant solar/wind project experience, team lead capability, and notice period..."
                   rows={3}
-                  className="w-full text-xs p-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                  className="w-full text-sm sm:text-xs p-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                 />
               </div>
 
@@ -953,14 +1077,14 @@ const TechnicianDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setApplyModalProject(null)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-50 cursor-pointer focus-ring"
+                  className="min-h-[44px] px-4 py-2 border border-slate-300 text-slate-700 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 cursor-pointer focus-ring flex items-center justify-center"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={applyingId === applyModalProject._id}
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow transition-all disabled:opacity-50 cursor-pointer focus-ring"
+                  className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs hover:shadow transition-all disabled:opacity-50 cursor-pointer focus-ring flex items-center justify-center"
                 >
                   {applyingId === applyModalProject._id ? 'Submitting...' : 'Submit Application'}
                 </button>

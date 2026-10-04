@@ -37,11 +37,11 @@ const companyProfileSchema = new mongoose.Schema(
     },
     city: {
       type: String,
-      default: 'Noida',
+      default: '',
     },
     state: {
       type: String,
-      default: 'Uttar Pradesh',
+      default: '',
     },
     companySize: {
       type: String,

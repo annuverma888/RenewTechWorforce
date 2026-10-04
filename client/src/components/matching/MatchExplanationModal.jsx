@@ -485,9 +485,9 @@ const MatchExplanationModal = ({
 
         {/* Modal Footer */}
         <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3">
-          <span className="text-[11px] text-slate-500 flex items-center gap-1">
-            <Info size={13} className="text-slate-400" />
-            <span>Calibrated with weighted multi-factor scoring engine</span>
+          <span className="text-[11px] text-slate-500 flex items-center gap-1.5">
+            <Info size={13} className="text-slate-400 shrink-0" />
+            <span>Match scores support candidate review based on skills, certs, and experience. Final hiring is subject to your verification.</span>
           </span>
 
           <div className="flex items-center gap-2">

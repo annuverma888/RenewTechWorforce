@@ -76,13 +76,10 @@ exports.register = async (req, res) => {
     if (userRole === 'technician') {
       profile = await TechnicianProfile.create({
         user: user._id,
-        profession: profession || 'Certified Solar PV Wireman',
-        city: city || 'Kanpur',
-        state: state || 'Uttar Pradesh',
-        renewableSkills: [
-          { name: 'PV Installation', category: 'Solar', proficiency: 'Intermediate' },
-          { name: 'Electrical Safety', category: 'Other', proficiency: 'Advanced' },
-        ],
+        profession: profession || '',
+        city: city || '',
+        state: state || '',
+        renewableSkills: [],
       });
       profile.calculateProfileCompletion();
       await profile.save();
@@ -90,8 +87,8 @@ exports.register = async (req, res) => {
       profile = await CompanyProfile.create({
         user: user._id,
         companyName: companyName || `${name} Renewable EPC`,
-        city: city || 'Noida',
-        state: state || 'Uttar Pradesh',
+        city: city ? city.trim() : '',
+        state: state ? state.trim() : '',
       });
     }
 
@@ -168,11 +165,10 @@ exports.googleAuth = async (req, res) => {
       if (!profile) {
         profile = await TechnicianProfile.create({
           user: user._id,
-          profession: 'Renewable Energy Technician',
-          renewableSkills: [
-            { name: 'PV Installation', category: 'Solar', proficiency: 'Intermediate' },
-            { name: 'Electrical Safety', category: 'Other', proficiency: 'Advanced' },
-          ],
+          profession: '',
+          city: '',
+          state: '',
+          renewableSkills: [],
         });
         profile.calculateProfileCompletion();
         await profile.save();
@@ -183,6 +179,8 @@ exports.googleAuth = async (req, res) => {
         profile = await CompanyProfile.create({
           user: user._id,
           companyName: `${user.name} Renewable EPC`,
+          city: '',
+          state: '',
         });
       }
     }
@@ -233,13 +231,10 @@ exports.selectRole = async (req, res) => {
       if (!profile) {
         profile = await TechnicianProfile.create({
           user: user._id,
-          profession: 'Certified Renewable Energy Technician',
-          city: 'Kanpur',
-          state: 'Uttar Pradesh',
-          renewableSkills: [
-            { name: 'PV Installation', category: 'Solar', proficiency: 'Intermediate' },
-            { name: 'Electrical Safety', category: 'Other', proficiency: 'Advanced' },
-          ],
+          profession: '',
+          city: '',
+          state: '',
+          renewableSkills: [],
         });
         profile.calculateProfileCompletion();
         await profile.save();
@@ -250,8 +245,8 @@ exports.selectRole = async (req, res) => {
         profile = await CompanyProfile.create({
           user: user._id,
           companyName: `${user.name} CleanTech Infrastructure`,
-          city: 'Noida',
-          state: 'Uttar Pradesh',
+          city: '',
+          state: '',
         });
       }
     }
@@ -381,3 +376,61 @@ exports.forgotPassword = async (req, res) => {
     });
   }
 };
+
+// @desc    Update EPC Company profile
+// @route   PUT /api/auth/company-profile
+// @access  Private (epc_company, admin)
+exports.updateCompanyProfile = async (req, res) => {
+  try {
+    let profile = await CompanyProfile.findOne({ user: req.user._id });
+    if (!profile) {
+      profile = new CompanyProfile({
+        user: req.user._id,
+        companyName: req.user.name || 'EPC Enterprise Partner',
+        city: '',
+        state: '',
+      });
+    }
+
+    const {
+      companyName,
+      website,
+      registrationNumber,
+      contactPerson,
+      designation,
+      officeAddress,
+      city,
+      state,
+      companySize,
+      primaryDomain,
+      description,
+    } = req.body;
+
+    if (companyName !== undefined) profile.companyName = companyName.trim();
+    if (website !== undefined) profile.website = website.trim();
+    if (registrationNumber !== undefined) profile.registrationNumber = registrationNumber.trim();
+    if (contactPerson !== undefined) profile.contactPerson = contactPerson.trim();
+    if (designation !== undefined) profile.designation = designation.trim();
+    if (officeAddress !== undefined) profile.officeAddress = officeAddress.trim();
+    if (city !== undefined) profile.city = city.trim();
+    if (state !== undefined) profile.state = state.trim();
+    if (companySize !== undefined) profile.companySize = companySize;
+    if (primaryDomain !== undefined) profile.primaryDomain = primaryDomain;
+    if (description !== undefined) profile.description = description.trim();
+
+    await profile.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Company profile updated successfully.',
+      profile,
+    });
+  } catch (error) {
+    console.error('[UpdateCompanyProfile Error]:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Server error updating company profile.',
+    });
+  }
+};
+

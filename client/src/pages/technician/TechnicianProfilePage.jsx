@@ -664,18 +664,18 @@ const TechnicianProfilePage = () => {
                       {/* Edit Profile Button */}
                       <button
                         onClick={() => setEditProfileModalOpen(true)}
-                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-xs cursor-pointer"
+                        className="min-h-[44px] px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors inline-flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
                       >
-                        <Edit3 size={14} />
+                        <Edit3 size={15} />
                         <span>Edit Profile</span>
                       </button>
 
                       {/* Skill Passport CTA */}
                       <Link
                         to="/technician/skill-passport"
-                        className="px-3.5 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-1.5"
+                        className="min-h-[44px] px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-colors inline-flex items-center justify-center gap-1.5"
                       >
-                        <QrCode size={14} className="text-slate-500" />
+                        <QrCode size={15} className="text-slate-500" />
                         <span>Skill Passport</span>
                       </Link>
                     </>
@@ -684,9 +684,9 @@ const TechnicianProfilePage = () => {
                       {/* Contact Technician Button */}
                       <button
                         onClick={() => setContactModalOpen(true)}
-                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-xs cursor-pointer"
+                        className="min-h-[44px] px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors inline-flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
                       >
-                        <Phone size={14} />
+                        <Phone size={15} />
                         <span>Contact Technician</span>
                       </button>
 
@@ -700,22 +700,22 @@ const TechnicianProfilePage = () => {
                               : `Removed ${name} from shortlist.`
                           );
                         }}
-                        className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 cursor-pointer border ${
+                        className={`min-h-[44px] px-3.5 py-2.5 rounded-xl text-xs font-bold transition-colors inline-flex items-center justify-center gap-1.5 cursor-pointer border ${
                           isShortlisted
                             ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                             : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
                         }`}
                       >
-                        {isShortlisted ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
+                        {isShortlisted ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
                         <span>{isShortlisted ? 'Shortlisted' : 'Shortlist'}</span>
                       </button>
 
                       {/* Public Passport Link */}
                       <Link
                         to={`/passport/${targetId}`}
-                        className="px-3 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-semibold inline-flex items-center gap-1"
+                        className="min-h-[44px] px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold inline-flex items-center justify-center gap-1"
                       >
-                        <QrCode size={13} className="text-slate-500" />
+                        <QrCode size={14} className="text-slate-500" />
                         <span>Passport</span>
                       </Link>
                     </>
@@ -744,12 +744,12 @@ const TechnicianProfilePage = () => {
             {isOwnProfile && (
               <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
                 <span className="font-semibold text-slate-600">Work Availability:</span>
-                <div className="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-50">
+                <div className="inline-flex rounded-xl border border-slate-200 p-0.5 bg-slate-50">
                   {['Available', 'On Project', 'Unavailable'].map((opt) => (
                     <button
                       key={opt}
                       onClick={() => handleQuickAvailabilityChange(opt)}
-                      className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors cursor-pointer ${
+                      className={`min-h-[38px] px-3 sm:px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                         availability === opt
                           ? 'bg-white text-emerald-800 shadow-2xs font-bold'
                           : 'text-slate-600 hover:text-slate-900'
@@ -1496,8 +1496,8 @@ const TechnicianProfilePage = () => {
 
       {/* ================= SECTION 9: EDIT PROFILE MODAL ================= */}
       {editProfileModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 border border-slate-200 shadow-xl space-y-5">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl max-w-xl w-full max-h-[92vh] overflow-y-auto p-4 sm:p-6 border border-slate-200 shadow-xl space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
                 <h3 className="text-base font-bold text-slate-900">Edit Technician Profile</h3>
@@ -1506,8 +1506,10 @@ const TechnicianProfilePage = () => {
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => setEditProfileModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+                className="w-10 h-10 min-w-[40px] min-h-[40px] text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Close modal"
               >
                 <X size={18} />
               </button>
@@ -1648,14 +1650,14 @@ const TechnicianProfilePage = () => {
                 <button
                   type="button"
                   onClick={() => setEditProfileModalOpen(false)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 transition-colors cursor-pointer"
+                  className="min-h-[44px] px-4 py-2 border border-slate-300 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-50 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={savingProfile}
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-xs"
+                  className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-colors inline-flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
                 >
                   {savingProfile ? (
                     <>
@@ -1677,8 +1679,8 @@ const TechnicianProfilePage = () => {
 
       {/* ================= ADD SKILL MODAL ================= */}
       {addSkillModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 border border-slate-200 shadow-xl space-y-4">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full max-h-[92vh] overflow-y-auto p-4 sm:p-6 border border-slate-200 shadow-xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
                 <h3 className="text-base font-bold text-slate-900">Add Technical Skill</h3>
@@ -1687,8 +1689,10 @@ const TechnicianProfilePage = () => {
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => setAddSkillModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="w-10 h-10 min-w-[40px] min-h-[40px] text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Close modal"
               >
                 <X size={18} />
               </button>
@@ -1744,14 +1748,14 @@ const TechnicianProfilePage = () => {
                 <button
                   type="button"
                   onClick={() => setAddSkillModalOpen(false)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 transition-colors cursor-pointer"
+                  className="min-h-[44px] px-4 py-2 border border-slate-300 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-50 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={addingSkill}
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-xs"
+                  className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-colors inline-flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
                 >
                   {addingSkill ? (
                     <>
@@ -1773,8 +1777,8 @@ const TechnicianProfilePage = () => {
 
       {/* ================= ADD PROJECT MODAL ================= */}
       {addProjectModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 border border-slate-200 shadow-xl space-y-4">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full max-h-[92vh] overflow-y-auto p-4 sm:p-6 border border-slate-200 shadow-xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
                 <h3 className="text-base font-bold text-slate-900">Add Project History</h3>
@@ -1783,8 +1787,10 @@ const TechnicianProfilePage = () => {
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => setAddProjectModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="w-10 h-10 min-w-[40px] min-h-[40px] text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Close modal"
               >
                 <X size={18} />
               </button>
@@ -1805,7 +1811,7 @@ const TechnicianProfilePage = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
                     Technology Type *
@@ -1835,7 +1841,7 @@ const TechnicianProfilePage = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
                     Your Role
@@ -1861,7 +1867,7 @@ const TechnicianProfilePage = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
                     Duration (Months)
@@ -1911,14 +1917,14 @@ const TechnicianProfilePage = () => {
                 <button
                   type="button"
                   onClick={() => setAddProjectModalOpen(false)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 transition-colors cursor-pointer"
+                  className="min-h-[44px] px-4 py-2 border border-slate-300 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-50 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={addingProject}
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-xs"
+                  className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-colors inline-flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
                 >
                   {addingProject ? (
                     <>
@@ -1940,32 +1946,34 @@ const TechnicianProfilePage = () => {
 
       {/* ================= CONTACT MODAL (FOR EPC VIEW) ================= */}
       {contactModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-sm w-full p-6 border border-slate-200 shadow-xl space-y-4">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full max-h-[92vh] overflow-y-auto p-4 sm:p-6 border border-slate-200 shadow-xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-base font-bold text-slate-900">Contact Technician</h3>
               <button
+                type="button"
                 onClick={() => setContactModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="w-10 h-10 min-w-[40px] min-h-[40px] text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Close modal"
               >
                 <X size={18} />
               </button>
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
                 <span className="text-slate-400 block font-medium">Direct Phone</span>
                 <span className="font-bold text-slate-800 text-sm mt-0.5 block">
                   {userData?.phone || 'Available upon shortlist'}
                 </span>
               </div>
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
                 <span className="text-slate-400 block font-medium">Verified Email</span>
                 <span className="font-bold text-slate-800 mt-0.5 block break-all">
                   {userData?.email || 'technician@renewtech.com'}
                 </span>
               </div>
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
                 <span className="text-slate-400 block font-medium">Location Base</span>
                 <span className="font-bold text-slate-800 mt-0.5 block">
                   {city && state ? `${city}, ${state}` : 'Location unconfirmed'}
@@ -1975,8 +1983,9 @@ const TechnicianProfilePage = () => {
 
             <div className="pt-2">
               <button
+                type="button"
                 onClick={() => setContactModalOpen(false)}
-                className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                className="w-full min-h-[44px] py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center justify-center"
               >
                 Close
               </button>

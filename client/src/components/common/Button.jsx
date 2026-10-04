@@ -18,8 +18,8 @@ const Button = ({
     'inline-flex items-center justify-center font-bold rounded-xl transition-all duration-150 focus-ring disabled:opacity-60 disabled:cursor-not-allowed select-none cursor-pointer';
 
   const sizeStyles = {
-    sm: 'text-xs px-3 py-1.5 min-h-[36px] gap-1.5',
-    md: 'text-xs sm:text-sm px-4 py-2.5 min-h-[42px] gap-2',
+    sm: 'text-xs px-3 py-1.5 min-h-[38px] gap-1.5',
+    md: 'text-xs sm:text-sm px-4 py-2.5 min-h-[44px] gap-2',
     lg: 'text-sm sm:text-base px-5 py-3 min-h-[48px] gap-2.5',
   };
 

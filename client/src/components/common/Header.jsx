@@ -9,7 +9,7 @@ import Badge from './Badge';
 const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick }) => {
   const navigate = useNavigate();
   const handleMenuToggle = onMenuToggle || onMenuClick || (() => {});
-  const { user, profile, isTechnician, isCompany, isAdmin, updateProfileState, logout } = useAuth();
+  const { user, profile, isTechnician, isCompany, isAdmin, updateProfileState, logout, requestLogout } = useAuth();
   const [availabilityDropdown, setAvailabilityDropdown] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [updatingAvail, setUpdatingAvail] = useState(false);
@@ -46,10 +46,14 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
     };
   }, []);
 
-  const handleProfileLogout = async () => {
+  const handleProfileLogout = () => {
     setProfileMenuOpen(false);
-    await logout();
-    navigate('/login');
+    if (typeof requestLogout === 'function') {
+      requestLogout('/login');
+    } else {
+      logout();
+      navigate('/login');
+    }
   };
 
   const currentAvail = profile?.currentAvailability || 'Available';
@@ -97,13 +101,13 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
         <button
           type="button"
           onClick={handleMenuToggle}
-          className="lg:hidden p-2 text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
+          className="lg:hidden min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
           aria-label="Toggle navigation menu"
         >
-          <Menu size={22} />
+          <Menu size={24} />
         </button>
         <div className="min-w-0">
-          <h1 className="text-base sm:text-2xl font-black text-slate-900 tracking-tight truncate max-w-[140px] xs:max-w-[220px] sm:max-w-none">
+          <h1 className="text-base sm:text-2xl font-black text-slate-900 tracking-tight truncate max-w-[130px] xs:max-w-[200px] sm:max-w-none">
             {title}
           </h1>
           {subtitle && (
@@ -123,7 +127,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
               type="button"
               onClick={() => setAvailabilityDropdown(!availabilityDropdown)}
               disabled={updatingAvail}
-              className="flex items-center gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 shadow-2xs transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 min-h-[40px] rounded-full text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 shadow-2xs transition-all cursor-pointer"
               title="Change deployment availability status"
             >
               <span
@@ -136,7 +140,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                 }`}
               />
               <span className="hidden md:inline text-slate-700">Status:</span>
-              <span className="text-[11px] sm:text-xs text-slate-800 font-semibold truncate max-w-[80px] sm:max-w-none">
+              <span className="text-[11px] sm:text-xs text-slate-800 font-semibold truncate max-w-[70px] xs:max-w-[80px] sm:max-w-none">
                 {currentAvail}
               </span>
               <ChevronDown size={13} className="text-slate-400 shrink-0" />
@@ -152,7 +156,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     key={status}
                     type="button"
                     onClick={() => handleUpdateAvailability(status)}
-                    className="w-full text-left px-3.5 py-2 text-xs flex items-center justify-between hover:bg-slate-50 font-medium text-slate-700 transition-colors cursor-pointer"
+                    className="w-full text-left px-3.5 py-2.5 min-h-[40px] text-xs sm:text-sm flex items-center justify-between hover:bg-slate-50 font-medium text-slate-700 transition-colors cursor-pointer"
                   >
                     <span>{status}</span>
                     {currentAvail === status && (
@@ -172,7 +176,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
           <button
             type="button"
             onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-            className="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-200 cursor-pointer hover:opacity-90 transition-opacity"
+            className="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-2 min-h-[44px] border-l border-slate-200 cursor-pointer hover:opacity-90 transition-opacity"
             aria-label="User profile menu"
           >
             <img

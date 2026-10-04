@@ -192,13 +192,13 @@ const ProjectListingPage = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search projects by title, skill, location or EPC..."
-              className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-emerald-600 focus:bg-white"
+              className="w-full pl-10 pr-4 py-2.5 min-h-[44px] text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-emerald-600 focus:bg-white"
             />
           </div>
           {/* Mobile Filter Button */}
           <button
             onClick={() => setMobileFilterOpen(true)}
-            className="md:hidden px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-colors border border-slate-200"
+            className="md:hidden px-3.5 py-2.5 min-h-[44px] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-colors border border-slate-200 cursor-pointer"
           >
             <SlidersHorizontal size={14} />
             <span>Filters</span>
@@ -302,7 +302,8 @@ const ProjectListingPage = () => {
               </div>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="text-slate-400 hover:text-slate-600 text-lg font-bold p-1"
+                className="text-slate-400 hover:text-slate-600 w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-lg text-lg font-bold p-1 cursor-pointer"
+                aria-label="Close filters"
               >
                 ✕
               </button>
@@ -392,13 +393,13 @@ const ProjectListingPage = () => {
                   setSelectedExperience('All');
                   setSelectedAvailability('All');
                 }}
-                className="text-xs font-semibold text-slate-500 hover:text-slate-800"
+                className="text-xs font-semibold text-slate-500 hover:text-slate-800 min-h-[44px] px-2 flex items-center cursor-pointer"
               >
                 Reset All
               </button>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="px-5 py-2.5 bg-emerald-600 text-white rounded-lg text-xs font-bold shadow-xs hover:bg-emerald-700"
+                className="px-5 py-2.5 min-h-[44px] bg-emerald-600 text-white rounded-lg text-xs font-bold shadow-xs hover:bg-emerald-700 flex items-center justify-center cursor-pointer"
               >
                 Apply Filters ({filteredProjects.length} Projects)
               </button>
@@ -468,7 +469,7 @@ const ProjectListingPage = () => {
                     </p>
                     <p className="text-xs text-slate-500 flex items-center gap-1 mt-1">
                       <MapPin size={13} className="text-slate-400 shrink-0" />
-                      <span>{proj.location?.city || 'Kanpur'}, {proj.location?.state || 'Uttar Pradesh'}</span>
+                      <span>{[proj.location?.city, proj.location?.state].filter(Boolean).join(', ') || 'Location not specified'}</span>
                     </p>
                   </div>
 
@@ -518,7 +519,7 @@ const ProjectListingPage = () => {
                 <div className="mt-5 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
                   <Link
                     to={`/projects/${proj._id}`}
-                    className="py-2 text-center text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors"
+                    className="py-2.5 min-h-[44px] flex items-center justify-center text-center text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors"
                   >
                     View Details
                   </Link>
@@ -530,7 +531,7 @@ const ProjectListingPage = () => {
                         setApplyModalProject(proj);
                       }
                     }}
-                    className="py-2 text-center text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-2xs transition-colors"
+                    className="py-2.5 min-h-[44px] flex items-center justify-center text-center text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-2xs transition-colors cursor-pointer"
                   >
                     Apply
                   </button>
@@ -551,7 +552,8 @@ const ProjectListingPage = () => {
               </h3>
               <button
                 onClick={() => setApplyModalProject(null)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="text-slate-400 hover:text-slate-600 w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-lg p-1 cursor-pointer"
+                aria-label="Close apply dialog"
               >
                 ✕
               </button>
@@ -580,14 +582,14 @@ const ProjectListingPage = () => {
                 <button
                   type="button"
                   onClick={() => setApplyModalProject(null)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50"
+                  className="px-4 py-2.5 min-h-[44px] border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 flex items-center justify-center cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submittingApp}
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-2xs disabled:opacity-50"
+                  className="px-5 py-2.5 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-2xs disabled:opacity-50 flex items-center justify-center cursor-pointer"
                 >
                   {submittingApp ? 'Submitting...' : 'Submit Application'}
                 </button>

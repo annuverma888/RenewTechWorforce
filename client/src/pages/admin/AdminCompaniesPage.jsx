@@ -291,7 +291,7 @@ const AdminCompaniesPage = () => {
                           <td className="py-3.5 px-4">
                             <div className="flex items-center gap-1 text-slate-700">
                               <MapPin size={12} className="text-slate-400 shrink-0" />
-                              <span>{p.city ? `${p.city}, ${p.state}` : 'Headquarters'}</span>
+                              <span>{[p.city, p.state].filter(Boolean).join(', ') || 'Location not added'}</span>
                             </div>
                           </td>
 

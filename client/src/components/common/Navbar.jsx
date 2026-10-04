@@ -17,7 +17,7 @@ import { useAuth } from '../../context/AuthContext';
 import NotificationDropdown from './NotificationDropdown';
 
 const Navbar = () => {
-  const { user, isAuthenticated, isTechnician, isCompany, isAdmin, logout } = useAuth();
+  const { user, isAuthenticated, isTechnician, isCompany, isAdmin, logout, requestLogout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,10 +32,14 @@ const Navbar = () => {
     return '/technician/dashboard';
   }, [user?.role, isAdmin, isCompany]);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     setMobileMenuOpen(false);
-    await logout();
-    navigate('/');
+    if (typeof requestLogout === 'function') {
+      requestLogout('/');
+    } else {
+      logout();
+      navigate('/');
+    }
   };
 
   // Smooth scroll handler for section anchors and route navigation
@@ -80,7 +84,7 @@ const Navbar = () => {
     }
   };
 
-  // Nav Items specification: Home, Jobs, Technicians, Skill Passport, About
+  // Nav Items specification: Home, For Technicians, For EPCs, How It Works, Skill Passport
   const navLinks = [
     {
       id: 'home',
@@ -90,19 +94,28 @@ const Navbar = () => {
       isActive: location.pathname === '/' && !activeSection,
     },
     {
-      id: 'jobs',
-      label: 'Jobs',
-      type: 'route',
-      path: '/projects',
-      isActive: location.pathname.startsWith('/projects'),
-    },
-    {
       id: 'technicians',
-      label: 'Technicians',
+      label: 'For Technicians',
       type: 'section',
       idVal: 'technicians',
       path: '/#technicians',
       isActive: location.pathname === '/' && activeSection === 'technicians',
+    },
+    {
+      id: 'epcs',
+      label: 'For EPCs',
+      type: 'section',
+      idVal: 'epc-companies',
+      path: '/#epc-companies',
+      isActive: location.pathname === '/' && activeSection === 'epc-companies',
+    },
+    {
+      id: 'how-it-works',
+      label: 'How It Works',
+      type: 'section',
+      idVal: 'how-it-works',
+      path: '/#how-it-works',
+      isActive: location.pathname === '/' && activeSection === 'how-it-works',
     },
     {
       id: 'skill-passport',
@@ -112,14 +125,6 @@ const Navbar = () => {
       isActive:
         location.pathname.startsWith('/verify/skill-passport') ||
         (location.pathname === '/' && activeSection === 'verified-skills'),
-    },
-    {
-      id: 'about',
-      label: 'About',
-      type: 'section',
-      idVal: 'how-it-works',
-      path: '/#how-it-works',
-      isActive: location.pathname === '/' && activeSection === 'how-it-works',
     },
   ];
 
@@ -135,8 +140,8 @@ const Navbar = () => {
 
       const scrollPosition = window.scrollY + 140;
       const trackedSections = [
+        'who-is-it-for',
         'how-it-works',
-        'why-renewtech',
         'technicians',
         'epc-companies',
         'verified-skills',
@@ -344,7 +349,7 @@ const Navbar = () => {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-xl focus-ring transition-colors cursor-pointer"
+            className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-xl focus-ring transition-colors cursor-pointer"
             aria-label="Toggle navigation menu"
             aria-expanded={mobileMenuOpen}
           >
@@ -444,7 +449,7 @@ const Navbar = () => {
                     <button
                       type="button"
                       onClick={handleLogout}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2 text-rose-600 hover:bg-rose-50 rounded-xl text-xs sm:text-sm font-semibold min-h-[42px] transition-colors cursor-pointer focus-ring"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2 text-rose-600 hover:bg-rose-50 rounded-xl text-xs sm:text-sm font-semibold min-h-[44px] transition-colors cursor-pointer focus-ring"
                     >
                       <LogOut size={16} />
                       <span>Logout</span>

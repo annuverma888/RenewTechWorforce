@@ -81,15 +81,15 @@ const SkillPassportShareModal = ({ isOpen, onClose, passport, verificationUrl })
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto bg-white rounded-3xl shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header */}
-        <div className="bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 px-6 py-5 text-white flex items-center justify-between">
+        <div className="bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 px-4 sm:px-6 py-4 sm:py-5 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shrink-0">
               <Share2 size={20} />
             </div>
             <div>
@@ -104,7 +104,7 @@ const SkillPassportShareModal = ({ isOpen, onClose, passport, verificationUrl })
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+            className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
             title="Close"
           >
             <X size={18} />
@@ -112,7 +112,7 @@ const SkillPassportShareModal = ({ isOpen, onClose, passport, verificationUrl })
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 space-y-5">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
           {/* Technician Snippet */}
           <div className="flex items-center gap-3.5 p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80">
             <img
@@ -222,20 +222,20 @@ const SkillPassportShareModal = ({ isOpen, onClose, passport, verificationUrl })
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-2">
               Or copy public verification link
             </span>
-            <div className="flex items-center gap-2 p-1.5 bg-slate-50 border border-slate-200 rounded-2xl">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-2 sm:p-1.5 bg-slate-50 border border-slate-200 rounded-2xl">
               <input
                 type="text"
                 readOnly
                 value={url}
-                className="flex-1 px-3 py-1.5 text-xs text-slate-700 font-mono bg-transparent outline-none truncate"
+                className="flex-1 px-3 py-2 text-xs text-slate-700 font-mono bg-transparent outline-none truncate"
                 onClick={(e) => e.target.select()}
               />
               <button
                 type="button"
                 onClick={handleCopy}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs shrink-0 cursor-pointer active:scale-95"
+                className="min-h-[44px] inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs shrink-0 cursor-pointer active:scale-95"
               >
-                {copied ? <Check size={14} /> : <Copy size={14} />}
+                {copied ? <Check size={15} /> : <Copy size={15} />}
                 <span>{copied ? 'Copied!' : 'Copy Link'}</span>
               </button>
             </div>

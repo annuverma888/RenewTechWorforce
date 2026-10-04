@@ -307,14 +307,14 @@ const RegisterPage = () => {
                       }`}>
                         <Wrench size={14} />
                       </div>
-                      <span className="text-xs font-bold text-slate-900">Technician</span>
+                      <span className="text-xs font-bold text-slate-900">I am a Technician</span>
                     </div>
                     {selectedRole === 'technician' && (
                       <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
                     )}
                   </div>
                   <p className="text-[11px] text-slate-500 leading-snug">
-                    Build your profile, verify skills and find opportunities.
+                    Build my profile, find projects and get hired.
                   </p>
                 </button>
 
@@ -335,14 +335,14 @@ const RegisterPage = () => {
                       }`}>
                         <Building2 size={14} />
                       </div>
-                      <span className="text-xs font-bold text-slate-900">EPC Company</span>
+                      <span className="text-xs font-bold text-slate-900">I am an EPC Company</span>
                     </div>
                     {selectedRole === 'epc_company' && (
                       <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
                     )}
                   </div>
                   <p className="text-[11px] text-slate-500 leading-snug">
-                    Find skilled technicians and build your project workforce.
+                    Find technicians, post projects and hire workforce.
                   </p>
                 </button>
               </div>
@@ -372,7 +372,7 @@ const RegisterPage = () => {
                   Full Name *
                 </label>
                 <div className="relative">
-                  <User size={16} className="absolute left-3.5 top-3 text-slate-400 pointer-events-none" />
+                  <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                   <input
                     id="register-name"
                     type="text"
@@ -382,7 +382,7 @@ const RegisterPage = () => {
                     onChange={handleChange}
                     placeholder="Rahul Kumar"
                     autoComplete="name"
-                    className="w-full text-xs sm:text-sm pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                    className="w-full text-xs sm:text-sm pl-10 pr-3 py-2.5 min-h-[44px] border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -392,7 +392,7 @@ const RegisterPage = () => {
                   Email Address *
                 </label>
                 <div className="relative">
-                  <Mail size={16} className="absolute left-3.5 top-3 text-slate-400 pointer-events-none" />
+                  <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                   <input
                     id="register-email"
                     type="email"
@@ -402,7 +402,7 @@ const RegisterPage = () => {
                     onChange={handleChange}
                     placeholder="user@renewtech.com"
                     autoComplete="email"
-                    className="w-full text-xs sm:text-sm pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                    className="w-full text-xs sm:text-sm pl-10 pr-3 py-2.5 min-h-[44px] border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -412,7 +412,7 @@ const RegisterPage = () => {
                   Password (minimum 6 characters) *
                 </label>
                 <div className="relative">
-                  <Lock size={16} className="absolute left-3.5 top-3 text-slate-400 pointer-events-none" />
+                  <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                   <input
                     id="register-password"
                     type={showPassword ? 'text' : 'password'}
@@ -423,12 +423,12 @@ const RegisterPage = () => {
                     onChange={handleChange}
                     placeholder="••••••••"
                     autoComplete="new-password"
-                    className="w-full text-xs sm:text-sm pl-10 pr-10 py-2.5 border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                    className="w-full text-xs sm:text-sm pl-10 pr-10 py-2.5 min-h-[44px] border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 p-0.5 rounded focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 w-9 h-9 min-w-[36px] min-h-[36px] flex items-center justify-center rounded focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -456,7 +456,7 @@ const RegisterPage = () => {
                   Confirm Password *
                 </label>
                 <div className="relative">
-                  <Lock size={16} className="absolute left-3.5 top-3 text-slate-400 pointer-events-none" />
+                  <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                   <input
                     id="register-confirm-password"
                     type={showConfirmPassword ? 'text' : 'password'}
@@ -467,12 +467,12 @@ const RegisterPage = () => {
                     onChange={handleChange}
                     placeholder="••••••••"
                     autoComplete="new-password"
-                    className="w-full text-xs sm:text-sm pl-10 pr-10 py-2.5 border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                    className="w-full text-xs sm:text-sm pl-10 pr-10 py-2.5 min-h-[44px] border border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 p-0.5 rounded focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 w-9 h-9 min-w-[36px] min-h-[36px] flex items-center justify-center rounded focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
                     aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
                   >
                     {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}

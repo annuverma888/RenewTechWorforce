@@ -292,9 +292,9 @@ const TechnicianCertificatesPage = () => {
                 setSelectedFileName('');
                 setShowUploadModal(true);
               }}
-              className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-xs transition-colors flex items-center justify-center gap-1.5 self-start sm:self-auto cursor-pointer"
+              className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer focus-ring"
             >
-              <Upload size={14} />
+              <Upload size={16} />
               <span>Upload Certificate</span>
             </button>
           </div>
@@ -525,7 +525,7 @@ const TechnicianCertificatesPage = () => {
                 return (
                   <div
                     key={cert._id || cert.id}
-                    className={`bg-white rounded-xl border p-5 shadow-xs flex flex-col justify-between transition-all hover:shadow-sm space-y-4 ${
+                    className={`bg-white rounded-2xl border p-4 sm:p-5 shadow-xs flex flex-col justify-between transition-all hover:shadow-sm space-y-3 sm:space-y-4 ${
                       cert.status === 'Verified' && !isExpired
                         ? 'border-emerald-200/80 bg-white'
                         : cert.status === 'Rejected'
@@ -533,129 +533,147 @@ const TechnicianCertificatesPage = () => {
                         : 'border-slate-200 bg-white'
                     }`}
                   >
-                    {/* Top Row: Category tag + Status Badge */}
-                    <div className="space-y-3">
+                    <div className="space-y-2.5">
+                      {/* Top Row: Category tag + Status Badge */}
                       <div className="flex items-center justify-between gap-2 flex-wrap">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
                           {cert.category || 'Solar PV'}
                         </span>
 
                         <span
-                          className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full border ${statusMeta.className}`}
+                          className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full border ${statusMeta.className}`}
                         >
-                          <StatusIcon size={12} className="shrink-0" />
+                          <StatusIcon size={13} className="shrink-0" />
                           <span>{statusMeta.label}</span>
                         </span>
                       </div>
 
-                      {/* Certificate Title & Organization */}
+                      {/* 1. Certificate Title & 3. Issuing Organization */}
                       <div>
-                        <h3 className="font-bold text-slate-900 text-sm leading-snug line-clamp-2">
+                        <h3 className="font-bold text-slate-900 text-sm sm:text-base leading-snug">
                           {cert.certificateName}
                         </h3>
-                        <div className="flex items-center gap-1.5 text-xs text-slate-600 mt-1">
+                        <div className="flex items-center gap-1.5 text-xs text-slate-600 mt-1 font-medium">
                           <Building size={13} className="text-slate-400 shrink-0" />
                           <span className="truncate">{cert.issuingOrganization}</span>
                         </div>
                       </div>
 
-                      {/* Certificate ID */}
-                      <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-100 text-xs">
-                        <span className="text-[11px] text-slate-500 block">Registration Number</span>
-                        <span className="font-mono font-bold text-slate-800 tracking-wide mt-0.5 block truncate">
-                          {cert.certificateNumber || 'N/A'}
-                        </span>
-                      </div>
+                      {/* Collapsible Secondary Details on Mobile */}
+                      <details className="sm:hidden group pt-1 border-t border-slate-100 text-xs">
+                        <summary className="font-semibold text-emerald-700 cursor-pointer py-1 flex items-center justify-between">
+                          <span>Registration & Validity Details</span>
+                          <span className="text-[10px] text-slate-400 group-open:hidden">Show</span>
+                          <span className="text-[10px] text-slate-400 hidden group-open:inline">Hide</span>
+                        </summary>
+                        <div className="space-y-2 pt-2">
+                          <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
+                            <span className="text-[10px] text-slate-400 block font-semibold">Registration Number</span>
+                            <span className="font-mono font-bold text-slate-800 text-xs mt-0.5 block truncate">
+                              {cert.certificateNumber || 'N/A'}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 text-xs">
+                            <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
+                              <span className="text-[10px] text-slate-400 block font-semibold">Issued</span>
+                              <span className="font-mono text-slate-700 font-semibold text-xs mt-0.5 block">
+                                {issueFormatted}
+                              </span>
+                            </div>
+                            <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
+                              <span className="text-[10px] text-slate-400 block font-semibold">Valid Until</span>
+                              <span className="font-mono text-slate-700 font-semibold text-xs mt-0.5 block">
+                                {expiryFormatted}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </details>
 
-                      {/* Dates Summary */}
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div className="p-2 bg-slate-50/70 rounded-lg border border-slate-100">
-                          <span className="text-[10px] text-slate-500 block">Issued</span>
-                          <span className="font-mono text-slate-700 font-semibold text-[11px] mt-0.5 block">
-                            {issueFormatted}
+                      {/* Desktop Secondary Info (Visible sm+) */}
+                      <div className="hidden sm:block space-y-2.5">
+                        <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-100 text-xs">
+                          <span className="text-[11px] text-slate-500 block">Registration Number</span>
+                          <span className="font-mono font-bold text-slate-800 tracking-wide mt-0.5 block truncate">
+                            {cert.certificateNumber || 'N/A'}
                           </span>
                         </div>
-                        <div className="p-2 bg-slate-50/70 rounded-lg border border-slate-100">
-                          <span className="text-[10px] text-slate-500 block">Valid Until</span>
-                          <span
-                            className={`font-mono font-semibold text-[11px] mt-0.5 block ${
-                              isExpired
-                                ? 'text-rose-600 font-bold'
-                                : isExpiring
-                                ? 'text-amber-700 font-bold'
-                                : 'text-slate-700'
-                            }`}
-                          >
-                            {expiryFormatted}
-                          </span>
+
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div className="p-2 bg-slate-50/70 rounded-lg border border-slate-100">
+                            <span className="text-[10px] text-slate-500 block">Issued</span>
+                            <span className="font-mono text-slate-700 font-semibold text-[11px] mt-0.5 block">
+                              {issueFormatted}
+                            </span>
+                          </div>
+                          <div className="p-2 bg-slate-50/70 rounded-lg border border-slate-100">
+                            <span className="text-[10px] text-slate-500 block">Valid Until</span>
+                            <span
+                              className={`font-mono font-semibold text-[11px] mt-0.5 block ${
+                                isExpired
+                                  ? 'text-rose-600 font-bold'
+                                  : isExpiring
+                                  ? 'text-amber-700 font-bold'
+                                  : 'text-slate-700'
+                              }`}
+                            >
+                              {expiryFormatted}
+                            </span>
+                          </div>
                         </div>
                       </div>
 
-                      {/* SECTION 5: PENDING REVIEW NOTICE */}
+                      {/* Status Warnings & Alerts */}
                       {cert.status === 'Pending' && !isExpired && (
-                        <div className="p-2.5 bg-amber-50/70 border border-amber-200 rounded-lg text-[11px] text-amber-800 space-y-0.5">
-                          <span className="font-bold block">Under Verification Review</span>
-                          <p className="text-amber-700 leading-tight">
-                            Your certificate is under review. Verification typically takes 24–48 hours.
+                        <div className="p-2.5 bg-amber-50/70 border border-amber-200 rounded-lg text-xs text-amber-800 space-y-0.5">
+                          <span className="font-bold block text-[11px]">Under Verification Review</span>
+                          <p className="text-amber-700 text-[11px] leading-tight">
+                            Verification review typically completes within 24–48 hours.
                           </p>
                         </div>
                       )}
 
-                      {/* SECTION 6: REJECTED NOTICE & REASON */}
                       {cert.status === 'Rejected' && (
-                        <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-lg text-[11px] text-rose-800 space-y-1">
-                          <span className="font-bold flex items-center gap-1">
-                            <AlertCircle size={12} className="text-rose-600" />
+                        <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-800 space-y-1">
+                          <span className="font-bold flex items-center gap-1 text-[11px]">
+                            <AlertCircle size={13} className="text-rose-600" />
                             <span>Verification Rejected</span>
                           </span>
-                          <p className="text-rose-700 leading-relaxed">
+                          <p className="text-rose-700 text-[11px] leading-relaxed">
                             {cert.rejectionReason
                               ? `Reason: ${cert.rejectionReason}`
-                              : 'The submitted document was unclear or details did not match official registry records.'}
+                              : 'Submitted document could not be matched with official accreditation registry.'}
                           </p>
                           <button
                             onClick={() => handleOpenUploadForReplace(cert)}
-                            className="mt-1 text-xs font-bold text-rose-800 hover:text-rose-900 underline inline-flex items-center gap-1 cursor-pointer"
+                            className="min-h-[38px] mt-1 text-xs font-bold text-rose-800 hover:text-rose-900 underline inline-flex items-center gap-1 cursor-pointer"
                           >
                             <span>Re-upload / Replace Certificate</span>
-                            <ArrowRight size={11} />
+                            <ArrowRight size={12} />
                           </button>
                         </div>
                       )}
 
-                      {/* SECTION 7: EXPIRY WARNING */}
                       {isExpiring && (
-                        <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-[11px] text-amber-800 flex items-center justify-between gap-2">
-                          <span className="font-semibold">Certificate expiring soon</span>
+                        <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800 flex items-center justify-between gap-2">
+                          <span className="font-semibold text-[11px]">Expiring soon</span>
                           <button
                             onClick={() => handleOpenUploadForReplace(cert)}
-                            className="font-bold text-amber-900 underline cursor-pointer shrink-0"
+                            className="min-h-[36px] font-bold text-amber-900 underline cursor-pointer shrink-0 flex items-center"
                           >
-                            Renew / Replace
-                          </button>
-                        </div>
-                      )}
-
-                      {isExpired && (
-                        <div className="p-2.5 bg-slate-100 border border-slate-300 rounded-lg text-[11px] text-slate-700 flex items-center justify-between gap-2">
-                          <span className="font-semibold">Certificate expired</span>
-                          <button
-                            onClick={() => handleOpenUploadForReplace(cert)}
-                            className="font-bold text-slate-900 underline cursor-pointer shrink-0"
-                          >
-                            Renew / Replace
+                            Renew
                           </button>
                         </div>
                       )}
                     </div>
 
-                    {/* SECTION 9: ACTION BUTTONS */}
-                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
+                    {/* Main Actions (touch target >= 44px on mobile) */}
+                    <div className="pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-xs">
                       <button
                         onClick={() => setViewCertModal(cert)}
-                        className="flex-1 py-1.5 px-3 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg font-semibold border border-slate-200 inline-flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                        className="min-h-[44px] py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold border border-slate-200 inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer focus-ring"
                       >
-                        <Eye size={13} />
+                        <Eye size={14} />
                         <span>View Details</span>
                       </button>
 
@@ -664,20 +682,19 @@ const TechnicianCertificatesPage = () => {
                           href={cert.documentUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="py-1.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg font-semibold border border-emerald-200 inline-flex items-center justify-center gap-1 transition-colors"
+                          className="min-h-[44px] py-2 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl font-bold border border-emerald-200 inline-flex items-center justify-center gap-1.5 transition-colors focus-ring"
                           title="Open or download certificate document"
                         >
-                          <ExternalLink size={13} />
+                          <ExternalLink size={14} />
                           <span>Document</span>
                         </a>
                       ) : (
                         <button
-                          onClick={() => setViewCertModal(cert)}
-                          className="py-1.5 px-3 bg-slate-50 text-slate-400 rounded-lg font-semibold border border-slate-200 inline-flex items-center justify-center gap-1 cursor-not-allowed"
-                          title="No document file attached"
+                          onClick={() => handleOpenUploadForReplace(cert)}
+                          className="min-h-[44px] py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer focus-ring"
                         >
-                          <FileText size={13} />
-                          <span>Info</span>
+                          <Upload size={14} />
+                          <span>Upload File</span>
                         </button>
                       )}
                     </div>
@@ -702,9 +719,10 @@ const TechnicianCertificatesPage = () => {
               </div>
               <button
                 onClick={() => setShowUploadModal(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 rounded-lg cursor-pointer"
+                aria-label="Close modal"
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
 
@@ -832,23 +850,23 @@ const TechnicianCertificatesPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowUploadModal(false)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 cursor-pointer"
+                  className="min-h-[44px] px-4 py-2 border border-slate-300 text-slate-700 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 cursor-pointer flex items-center justify-center"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold shadow-xs transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                  className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-colors inline-flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {submitting ? (
                     <>
-                      <RefreshCw size={13} className="animate-spin" />
+                      <RefreshCw size={14} className="animate-spin" />
                       <span>Submitting for Audit...</span>
                     </>
                   ) : (
                     <>
-                      <Upload size={13} />
+                      <Upload size={14} />
                       <span>Upload Certificate</span>
                     </>
                   )}
@@ -862,7 +880,7 @@ const TechnicianCertificatesPage = () => {
       {/* ================= VIEW CERTIFICATE DETAILS MODAL ================= */}
       {viewCertModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 border border-slate-200 shadow-xl space-y-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 border border-slate-200 shadow-xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
@@ -872,9 +890,10 @@ const TechnicianCertificatesPage = () => {
               </div>
               <button
                 onClick={() => setViewCertModal(null)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                aria-label="Close modal"
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
 

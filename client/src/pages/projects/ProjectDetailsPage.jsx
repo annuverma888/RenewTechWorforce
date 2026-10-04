@@ -201,7 +201,7 @@ const ProjectDetailsPage = () => {
       <div className="flex items-center gap-2">
         <button
           onClick={() => navigate(-1)}
-          className="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1 cursor-pointer"
+          className="text-xs font-semibold text-slate-500 hover:text-slate-800 min-h-[44px] px-2 -ml-2 flex items-center gap-1 cursor-pointer"
         >
           <ChevronLeft size={16} />
           <span>Back</span>
@@ -234,7 +234,7 @@ const ProjectDetailsPage = () => {
               </p>
               <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-1">
                 <MapPin size={13} className="text-slate-400" />
-                <span>{project.location?.city || 'Kanpur'}, {project.location?.state || 'Uttar Pradesh'}</span>
+                <span>{[project.location?.city, project.location?.state].filter(Boolean).join(', ') || 'Location not specified'}</span>
               </p>
             </div>
 
@@ -529,7 +529,7 @@ const ProjectDetailsPage = () => {
             {/* Apply Button */}
             <div className="pt-4 border-t border-slate-100">
               {hasApplied ? (
-                <div className="w-full py-3 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold text-center border border-emerald-300 flex items-center justify-center gap-2">
+                <div className="w-full py-3 min-h-[44px] bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold text-center border border-emerald-300 flex items-center justify-center gap-2">
                   <Check size={16} className="text-emerald-600" />
                   <span>Application Submitted</span>
                 </div>
@@ -542,7 +542,7 @@ const ProjectDetailsPage = () => {
                       setApplyModalOpen(true);
                     }
                   }}
-                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold shadow-2xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold shadow-2xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Apply for Project</span>
                   <ArrowRight size={15} />
@@ -581,7 +581,8 @@ const ProjectDetailsPage = () => {
               </h3>
               <button
                 onClick={() => setApplyModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="text-slate-400 hover:text-slate-600 w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-lg p-1 cursor-pointer"
+                aria-label="Close application dialog"
               >
                 ✕
               </button>
@@ -609,14 +610,14 @@ const ProjectDetailsPage = () => {
                 <button
                   type="button"
                   onClick={() => setApplyModalOpen(false)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50"
+                  className="px-4 py-2.5 min-h-[44px] border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 flex items-center justify-center cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={applying}
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-2xs disabled:opacity-50"
+                  className="px-5 py-2.5 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-2xs disabled:opacity-50 flex items-center justify-center cursor-pointer"
                 >
                   {applying ? 'Submitting...' : 'Confirm & Apply'}
                 </button>

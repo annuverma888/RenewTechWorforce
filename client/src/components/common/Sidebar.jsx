@@ -21,7 +21,7 @@ import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
   const navigate = useNavigate();
-  const { user, isTechnician, isCompany, isAdmin, logout } = useAuth();
+  const { user, isTechnician, isCompany, isAdmin, logout, requestLogout } = useAuth();
 
   // Handle escape key and prevent body scrolling when drawer is open on mobile
   useEffect(() => {
@@ -43,10 +43,14 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
     }
   }, [isOpen, onClose]);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     onClose();
-    await logout();
-    navigate('/login');
+    if (typeof requestLogout === 'function') {
+      requestLogout('/login');
+    } else {
+      logout();
+      navigate('/login');
+    }
   };
 
   const technicianLinks = [
@@ -120,10 +124,10 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
           <button
             type="button"
             onClick={onClose}
-            className="lg:hidden text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+            className="lg:hidden text-slate-400 hover:text-white min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label="Close sidebar navigation"
           >
-            <X size={20} />
+            <X size={22} />
           </button>
         </div>
 
@@ -138,8 +142,8 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
             className="w-10 h-10 rounded-xl object-cover border border-slate-700 shrink-0"
           />
           <div className="overflow-hidden min-w-0">
-            <h4 className="text-xs font-bold text-white truncate">{user?.name}</h4>
-            <p className="text-[10px] text-emerald-400 truncate capitalize font-medium">
+            <h4 className="text-sm font-bold text-white truncate">{user?.name}</h4>
+            <p className="text-xs text-emerald-400 truncate capitalize font-medium">
               {user?.role === 'epc_company' ? 'EPC Contractor' : user?.role === 'admin' ? 'Administrator' : user?.role}
             </p>
           </div>
@@ -160,14 +164,14 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
                     (item.to === '/technician/skill-passport' &&
                       typeof window !== 'undefined' &&
                       window.location.pathname.includes('/technician/passport'));
-                  return `flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold min-h-[42px] transition-colors ${
+                  return `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold min-h-[44px] transition-colors ${
                     isCurrent
                       ? 'bg-emerald-600 text-white font-bold shadow-xs'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/80'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
                   }`;
                 }}
               >
-                <Icon size={18} className="shrink-0" />
+                <Icon size={19} className="shrink-0" />
                 <span className="truncate">{item.label}</span>
               </NavLink>
             );
@@ -179,9 +183,9 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl min-h-[42px] transition-colors cursor-pointer"
+            className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-semibold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl min-h-[44px] transition-colors cursor-pointer"
           >
-            <LogOut size={16} className="shrink-0" />
+            <LogOut size={18} className="shrink-0" />
             <span>Logout</span>
           </button>
         </div>

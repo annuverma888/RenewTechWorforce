@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../services/api';
 import {
   signInWithGoogle,
@@ -6,10 +7,12 @@ import {
   logOutFirebase,
   onAuthChange,
 } from '../services/firebase';
+import LogoutConfirmationModal from '../components/common/LogoutConfirmationModal';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(() => {
     try {
       const stored = localStorage.getItem('renewtech_user');
@@ -22,6 +25,9 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('renewtech_token') || null);
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState(null);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const pendingLogoutRedirectRef = useRef('/login');
   const hasProcessedRedirectRef = useRef(false);
 
   // Sync token to localStorage and state
@@ -279,7 +285,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout from both platform and Firebase
+  // Logout from both platform and Firebase (core execution)
   const logout = async () => {
     try {
       await logOutFirebase();
@@ -290,6 +296,38 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  // Request logout confirmation modal
+  const requestLogout = useCallback((redirectTo = '/login') => {
+    pendingLogoutRedirectRef.current = redirectTo;
+    setIsLogoutModalOpen(true);
+  }, []);
+
+  // Cancel logout - close confirmation dialog, stay on current page
+  const cancelLogout = useCallback(() => {
+    if (isLoggingOut) return;
+    setIsLogoutModalOpen(false);
+  }, [isLoggingOut]);
+
+  // Confirm logout - execute existing logout function and redirect
+  const confirmLogout = useCallback(async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await logout();
+      setIsLogoutModalOpen(false);
+      const destination = pendingLogoutRedirectRef.current || '/login';
+      if (typeof navigate === 'function') {
+        navigate(destination);
+      } else {
+        window.location.href = destination;
+      }
+    } catch (err) {
+      console.error('[AUTH] Confirmation logout error:', err);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  }, [isLoggingOut, navigate]);
 
   const updateProfileState = (newProfile) => {
     setProfile(newProfile);
@@ -320,6 +358,11 @@ export const AuthProvider = ({ children }) => {
         loginWithGoogle,
         selectRole,
         logout,
+        requestLogout,
+        cancelLogout,
+        confirmLogout,
+        isLogoutModalOpen,
+        isLoggingOut,
         updateProfileState,
         refreshUser,
         getDashboardPath,
@@ -331,6 +374,12 @@ export const AuthProvider = ({ children }) => {
       }}
     >
       {children}
+      <LogoutConfirmationModal
+        isOpen={isLogoutModalOpen}
+        isLoading={isLoggingOut}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+      />
     </AuthContext.Provider>
   );
 };

@@ -207,7 +207,7 @@ const SkillPassportScannerModal = ({ isOpen, onClose }) => {
               await stopScanner();
               onClose();
             }}
-            className="w-8 h-8 rounded-full bg-slate-200/80 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
+            className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full bg-slate-200/80 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
             aria-label="Close Scanner"
           >
             <X size={18} />
@@ -345,7 +345,7 @@ const SkillPassportScannerModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Modal Footer Controls */}
-        <div className="px-6 py-3.5 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3.5 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-800">
             <ShieldCheck size={14} className="text-emerald-600" />
             <span>RenewTech Verified Scanner</span>
@@ -357,7 +357,7 @@ const SkillPassportScannerModal = ({ isOpen, onClose }) => {
               await stopScanner();
               onClose();
             }}
-            className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+            className="min-h-[44px] px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer"
           >
             Close Scanner
           </button>

@@ -153,6 +153,33 @@ exports.submitAssessment = async (req, res) => {
     const profile = await TechnicianProfile.findOne({ user: req.user._id });
     if (profile) {
       profile.overallSkillScore = avgScore;
+      if (scorePercentage >= assessment.passingPercentage) {
+        // Mark matching skills as verified through Assessment
+        const titleLower = (assessment.title || '').toLowerCase();
+        let matched = false;
+        (profile.renewableSkills || []).forEach((sk) => {
+          if (sk.name && titleLower.includes(sk.name.toLowerCase())) {
+            sk.isVerified = true;
+            sk.verificationSource = 'Assessment';
+            sk.verifiedAt = new Date();
+            matched = true;
+          }
+        });
+        if (!matched) {
+          const cleanSkillName = assessment.title
+            .replace(/Technical Competency|Competency|Assessment|Exam|Test|Module/gi, '')
+            .trim() || assessment.title;
+          profile.renewableSkills.push({
+            name: cleanSkillName,
+            category: assessment.category || 'Solar',
+            proficiency: skillLevel,
+            isVerified: true,
+            verificationSource: 'Assessment',
+            verifiedAt: new Date(),
+          });
+        }
+        profile.markModified('renewableSkills');
+      }
       profile.calculateProfileCompletion();
       await profile.save();
     }
