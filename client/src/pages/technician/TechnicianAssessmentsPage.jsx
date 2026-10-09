@@ -24,8 +24,11 @@ import {
 import { assessmentAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel } from '../../utils/i18nHelpers';
 
 const TechnicianAssessmentsPage = () => {
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [assessments, setAssessments] = useState([]);
   const [myResults, setMyResults] = useState([]);
@@ -122,8 +125,8 @@ const TechnicianAssessmentsPage = () => {
 
       <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
         <Header
-          title="Assessments"
-          subtitle="Validate your renewable-energy skills through technical assessments."
+          title={t('technician.assessments', 'Assessments')}
+          subtitle={t('technician.assessmentsSubtitle', 'Validate your renewable-energy skills through technical assessments.')}
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
 
@@ -132,12 +135,10 @@ const TechnicianAssessmentsPage = () => {
           <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                Technical Assessments
+                {t('technician.technicalAssessments', 'Technical Assessments')}
               </h1>
               <p className="text-xs text-slate-600 max-w-2xl leading-relaxed">
-                Validate your renewable-energy skills through technical assessments. Standardized
-                evaluations test your practical knowledge in Solar PV and Wind energy systems, strengthening
-                your Skill Passport and helping EPC companies evaluate your qualifications.
+                {t('technician.assessmentsHeroDesc', 'Validate your renewable-energy skills through technical assessments. Standardized evaluations test your practical knowledge in Solar PV and Wind energy systems, strengthening your Skill Passport and helping EPC companies evaluate your qualifications.')}
               </p>
             </div>
 
@@ -146,7 +147,7 @@ const TechnicianAssessmentsPage = () => {
               className="px-3.5 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-1.5 self-start sm:self-auto shrink-0"
             >
               <QrCode size={14} className="text-slate-500" />
-              <span>Skill Passport</span>
+              <span>{t('technician.skillPassport', 'Skill Passport')}</span>
             </Link>
           </div>
 
@@ -156,35 +157,35 @@ const TechnicianAssessmentsPage = () => {
             <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-1">
               <div className="flex items-center justify-between text-slate-500">
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Total Catalog
+                  {t('technician.totalCatalog', 'Total Catalog')}
                 </span>
                 <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
                   <BookOpen size={16} />
                 </div>
               </div>
               <div className="text-2xl font-bold text-slate-900 font-mono">{totalAssessments}</div>
-              <p className="text-[11px] text-slate-500">Available modules</p>
+              <p className="text-[11px] text-slate-500">{t('technician.availableModules', 'Available modules')}</p>
             </div>
 
             {/* Completed Assessments */}
             <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-1">
               <div className="flex items-center justify-between text-slate-500">
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-700">
-                  Completed
+                  {t('status.COMPLETED', 'Completed')}
                 </span>
                 <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
                   <CheckCircle2 size={16} />
                 </div>
               </div>
               <div className="text-2xl font-bold text-slate-900 font-mono">{completedCount}</div>
-              <p className="text-[11px] text-slate-500">Evaluations taken</p>
+              <p className="text-[11px] text-slate-500">{t('technician.evaluationsTaken', 'Evaluations taken')}</p>
             </div>
 
             {/* Average Score */}
             <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-1">
               <div className="flex items-center justify-between text-slate-500">
                 <span className="text-xs font-semibold uppercase tracking-wider text-emerald-700">
-                  Average Score
+                  {t('technician.averageScore', 'Average Score')}
                 </span>
                 <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
                   <TrendingUp size={16} />
@@ -193,21 +194,21 @@ const TechnicianAssessmentsPage = () => {
               <div className="text-2xl font-bold text-emerald-700 font-mono">
                 {completedCount > 0 ? `${avgScore}%` : '0%'}
               </div>
-              <p className="text-[11px] text-slate-500">Across completed tests</p>
+              <p className="text-[11px] text-slate-500">{t('technician.acrossCompletedTests', 'Across completed tests')}</p>
             </div>
 
             {/* Passed Modules */}
             <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-1">
               <div className="flex items-center justify-between text-slate-500">
                 <span className="text-xs font-semibold uppercase tracking-wider text-emerald-700">
-                  Passed Modules
+                  {t('technician.passedModules', 'Passed Modules')}
                 </span>
                 <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
                   <ShieldCheck size={16} />
                 </div>
               </div>
               <div className="text-2xl font-bold text-emerald-700 font-mono">{passedCount}</div>
-              <p className="text-[11px] text-slate-500">Benchmark met</p>
+              <p className="text-[11px] text-slate-500">{t('technician.benchmarkMet', 'Benchmark met')}</p>
             </div>
           </div>
 
@@ -217,7 +218,7 @@ const TechnicianAssessmentsPage = () => {
               <div className="space-y-1.5">
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                   <Zap size={12} />
-                  <span>Continue Building Your Skills</span>
+                  <span>{t('technician.continueBuildingSkills', 'Continue Building Your Skills')}</span>
                 </div>
                 <h3 className="text-base sm:text-lg font-bold text-white">
                   {nextRecommended.title}
@@ -228,7 +229,7 @@ const TechnicianAssessmentsPage = () => {
                 <div className="flex items-center gap-3 text-xs text-slate-400 pt-1">
                   <span>{nextRecommended.durationMinutes} Minutes</span>
                   <span>•</span>
-                  <span>{nextRecommended.totalQuestions || 10} Questions</span>
+                  <span>{nextRecommended.totalQuestions || 10} {t('technician.questions', 'Questions')}</span>
                   <span>•</span>
                   <span>Passing Score: {nextRecommended.passingPercentage}%</span>
                 </div>
@@ -238,7 +239,7 @@ const TechnicianAssessmentsPage = () => {
                 to={`/technician/assessments/${nextRecommended._id}/take`}
                 className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center justify-center gap-1.5 shrink-0 self-start md:self-auto shadow-xs"
               >
-                <span>Take Assessment</span>
+                <span>{t('technician.takeAssessment', 'Take Assessment')}</span>
                 <ArrowRight size={14} />
               </Link>
             </div>
@@ -253,9 +254,9 @@ const TechnicianAssessmentsPage = () => {
                     <TrendingUp size={16} />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-slate-900">Your Assessment Progress</h2>
+                    <h2 className="text-sm font-bold text-slate-900">{t('technician.yourAssessmentProgress', 'Your Assessment Progress')}</h2>
                     <p className="text-[11px] text-slate-500">
-                      Demonstrated competency scores across verified renewable domains
+                      {t('technician.demonstratedScoresDesc', 'Demonstrated competency scores across verified renewable domains')}
                     </p>
                   </div>
                 </div>
@@ -325,7 +326,7 @@ const TechnicianAssessmentsPage = () => {
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
-                  <span>{tab.label}</span>
+                  <span>{tab.label === 'All' ? t('common.all', 'All') : tab.label === 'Available' ? t('technician.available', 'Available') : t('status.COMPLETED', 'Completed')}</span>
                   <span
                     className={`text-[10px] font-mono px-1.5 py-0.5 rounded-full ${
                       activeTab === tab.label
@@ -341,7 +342,7 @@ const TechnicianAssessmentsPage = () => {
 
             {/* Category Sector Filter */}
             <div className="flex items-center gap-1.5 self-start sm:self-auto text-xs">
-              <span className="text-slate-500 font-medium hidden sm:inline">Sector:</span>
+              <span className="text-slate-500 font-medium hidden sm:inline">{t('landing.filterBySector', 'Sector:')}</span>
               {['All', 'Solar', 'Wind'].map((domain) => (
                 <button
                   key={domain}
@@ -352,7 +353,7 @@ const TechnicianAssessmentsPage = () => {
                       : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
                   }`}
                 >
-                  {domain === 'All' ? 'All Sectors' : domain}
+                  {domain === 'All' ? t('landing.allSectors', 'All Sectors') : getSectorLabel(domain, t)}
                 </button>
               ))}
             </div>
@@ -384,14 +385,14 @@ const TechnicianAssessmentsPage = () => {
               <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
                 <AlertCircle size={24} />
               </div>
-              <h2 className="text-base font-bold text-slate-900">Unable to load assessments</h2>
+              <h2 className="text-base font-bold text-slate-900">{t('technician.unableToLoadAssessments', 'Unable to load assessments')}</h2>
               <p className="text-xs text-slate-600 leading-relaxed">{fetchError}</p>
               <button
                 onClick={fetchData}
                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
               >
                 <RefreshCw size={14} />
-                <span>Try Again</span>
+                <span>{t('common.tryAgain', 'Try Again')}</span>
               </button>
             </div>
           ) : activeTab === 'Completed' && filteredResults.length === 0 ? (
@@ -400,16 +401,15 @@ const TechnicianAssessmentsPage = () => {
               <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
                 <Award size={24} />
               </div>
-              <h3 className="text-base font-bold text-slate-900">No Completed Assessments</h3>
+              <h3 className="text-base font-bold text-slate-900">{t('technician.noCompletedAssessments', 'No Completed Assessments')}</h3>
               <p className="text-xs text-slate-600 max-w-sm mx-auto leading-relaxed">
-                Complete your first technical assessment to demonstrate your skills and benchmark your
-                technical capabilities.
+                {t('technician.noCompletedAssessmentsDesc', 'Complete your first technical assessment to demonstrate your skills and benchmark your technical capabilities.')}
               </p>
               <button
                 onClick={() => setActiveTab('Available')}
                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-xs"
               >
-                <span>Explore Assessments</span>
+                <span>{t('technician.exploreAssessments', 'Explore Assessments')}</span>
                 <ArrowRight size={13} />
               </button>
             </div>
@@ -419,9 +419,9 @@ const TechnicianAssessmentsPage = () => {
               <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center mx-auto">
                 <BookOpen size={24} />
               </div>
-              <h3 className="text-base font-bold text-slate-900">No Assessments Available</h3>
+              <h3 className="text-base font-bold text-slate-900">{t('technician.noAssessmentsAvailable', 'No Assessments Available')}</h3>
               <p className="text-xs text-slate-600 max-w-sm mx-auto leading-relaxed">
-                Technical assessments will appear here when available. Check back soon for new competency modules.
+                {t('technician.noAssessmentsAvailableDesc', 'Technical assessments will appear here when available. Check back soon for new competency modules.')}
               </p>
               <button
                 onClick={() => {
@@ -430,7 +430,7 @@ const TechnicianAssessmentsPage = () => {
                 }}
                 className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer"
               >
-                Reset Filters
+                {t('common.resetFilters', 'Reset Filters')}
               </button>
             </div>
           ) : (
@@ -465,7 +465,7 @@ const TechnicianAssessmentsPage = () => {
                             </div>
                           )}
                           <span className="text-[11px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
-                            {test.category} Domain
+                            {getSectorLabel(test.category, t)} {t('technician.domain', 'Domain')}
                           </span>
                         </div>
 
@@ -478,12 +478,12 @@ const TechnicianAssessmentsPage = () => {
                                   : 'bg-amber-50 text-amber-800 border-amber-200'
                               }`}
                             >
-                              {hasPassed ? '✓ Passed' : '○ Not Passed'} ({attempt.scorePercentage}%)
+                              {hasPassed ? `✓ ${t('common.approved', 'Passed')}` : `○ ${t('technician.notPassed', 'Not Passed')}`} ({attempt.scorePercentage}%)
                             </span>
                           </div>
                         ) : (
                           <span className="text-[11px] font-semibold text-slate-500 bg-slate-50 px-2 py-0.5 rounded border border-slate-200">
-                            Not Attempted
+                            {t('technician.notAttempted', 'Not Attempted')}
                           </span>
                         )}
                       </div>
@@ -501,7 +501,7 @@ const TechnicianAssessmentsPage = () => {
                       {/* Technical Specs: Duration, Questions, Passing */}
                       <div className="grid grid-cols-3 gap-2 text-xs pt-2 border-t border-slate-100">
                         <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
-                          <span className="text-[10px] text-slate-500 block font-semibold">Duration</span>
+                          <span className="text-[10px] text-slate-500 block font-semibold">{t('projects.duration', 'Duration')}</span>
                           <span className="font-bold text-slate-800 mt-0.5 block flex items-center gap-1">
                             <Clock size={12} className="text-slate-400" />
                             <span>{test.durationMinutes} Mins</span>
@@ -517,7 +517,7 @@ const TechnicianAssessmentsPage = () => {
                         </div>
 
                         <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
-                          <span className="text-[10px] text-slate-500 block font-semibold">Passing Mark</span>
+                          <span className="text-[10px] text-slate-500 block font-semibold">{t('technician.passingMark', 'Passing Mark')}</span>
                           <span className="font-bold text-slate-800 mt-0.5 block font-mono">
                             {test.passingPercentage}%
                           </span>
@@ -528,7 +528,7 @@ const TechnicianAssessmentsPage = () => {
                       {test.topics && test.topics.length > 0 && (
                         <div className="pt-1">
                           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
-                            Topics Evaluated
+                            {t('technician.topicsEvaluated', 'Topics Evaluated')}
                           </span>
                           <div className="flex flex-wrap gap-1">
                             {test.topics.map((t, idx) => (
@@ -553,7 +553,7 @@ const TechnicianAssessmentsPage = () => {
                             className="flex-1 min-h-[44px] py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold border border-slate-200 inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer focus-ring"
                           >
                             <BarChart2 size={14} />
-                            <span>View Result</span>
+                            <span>{t('technician.viewResult', 'View Result')}</span>
                           </button>
 
                           <Link
@@ -561,7 +561,7 @@ const TechnicianAssessmentsPage = () => {
                             className="flex-1 min-h-[44px] py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-colors inline-flex items-center justify-center gap-1.5 shadow-xs focus-ring"
                           >
                             <RotateCcw size={14} />
-                            <span>Retake</span>
+                            <span>{t('technician.retake', 'Retake')}</span>
                           </Link>
                         </>
                       ) : (
@@ -592,8 +592,8 @@ const TechnicianAssessmentsPage = () => {
                   <BarChart2 size={16} />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-900">Assessment Evaluation</h3>
-                  <p className="text-xs text-slate-500">Official technical benchmark score</p>
+                  <h3 className="text-base font-bold text-slate-900">{t('technician.assessmentEvaluation', 'Assessment Evaluation')}</h3>
+                  <p className="text-xs text-slate-500">{t('technician.officialBenchmarkScore', 'Official technical benchmark score')}</p>
                 </div>
               </div>
               <button
@@ -609,7 +609,7 @@ const TechnicianAssessmentsPage = () => {
               {/* Test Name & Status */}
               <div className="p-4 bg-slate-50 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <span className="text-[11px] text-slate-400 block font-medium">Assessment Module</span>
+                  <span className="text-[11px] text-slate-400 block font-medium">{t('technician.assessmentModule', 'Assessment Module')}</span>
                   <h4 className="font-bold text-slate-900 text-sm mt-0.5">
                     {viewResultModal.assessmentTitle}
                   </h4>
@@ -643,14 +643,14 @@ const TechnicianAssessmentsPage = () => {
               {/* Performance Stats */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                  <span className="text-[11px] text-slate-400 block font-medium">Questions Correct</span>
+                  <span className="text-[11px] text-slate-400 block font-medium">{t('technician.questionsCorrect', 'Questions Correct')}</span>
                   <span className="font-bold text-slate-800 text-sm mt-0.5 block">
                     {viewResultModal.correctAnswers} / {viewResultModal.totalQuestions}
                   </span>
                 </div>
 
                 <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                  <span className="text-[11px] text-slate-400 block font-medium">Demonstrated Level</span>
+                  <span className="text-[11px] text-slate-400 block font-medium">{t('technician.demonstratedLevel', 'Demonstrated Level')}</span>
                   <span className="font-bold text-emerald-700 text-sm mt-0.5 block">
                     {viewResultModal.skillLevel || 'Competent'}
                   </span>
@@ -661,7 +661,7 @@ const TechnicianAssessmentsPage = () => {
               {viewResultModal.categoryBreakdown && viewResultModal.categoryBreakdown.length > 0 && (
                 <div className="space-y-2 pt-2 border-t border-slate-100">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
-                    Knowledge Domain Breakdown
+                    {t('technician.domainBreakdown', 'Knowledge Domain Breakdown')}
                   </span>
                   <div className="space-y-2.5">
                     {viewResultModal.categoryBreakdown.map((cat, idx) => (
@@ -690,7 +690,7 @@ const TechnicianAssessmentsPage = () => {
                 onClick={() => setViewResultModal(null)}
                 className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 cursor-pointer"
               >
-                Close
+                {t('common.close', 'Close')}
               </button>
 
               <Link
@@ -700,7 +700,7 @@ const TechnicianAssessmentsPage = () => {
                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1 shadow-xs"
               >
                 <RotateCcw size={13} />
-                <span>Retake Test</span>
+                <span>{t('technician.retakeTest', 'Retake Test')}</span>
               </Link>
             </div>
           </div>

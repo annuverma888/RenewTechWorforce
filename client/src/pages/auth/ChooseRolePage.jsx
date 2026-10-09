@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
+import LanguageSelector from '../../components/common/LanguageSelector';
 import {
   Wrench,
   Building2,
@@ -15,6 +17,7 @@ import {
 const ChooseRolePage = () => {
   const { user, selectRole, getDashboardPath } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const roleParam = searchParams.get('role');
 
@@ -33,28 +36,28 @@ const ChooseRolePage = () => {
   const roles = [
     {
       id: 'technician',
-      title: 'I am a Technician',
-      tagline: 'Renewable Energy Talent',
-      description: 'Build my profile, find projects and get hired.',
-      cta: 'Continue as Technician',
+      title: t('auth.roleTechnicianTitle'),
+      tagline: t('auth.roleTechnicianTagline'),
+      description: t('auth.roleTechnicianDesc'),
+      cta: t('auth.roleTechnicianCta'),
       icon: Wrench,
       features: [
-        'Build professional profile and verified Skill Passport',
-        'Direct connection to active Solar PV, Wind & BESS projects',
-        'Standardized competency assessments & transparent hiring',
+        t('auth.roleTechnicianF1'),
+        t('auth.roleTechnicianF2'),
+        t('auth.roleTechnicianF3'),
       ],
     },
     {
       id: 'epc_company',
-      title: 'I am an EPC Company',
-      tagline: 'EPC Contractor & Project Developer',
-      description: 'Find technicians, post projects and hire workforce.',
-      cta: 'Continue as EPC Company',
+      title: t('auth.roleEpcTitle'),
+      tagline: t('auth.roleEpcTagline'),
+      description: t('auth.roleEpcDesc'),
+      cta: t('auth.roleEpcCta'),
       icon: Building2,
       features: [
-        'Find skilled renewable-energy technicians & match to projects',
-        'Post projects and manage multi-MW site workforce',
-        'Review candidates, hire faster, and manage active crews',
+        t('auth.roleEpcF1'),
+        t('auth.roleEpcF2'),
+        t('auth.roleEpcF3'),
       ],
     },
   ];
@@ -79,16 +82,17 @@ const ChooseRolePage = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-8 px-4 sm:px-6 lg:px-8">
-      {/* Top Back to Home */}
-      <div className="max-w-4xl mx-auto w-full mb-4">
+      {/* Top Bar with Back Link and Language Selector */}
+      <div className="max-w-4xl mx-auto w-full mb-4 flex items-center justify-between">
         <Link
           to="/"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-emerald-700 transition-colors focus-ring rounded-lg py-1 px-2"
-          aria-label="Back to Home"
+          aria-label={t('auth.backToHome')}
         >
           <ArrowLeft size={14} className="shrink-0" />
-          <span>Back to Home</span>
+          <span>{t('auth.backToHome')}</span>
         </Link>
+        <LanguageSelector />
       </div>
 
       <div className="max-w-4xl mx-auto w-full">
@@ -96,21 +100,21 @@ const ChooseRolePage = () => {
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200/80 mb-3 shadow-2xs">
             <Zap size={14} className="text-emerald-600" />
-            <span>Account Onboarding</span>
+            <span>{t('auth.accountOnboarding')}</span>
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            How will you use RenewTech Workforce?
+            {t('auth.howWillYouUse')}
           </h1>
 
           <p className="mt-2.5 text-xs sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
-            {user?.name ? `Welcome, ${user.name}! ` : 'Welcome to RenewTech Workforce! '}
-            Select your account type to personalize your verified clean energy experience.
+            {user?.name ? `${t('technician.welcomeBack')}, ${user.name}! ` : ''}
+            {t('auth.selectAccountType')}
           </p>
 
           {user?.email && (
             <p className="mt-1 text-xs text-slate-400">
-              Signed in as <span className="font-semibold text-slate-600">{user.email}</span>
+              {t('auth.signedInAs')} <span className="font-semibold text-slate-600">{user.email}</span>
             </p>
           )}
         </div>
@@ -120,7 +124,7 @@ const ChooseRolePage = () => {
             role="alert"
             className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-300 text-xs sm:text-sm text-rose-800 flex items-start gap-2.5 shadow-2xs"
           >
-            <span className="font-bold">Error:</span> {error}
+            <span className="font-bold">{t('common.error')}:</span> {error}
           </div>
         )}
 
@@ -150,10 +154,10 @@ const ChooseRolePage = () => {
                     </div>
                     {isSelected ? (
                       <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                        <CheckCircle2 size={14} /> Selected
+                        <CheckCircle2 size={14} /> {t('auth.selected')}
                       </span>
                     ) : (
-                      <span className="text-xs text-slate-400 font-medium">Click to select</span>
+                      <span className="text-xs text-slate-400 font-medium">{t('auth.clickToSelect')}</span>
                     )}
                   </div>
 
@@ -196,7 +200,7 @@ const ChooseRolePage = () => {
                     {loading && isSelected ? (
                       <>
                         <Loader2 size={16} className="animate-spin" />
-                        <span>Setting up your account...</span>
+                        <span>{t('auth.settingUpAccount')}</span>
                       </>
                     ) : (
                       <>
@@ -214,7 +218,7 @@ const ChooseRolePage = () => {
         {/* Security / Trust footer */}
         <div className="text-center text-xs text-slate-500 flex items-center justify-center gap-2">
           <ShieldCheck size={16} className="text-emerald-600 shrink-0" />
-          <span>RenewTech Workforce uses role-based security & government accredited credential standards.</span>
+          <span>{t('auth.roleTrustNotice')}</span>
         </div>
       </div>
     </div>

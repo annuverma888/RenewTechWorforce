@@ -13,8 +13,11 @@ import { assessmentAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel } from '../../utils/i18nHelpers';
 
 const TakeAssessmentPage = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const { refreshUser } = useAuth();
@@ -171,7 +174,7 @@ const TakeAssessmentPage = () => {
 
       <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
         <Header
-          title="Skill Assessment"
+          title={t('technician.skillAssessment', 'Skill Assessment')}
           subtitle={assessment?.title || 'Solar PV Technical Assessment'}
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
@@ -188,20 +191,20 @@ const TakeAssessmentPage = () => {
                   {assessment?.title || 'Solar PV Technical Assessment'}
                 </h2>
                 <span className="text-xs font-semibold text-slate-500">
-                  Standardized Assessment Completed
+                  {t('technician.standardizedCompleted', 'Standardized Assessment Completed')}
                 </span>
               </div>
 
               {/* Score and Skill Level */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200">
                 <div className="text-center sm:border-r sm:border-b-0 border-b border-slate-200 pb-3 sm:pb-0 sm:pr-2">
-                  <span className="text-xs text-slate-500 font-semibold block">Score</span>
+                  <span className="text-xs text-slate-500 font-semibold block">{t('technician.assessmentScore', 'Score')}</span>
                   <div className="text-3xl sm:text-4xl font-extrabold text-emerald-600 font-mono mt-1">
                     {completedResult.score}%
                   </div>
                 </div>
                 <div className="text-center sm:pl-2 pt-1 sm:pt-0">
-                  <span className="text-xs text-slate-500 font-semibold block">Skill Level</span>
+                  <span className="text-xs text-slate-500 font-semibold block">{t('technician.proficiencyLabel', 'Skill Level')}</span>
                   <div className="text-base sm:text-lg font-bold text-emerald-700 mt-2">
                     {completedResult.skillLevel}
                   </div>
@@ -213,7 +216,7 @@ const TakeAssessmentPage = () => {
                 <div className="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50 space-y-2">
                   <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
                     <CheckCircle2 size={14} className="text-emerald-600" />
-                    Strengths
+                    {t('technician.strengths', 'Strengths')}
                   </span>
                   <ul className="text-xs text-slate-700 space-y-1.5">
                     <li>• String Inverter & Array DC Cabling</li>
@@ -225,7 +228,7 @@ const TakeAssessmentPage = () => {
                 <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/40 space-y-2">
                   <span className="text-xs font-bold uppercase tracking-wider text-amber-800 flex items-center gap-1.5">
                     <AlertCircle size={14} className="text-amber-600" />
-                    Skill Gaps
+                    {t('technician.skillGaps', 'Skill Gaps')}
                   </span>
                   <ul className="text-xs text-slate-700 space-y-1.5">
                     <li>• SCADA Telemetry & Remote Monitoring</li>
@@ -236,7 +239,7 @@ const TakeAssessmentPage = () => {
 
               {/* Recommended Learning */}
               <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2 text-xs">
-                <span className="font-bold text-slate-800 block">Recommended Learning:</span>
+                <span className="font-bold text-slate-800 block">{t('technician.recommendedLearning', 'Recommended Learning')}:</span>
                 <p className="text-slate-600">
                   Course SCGJ-ADV-402: <em>Advanced SCADA Integration & Automated Grid Synchronization</em>. Completing this module will upgrade your Skill Score by +6%.
                 </p>
@@ -247,19 +250,19 @@ const TakeAssessmentPage = () => {
                   to="/technician/assessments"
                   className="w-full sm:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-2xs transition-colors text-center"
                 >
-                  Back to Assessments
+                  {t('technician.backToAssessments', 'Back to Assessments')}
                 </Link>
                 <Link
                   to="/technician/profile"
                   className="w-full sm:w-auto px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors text-center border border-slate-200"
                 >
-                  View Profile
+                  {t('technician.profile', 'View Profile')}
                 </Link>
                 <Link
                   to="/technician/skill-passport"
                   className="w-full sm:w-auto px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors text-center border border-slate-200"
                 >
-                  View Skill Passport
+                  {t('technician.skillPassport', 'View Skill Passport')}
                 </Link>
               </div>
             </div>
@@ -274,14 +277,14 @@ const TakeAssessmentPage = () => {
                       {assessment?.title || 'Solar PV Technical Assessment'}
                     </h2>
                     <span className="text-xs font-medium text-emerald-700 block mt-0.5">
-                      Skill Category: {currentCategory}
+                      {t('technician.skillCategory', 'Skill Category')}: {currentCategory}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-3 self-start sm:self-auto">
                     <span className="text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded flex items-center gap-1 font-mono">
                       <Clock size={13} className="text-slate-500" />
-                      {formatTime(timeLeft)} Remaining
+                      {formatTime(timeLeft)} {t('technician.timeRemaining', 'Remaining')}
                     </span>
                   </div>
                 </div>
@@ -289,8 +292,8 @@ const TakeAssessmentPage = () => {
                 {/* Progress bar with percentage */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
-                    <span>Question {questionNumber} of {totalQuestions}</span>
-                    <span className="font-mono">{progressPercent}% Progress</span>
+                    <span>{t('technician.questionNumber', 'Question')} {questionNumber} {t('technician.questionOf', 'of')} {totalQuestions}</span>
+                    <span className="font-mono">{progressPercent}% {t('technician.progress', 'Progress')}</span>
                   </div>
                   <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                     <div
@@ -304,7 +307,7 @@ const TakeAssessmentPage = () => {
               {/* Question Header & Body */}
               <div className="space-y-4">
                 <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200">
-                  Question {questionNumber} of {totalQuestions}
+                  {t('technician.questionNumber', 'Question')} {questionNumber} {t('technician.questionOf', 'of')} {totalQuestions}
                 </span>
 
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">
@@ -348,7 +351,7 @@ const TakeAssessmentPage = () => {
                   disabled={currentIndex === 0}
                   className="px-4 py-2.5 min-h-[44px] border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
-                  Previous
+                  {t('common.previous', 'Previous')}
                 </button>
 
                 {questionNumber < totalQuestions ? (
@@ -357,7 +360,7 @@ const TakeAssessmentPage = () => {
                     onClick={handleNext}
                     className="px-5 py-2.5 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-2xs transition-colors flex items-center gap-1.5 cursor-pointer"
                   >
-                    <span>Next</span>
+                    <span>{t('common.next', 'Next')}</span>
                     <ChevronRight size={14} />
                   </button>
                 ) : (
@@ -367,7 +370,7 @@ const TakeAssessmentPage = () => {
                     disabled={submitting}
                     className="px-5 py-2.5 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-2xs transition-colors cursor-pointer"
                   >
-                    {submitting ? 'Submitting...' : 'Complete Assessment'}
+                    {submitting ? t('common.submitting', 'Submitting...') : t('technician.completeAssessment', 'Complete Assessment')}
                   </button>
                 )}
               </div>

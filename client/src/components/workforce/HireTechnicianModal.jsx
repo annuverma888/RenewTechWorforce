@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   X,
   UserCheck,
@@ -31,6 +32,8 @@ const POPULAR_ROLES = [
 ];
 
 const HireTechnicianModal = ({
+  /* i18n */
+
   isOpen,
   onClose,
   technician,
@@ -48,6 +51,7 @@ const HireTechnicianModal = ({
     ? new Date(project.endDate).toISOString().split('T')[0]
     : new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
 
+  const { t } = useTranslation();
   const [roleAssigned, setRoleAssigned] = useState(
     project?.workerRoles?.[0]?.role ||
       technician?.profession ||

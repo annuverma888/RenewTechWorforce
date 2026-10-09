@@ -15,8 +15,11 @@ import {
 } from 'lucide-react';
 import Badge from '../common/Badge';
 import RatingStars from '../common/RatingStars';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel } from '../../utils/i18nHelpers';
 
 const DigitalSkillPassportCard = ({ passport }) => {
+  const { t } = useTranslation();
   const [copiedLink, setCopiedLink] = useState(false);
 
   if (!passport) {

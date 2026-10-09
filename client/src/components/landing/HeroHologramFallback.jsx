@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Sun,
   Wind,
@@ -8,6 +9,7 @@ import {
 } from 'lucide-react';
 
 export const HeroHologramFallback = () => {
+  const { t } = useTranslation();
   return (
     <div className="relative w-full h-[440px] sm:h-[540px] flex items-center justify-center overflow-hidden px-3">
       {/* Radial glow background */}
@@ -56,7 +58,7 @@ export const HeroHologramFallback = () => {
         </div>
         <div>
           <span className="block text-[11px] sm:text-xs font-bold text-white leading-tight">Rahul Kumar</span>
-          <span className="block text-[9px] sm:text-[10px] text-teal-300">96% Smart Match</span>
+          <span className="block text-[9px] sm:text-[10px] text-teal-300">{`96% ${t('epc.matchScore', 'Smart Match')}`}</span>
         </div>
       </div>
 

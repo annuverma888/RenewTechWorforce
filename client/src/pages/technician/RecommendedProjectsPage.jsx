@@ -24,6 +24,8 @@ import {
   Zap,
 } from 'lucide-react';
 import { matchingAPI, applicationAPI } from '../../services/api';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel } from '../../utils/i18nHelpers';
 import { useAuth } from '../../context/AuthContext';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
@@ -31,6 +33,7 @@ import MatchScoreBadge from '../../components/matching/MatchScoreBadge';
 import MatchExplanationModal from '../../components/matching/MatchExplanationModal';
 
 const RecommendedProjectsPage = () => {
+  const { t } = useTranslation();
   const { user, profile } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [projects, setProjects] = useState([]);
@@ -153,8 +156,8 @@ const RecommendedProjectsPage = () => {
 
       <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
         <Header
-          title="Recommended Projects"
-          subtitle="Find renewable-energy projects that match your skills, experience and availability."
+          title={t('technician.recommendedProjects', 'Recommended Projects')}
+          subtitle={t('technician.recommendedSubtitle', 'Find renewable-energy projects that match your skills, experience and availability.')}
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
 
@@ -194,12 +197,10 @@ const RecommendedProjectsPage = () => {
           <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                Recommended Projects
+                {t('technician.recommendedProjects', 'Recommended Projects')}
               </h1>
               <p className="text-xs text-slate-600 max-w-2xl leading-relaxed">
-                Find renewable-energy projects that match your skills, experience and availability.
-                Our multi-factor matching engine continuously benchmarks your verified credentials against
-                active EPC requirements.
+                {t('technician.recommendedDesc', 'Find renewable-energy projects that match your skills, experience and availability. Our multi-factor matching engine continuously benchmarks your verified credentials against active EPC requirements.')}
               </p>
             </div>
 
@@ -208,7 +209,7 @@ const RecommendedProjectsPage = () => {
               className="px-3.5 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-1.5 self-start sm:self-auto shrink-0"
             >
               <Briefcase size={14} className="text-slate-500" />
-              <span>My Applications ({appliedCount})</span>
+              <span>{t('technician.applications', 'My Applications')} ({appliedCount})</span>
             </Link>
           </div>
 
@@ -218,7 +219,7 @@ const RecommendedProjectsPage = () => {
             <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-1">
               <div className="flex items-center justify-between text-slate-500">
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Recommended Projects
+                  {t('technician.recommendedProjects', 'Recommended Projects')}
                 </span>
                 <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
                   <Layers size={16} />
@@ -227,14 +228,14 @@ const RecommendedProjectsPage = () => {
               <div className="text-2xl font-bold text-slate-900 font-mono">
                 {totalRecommendations}
               </div>
-              <p className="text-[11px] text-slate-500">Matching active deployments</p>
+              <p className="text-[11px] text-slate-500">{t('technician.matchingActiveDeployments', 'Matching active deployments')}</p>
             </div>
 
             {/* Strong Matches */}
             <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-1">
               <div className="flex items-center justify-between text-slate-500">
                 <span className="text-xs font-semibold uppercase tracking-wider text-emerald-700">
-                  Strong Matches (80%+)
+                  {t('technician.strongMatches', 'Strong Matches (80%+)')}
                 </span>
                 <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
                   <Sparkles size={16} />
@@ -243,21 +244,21 @@ const RecommendedProjectsPage = () => {
               <div className="text-2xl font-bold text-emerald-700 font-mono">
                 {strongMatchesCount}
               </div>
-              <p className="text-[11px] text-slate-500">Immediate deployment fit</p>
+              <p className="text-[11px] text-slate-500">{t('technician.immediateDeploymentFit', 'Immediate deployment fit')}</p>
             </div>
 
             {/* Projects Applied To */}
             <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-1 col-span-2 lg:col-span-1">
               <div className="flex items-center justify-between text-slate-500">
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-700">
-                  Projects Applied To
+                  {t('technician.projectsAppliedTo', 'Projects Applied To')}
                 </span>
                 <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
                   <CheckCircle2 size={16} />
                 </div>
               </div>
               <div className="text-2xl font-bold text-slate-900 font-mono">{appliedCount}</div>
-              <p className="text-[11px] text-slate-500">Applications submitted</p>
+              <p className="text-[11px] text-slate-500">{t('technician.applicationsSubmitted', 'Applications submitted')}</p>
             </div>
           </div>
 
@@ -271,7 +272,7 @@ const RecommendedProjectsPage = () => {
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search projects, EPCs, skills, or cities..."
+                  placeholder={t('placeholders.searchProjects', 'Search projects, EPCs, skills, or cities...')}
                   className="w-full text-xs pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-emerald-600 focus:bg-white text-slate-900"
                 />
                 {searchTerm && (
@@ -286,7 +287,7 @@ const RecommendedProjectsPage = () => {
 
               {/* Technology Filter Pills */}
               <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto text-xs">
-                <span className="text-slate-500 font-medium mr-1 hidden sm:inline">Technology:</span>
+                <span className="text-slate-500 font-medium mr-1 hidden sm:inline">{t('common.technology', 'Technology')}:</span>
                 {['All', 'Solar', 'Wind', 'BESS', 'Hybrid'].map((type) => (
                   <button
                     key={type}
@@ -297,7 +298,7 @@ const RecommendedProjectsPage = () => {
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                     }`}
                   >
-                    {type === 'All' ? 'All Tech' : type}
+                    {type === 'All' ? t('technician.allTech', 'All Tech') : getSectorLabel(type, t)}
                   </button>
                 ))}
               </div>
@@ -307,30 +308,30 @@ const RecommendedProjectsPage = () => {
             <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs text-slate-600">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-semibold text-slate-500 text-[11px] uppercase tracking-wider">
-                  Match Tier:
+                  {t('technician.matchTier', 'Match Tier')}:
                 </span>
                 <select
                   value={scoreFilter}
                   onChange={(e) => setScoreFilter(e.target.value)}
                   className="p-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs font-medium text-slate-700 focus:outline-emerald-600"
                 >
-                  <option value="All">All Match Scores</option>
-                  <option value="80+">80%+ (Strong Match)</option>
-                  <option value="60-79">60–79% (Moderate Match)</option>
-                  <option value="below-60">Below 60%</option>
+                  <option value="All">{t('technician.allMatchScores', 'All Match Scores')}</option>
+                  <option value="80+">{t('technician.strongMatchTier', '80%+ (Strong Match)')}</option>
+                  <option value="60-79">{t('technician.moderateMatchTier', '60–79% (Moderate Match)')}</option>
+                  <option value="below-60">{t('technician.belowMatchTier', 'Below 60%')}</option>
                 </select>
 
                 <span className="font-semibold text-slate-500 text-[11px] uppercase tracking-wider ml-2">
-                  Status:
+                  {t('common.status', 'Status')}:
                 </span>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                   className="p-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs font-medium text-slate-700 focus:outline-emerald-600"
                 >
-                  <option value="All">All Projects</option>
-                  <option value="Not Applied">Not Applied</option>
-                  <option value="Applied">Already Applied</option>
+                  <option value="All">{t('technician.allProjects', 'All Projects')}</option>
+                  <option value="Not Applied">{t('technician.notApplied', 'Not Applied')}</option>
+                  <option value="Applied">{t('technician.alreadyApplied', 'Already Applied')}</option>
                 </select>
               </div>
 
@@ -347,7 +348,7 @@ const RecommendedProjectsPage = () => {
                   }}
                   className="text-xs font-bold text-emerald-700 hover:text-emerald-800 cursor-pointer"
                 >
-                  Reset Filters
+                  {t('technician.resetFilters', 'Reset Filters')}
                 </button>
               )}
             </div>
@@ -381,14 +382,14 @@ const RecommendedProjectsPage = () => {
               <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
                 <AlertCircle size={24} />
               </div>
-              <h2 className="text-base font-bold text-slate-900">Unable to Load Projects</h2>
+              <h2 className="text-base font-bold text-slate-900">{t('technician.unableToLoad', 'Unable to Load Projects')}</h2>
               <p className="text-xs text-slate-600 leading-relaxed">{fetchError}</p>
               <button
                 onClick={fetchRecommendations}
                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
               >
                 <RefreshCw size={14} />
-                <span>Try Again</span>
+                <span>{t('technician.tryAgain', 'Try Again')}</span>
               </button>
             </div>
           ) : filteredProjects.length === 0 ? (
@@ -399,11 +400,10 @@ const RecommendedProjectsPage = () => {
               </div>
               <div className="space-y-1">
                 <h3 className="text-base sm:text-lg font-bold text-slate-900">
-                  No Matching Projects Yet
+                  {t('technician.noMatchingProjects', 'No Matching Projects Yet')}
                 </h3>
                 <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
-                  Your current profile does not have matching opportunities right now. Adding more
-                  verified skills or certificates expands your eligibility.
+                  {t('technician.noMatchingProjectsDesc', 'Your current profile does not have matching opportunities right now. Adding more verified skills or certificates expands your eligibility.')}
                 </p>
               </div>
 
@@ -412,21 +412,21 @@ const RecommendedProjectsPage = () => {
                   to="/technician/profile"
                   className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-xs"
                 >
-                  <span>Update Skills</span>
+                  <span>{t('technician.updateSkills', 'Update Skills')}</span>
                 </Link>
 
                 <Link
                   to="/technician/profile"
                   className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-semibold transition-colors"
                 >
-                  <span>Complete Profile</span>
+                  <span>{t('technician.completeProfile', 'Complete Profile')}</span>
                 </Link>
 
                 <Link
                   to="/projects"
                   className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-semibold transition-colors"
                 >
-                  <span>Browse All Projects</span>
+                  <span>{t('technician.browseAllProjects', 'Browse All Projects')}</span>
                 </Link>
               </div>
             </div>
@@ -459,7 +459,7 @@ const RecommendedProjectsPage = () => {
                         {/* Tags: Sector, Company */}
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
-                            {isWind ? '💨 Wind' : '☀️ Solar'}
+                            {isWind ? `💨 ${getSectorLabel('Wind', t)}` : `☀️ ${getSectorLabel('Solar', t)}`}
                           </span>
 
                           <div className="flex items-center gap-1 text-xs text-slate-600 font-medium truncate">
@@ -503,7 +503,7 @@ const RecommendedProjectsPage = () => {
                     {keySkills.length > 0 && (
                       <div className="pt-1">
                         <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                          Key Skills
+                          {t('technician.skills', 'Key Skills')}
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           {keySkills.slice(0, 4).map((sk, sIdx) => (
@@ -606,21 +606,21 @@ const RecommendedProjectsPage = () => {
                         to={`/projects/${proj._id}`}
                         className="min-h-[44px] px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-xl text-xs sm:text-sm border border-slate-300 transition-colors flex items-center justify-center gap-1 focus-ring"
                       >
-                        <span>View Details</span>
+                        <span>{t('technician.viewProjectDetails', 'View Details')}</span>
                         <ExternalLink size={13} className="text-slate-400" />
                       </Link>
 
                       {rec.hasApplied ? (
                         <span className="min-h-[44px] px-3 py-2 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1 shadow-2xs">
                           <CheckCircle2 size={14} className="text-emerald-600" />
-                          <span>Applied</span>
+                          <span>{t('common.applied', 'Applied')}</span>
                         </span>
                       ) : (
                         <button
                           onClick={() => setApplyModalProject(proj)}
                           className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer flex items-center justify-center focus-ring"
                         >
-                          Apply Now
+                          {t('technician.applyToProject', 'Apply Now')}
                         </button>
                       )}
                     </div>
@@ -657,13 +657,13 @@ const RecommendedProjectsPage = () => {
             <form onSubmit={handleApply} className="space-y-3.5 text-xs">
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">
-                  Introduction / Cover Note
+                  {t('technician.coverNotePrompt', 'Introduction / Cover Note')}
                 </label>
                 <textarea
                   rows={3}
                   value={coverNote}
                   onChange={(e) => setCoverNote(e.target.value)}
-                  placeholder="State your renewable experience, hands-on field readiness, and availability date..."
+                  placeholder={t('technician.coverNotePlaceholder', 'State your renewable experience, hands-on field readiness, and availability date...')}
                   className="w-full text-sm sm:text-xs p-2.5 border border-slate-300 rounded-lg focus:outline-emerald-600 focus:bg-white text-slate-900 leading-relaxed"
                 />
               </div>
@@ -671,11 +671,10 @@ const RecommendedProjectsPage = () => {
               <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200 text-xs text-emerald-800 space-y-0.5">
                 <span className="font-bold flex items-center gap-1">
                   <ShieldCheck size={13} className="text-emerald-600" />
-                  <span>Verified Skill Passport Attached</span>
+                  <span>{t('technician.verifiedSkillPassportAttached', 'Verified Skill Passport Attached')}</span>
                 </span>
                 <p className="text-emerald-700 text-[11px] leading-tight">
-                  Your verified credentials, certifications, and technical benchmark scores will be
-                  automatically presented to the EPC hiring manager.
+                  {t('technician.attachedNotice', 'Your verified credentials, certifications, and technical benchmark scores will be automatically presented to the EPC hiring manager.')}
                 </p>
               </div>
 
@@ -685,14 +684,14 @@ const RecommendedProjectsPage = () => {
                   onClick={() => setApplyModalProject(null)}
                   className="min-h-[44px] px-4 py-2 border border-slate-300 text-slate-700 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 cursor-pointer flex items-center justify-center"
                 >
-                  Cancel
+                  {t('common.cancel', 'Cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={applying}
                   className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer flex items-center justify-center"
                 >
-                  {applying ? 'Submitting...' : 'Submit Application'}
+                  {applying ? t('common.submitting', 'Submitting...') : t('technician.submitApplication', 'Submit Application')}
                 </button>
               </div>
             </form>

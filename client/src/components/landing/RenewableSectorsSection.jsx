@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Sun, Wind, BatteryCharging, Zap, Layers } from 'lucide-react';
 
 const sectors = [
@@ -40,18 +41,19 @@ const sectors = [
 ];
 
 const RenewableSectorsSection = () => {
+  const { t } = useTranslation();
   return (
     <section className="py-14 sm:py-20 bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
           <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-            Sectors Covered
+            {t('landing.supportedCapability', 'Sectors Covered')}
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2.5 tracking-tight">
-            Renewable Energy Sectors We Mobilize
+            {t('landing.builtForRenewable', 'Renewable Energy Sectors We Mobilize')}
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-            Standardized technical workforce credentials across core clean energy verticals.
+            {t('landing.builtForRenewableDesc', 'Standardized technical workforce credentials across core clean energy verticals.')}
           </p>
         </div>
 

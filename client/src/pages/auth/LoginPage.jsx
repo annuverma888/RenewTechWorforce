@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Zap,
   Lock,
@@ -17,8 +18,10 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import GoogleSignInButton from '../../components/auth/GoogleSignInButton';
+import LanguageSelector from '../../components/common/LanguageSelector';
 
 const LoginPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading: authLoading, isAuthenticated, login, loginWithGoogle, getDashboardPath, authError, setAuthError } = useAuth();
@@ -57,7 +60,7 @@ const LoginPage = () => {
     try {
       setLoading(true);
       const { user: authedUser } = await login(email, password);
-      setSuccessMessage('Successfully signed in! Redirecting...');
+      setSuccessMessage(t('auth.signInSuccess', 'Successfully signed in! Redirecting...'));
       setTimeout(() => {
         if (authedUser.role === 'pending_role') {
           navigate('/choose-role', { replace: true });
@@ -68,7 +71,7 @@ const LoginPage = () => {
         }
       }, 500);
     } catch (err) {
-      setErrorMessage(err.message || 'Invalid email or password.');
+      setErrorMessage(err.message || t('errors.incorrectPassword', 'Invalid email or password.'));
       setLoading(false);
     }
   };
@@ -81,30 +84,31 @@ const LoginPage = () => {
     try {
       const res = await loginWithGoogle();
       if (res && res.user) {
-        setSuccessMessage('Successfully signed in! Redirecting...');
+        setSuccessMessage(t('auth.signInSuccess', 'Successfully signed in! Redirecting...'));
         const dest = res.destination || (res.user.role === 'pending_role' ? '/choose-role' : (from || getDashboardPath(res.user.role)));
         console.log('[AUTH] Redirecting to dashboard:', dest);
         navigate(dest, { replace: true });
       }
     } catch (err) {
       console.error('Google Sign-in initiation error:', err);
-      setErrorMessage(err.message || 'Google Sign-In could not be completed. Please try again.');
+      setErrorMessage(err.message || t('errors.somethingWentWrong', 'Google Sign-In could not be completed. Please try again.'));
       setGoogleLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
-      {/* Top Navigation Bar: Back to Home */}
-      <div className="max-w-5xl mx-auto w-full mb-4">
+      {/* Top Navigation Bar: Back to Home & Global Language Selector */}
+      <div className="max-w-5xl mx-auto w-full mb-4 flex items-center justify-between">
         <Link
           to="/"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-emerald-700 transition-colors focus-ring rounded-lg py-1 px-2"
-          aria-label="Back to Home"
+          aria-label={t('auth.backToHome', 'Back to Home')}
         >
           <ArrowLeft size={14} className="shrink-0" />
-          <span>Back to Home</span>
+          <span>{t('auth.backToHome', 'Back to Home')}</span>
         </Link>
+        <LanguageSelector />
       </div>
 
       <div className="max-w-5xl mx-auto w-full bg-white rounded-3xl border border-slate-200/90 shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
@@ -128,13 +132,13 @@ const LoginPage = () => {
             <div className="mt-8 space-y-3">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-300 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-800">
                 <ShieldCheck size={12} />
-                <span>Verified Clean Energy Network</span>
+                <span>{t('auth.verifiedNetworkBadge', 'Verified Clean Energy Network')}</span>
               </span>
               <h2 className="text-2xl font-black text-white tracking-tight leading-snug">
-                Powering Renewable Projects with Verified Skilled Talent
+                {t('auth.brandTagline', 'Powering Renewable Projects with Verified Skilled Talent')}
               </h2>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Connect certified solar and wind technicians with utility-scale EPC projects across India.
+                {t('auth.brandSubtitle', 'Connect certified solar and wind technicians with utility-scale EPC projects across India.')}
               </p>
             </div>
           </div>
@@ -156,15 +160,15 @@ const LoginPage = () => {
             <div className="space-y-2 pt-2 border-t border-white/10 text-xs text-slate-300">
               <div className="flex items-center gap-2">
                 <Check size={13} className="text-emerald-400 shrink-0" />
-                <span>100% Verified Accreditations & Licenses</span>
+                <span>{t('auth.featureAccredited', '100% Verified Accreditations & Licenses')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Check size={13} className="text-emerald-400 shrink-0" />
-                <span>Tamper-proof Digital Skill Passports</span>
+                <span>{t('auth.featurePassports', 'Tamper-proof Digital Skill Passports')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Check size={13} className="text-emerald-400 shrink-0" />
-                <span>Algorithmic EPC Project Matching</span>
+                <span>{t('auth.featureMatching', 'Algorithmic EPC Project Matching')}</span>
               </div>
             </div>
           </div>
@@ -172,7 +176,7 @@ const LoginPage = () => {
           {/* Bottom Security Note */}
           <div className="relative z-10 text-[11px] text-slate-400 flex items-center gap-2">
             <ShieldCheck size={14} className="text-emerald-400 shrink-0" />
-            <span>Encrypted Session • Standard Role Verification</span>
+            <span>{t('auth.securityNotice', 'Enterprise Grade Security • 256-bit SSL Encryption')}</span>
           </div>
         </div>
 
@@ -193,10 +197,10 @@ const LoginPage = () => {
           <div className="max-w-md w-full mx-auto space-y-6">
             <div>
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                Welcome Back
+                {t('auth.login', 'Sign In')}
               </h1>
               <p className="mt-1 text-xs sm:text-sm text-slate-500">
-                Sign in to continue to your RenewTech Workforce account.
+                {t('landing.heroSubtitle', 'Sign in to continue to your RenewTech Workforce account.')}
               </p>
             </div>
 
@@ -227,14 +231,14 @@ const LoginPage = () => {
                 onClick={handleGoogleSignIn}
                 loading={googleLoading}
                 disabled={loading}
-                text="Continue with Google"
+                text={t('auth.continueWithGoogle', 'Continue with Google')}
               />
             </div>
 
             <div className="relative flex items-center justify-center">
               <div className="border-t border-slate-200 w-full" />
               <span className="bg-white px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 absolute">
-                Or sign in with email
+                {t('auth.orContinueWithEmail', 'Or sign in with email')}
               </span>
             </div>
 
@@ -242,7 +246,7 @@ const LoginPage = () => {
             <form onSubmit={handleEmailSubmit} className="space-y-4">
               <div>
                 <label htmlFor="login-email" className="block text-xs font-bold text-slate-700 mb-1">
-                  Email Address
+                  {t('auth.email', 'Email Address')}
                 </label>
                 <div className="relative">
                   <Mail size={16} className="absolute left-3.5 top-3 text-slate-400 pointer-events-none" />
@@ -262,13 +266,13 @@ const LoginPage = () => {
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label htmlFor="login-password" className="block text-xs font-bold text-slate-700">
-                    Password
+                    {t('auth.password', 'Password')}
                   </label>
                   <Link
                     to="/forgot-password"
                     className="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 hover:underline"
                   >
-                    Forgot Password?
+                    {t('auth.forgotPasswordQuestion', 'Forgot Password?')}
                   </Link>
                 </div>
                 <div className="relative">
@@ -299,22 +303,22 @@ const LoginPage = () => {
                 disabled={loading || googleLoading}
                 className="w-full py-2.5 px-4 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer focus-ring"
               >
-                <span>{loading ? 'Authenticating...' : 'Login'}</span>
+                <span>{loading ? t('auth.signingIn', 'Signing in...') : t('auth.login', 'Login')}</span>
                 <ArrowRight size={15} />
               </button>
             </form>
 
             <div className="text-center pt-2 text-xs text-slate-500">
-              Don't have an account?{' '}
+              {t('auth.noAccount', "Don't have an account?")}{' '}
               <Link to="/register" className="font-bold text-emerald-600 hover:underline">
-                Create one
+                {t('auth.register', 'Create one')}
               </Link>
             </div>
 
             {/* Enterprise Security Footer */}
             <div className="pt-4 border-t border-slate-100 flex items-center justify-center gap-2 text-[11px] text-slate-400">
               <ShieldCheck size={14} className="text-emerald-600 shrink-0" />
-              <span>Enterprise Grade Security • 256-bit SSL Encryption</span>
+              <span>{t('auth.securityNotice', 'Enterprise Grade Security • 256-bit SSL Encryption')}</span>
             </div>
           </div>
         </div>

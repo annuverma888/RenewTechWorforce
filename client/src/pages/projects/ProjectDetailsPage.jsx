@@ -23,8 +23,11 @@ import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel } from '../../utils/i18nHelpers';
 
 const ProjectDetailsPage = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, isTechnician, isCompany, isAdmin, isAuthenticated } = useAuth();
@@ -637,7 +640,7 @@ const ProjectDetailsPage = () => {
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
           <Header
-            title="Project Details"
+            title={t('projects.projectDetails', 'Project Details')}
             subtitle={project.projectName}
             onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
           />

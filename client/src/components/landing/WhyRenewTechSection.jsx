@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShieldCheck, Target, UserCheck, LayoutDashboard } from 'lucide-react';
 
 const benefits = [
@@ -29,6 +30,7 @@ const benefits = [
 ];
 
 const WhyRenewTechSection = () => {
+  const { t } = useTranslation();
   return (
     <section id="why-renewtech" className="py-16 sm:py-24 bg-slate-50 text-slate-900 border-b border-slate-200 scroll-mt-[70px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,10 +39,10 @@ const WhyRenewTechSection = () => {
             Platform Advantages
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-3 tracking-tight">
-            Why RenewTech Workforce?
+            {t('landing.whyChooseTitle', 'Why RenewTech Workforce?')}
           </h2>
           <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
-            Built to solve critical workforce challenges across utility-scale solar and wind projects.
+            {t('landing.whyChooseSubtitle', 'Built to solve critical workforce challenges across utility-scale solar and wind projects.')}
           </p>
         </div>
 

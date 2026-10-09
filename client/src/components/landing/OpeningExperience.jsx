@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Zap, ArrowRight, ShieldCheck, Sun, Wind, CheckCircle2, Building2, Wrench, Award } from 'lucide-react';
 
 // 3 Core Quotes tailored for clean energy workforce (~4.2s target duration)
@@ -46,6 +47,7 @@ const NETWORK_LABELS = [
 ];
 
 const OpeningExperience = ({ onTransitionStart, onComplete }) => {
+  const { t } = useTranslation();
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);

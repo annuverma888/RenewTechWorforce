@@ -23,12 +23,14 @@ import {
   Layers,
   Award,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { adminAPI, projectAPI, applicationAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
 import Badge from '../../components/common/Badge';
 
 const AdminDashboard = () => {
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -170,7 +172,7 @@ const AdminDashboard = () => {
 
       <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
         <Header
-          title="Admin Dashboard"
+          title={t('admin.dashboard')}
           subtitle="Platform Administration & Compliance Oversight"
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
@@ -206,7 +208,7 @@ const AdminDashboard = () => {
                 onClick={fetchAdminData}
                 className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold self-start sm:self-auto transition-colors"
               >
-                Try Again
+                {t('common.retry')}
               </button>
             </div>
           )}
@@ -238,14 +240,14 @@ const AdminDashboard = () => {
                 title="Refresh dashboard metrics"
               >
                 <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
-                <span>Refresh</span>
+                <span>{t('common.reset')}</span>
               </button>
               <Link
                 to="/admin/certificates"
                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-2xs transition-colors flex items-center gap-1.5"
               >
                 <FileCheck size={15} />
-                <span>Verification Queue ({pendingCertificatesCount})</span>
+                <span>{t('admin.verification')} ({pendingCertificatesCount})</span>
               </Link>
             </div>
           </div>
@@ -296,7 +298,7 @@ const AdminDashboard = () => {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                    Technicians
+                    {t('admin.technicians')}
                   </span>
                   <Users size={16} className="text-slate-400 group-hover:text-emerald-600 transition-colors" />
                 </div>
@@ -313,7 +315,7 @@ const AdminDashboard = () => {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                    Verified Techs
+                    {t('technician.verifiedStatus')}
                   </span>
                   <ShieldCheck size={16} className="text-emerald-600" />
                 </div>
@@ -330,7 +332,7 @@ const AdminDashboard = () => {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                    EPC Companies
+                    {t('admin.epcCompanies')}
                   </span>
                   <Briefcase size={16} className="text-slate-400 group-hover:text-blue-600 transition-colors" />
                 </div>
@@ -347,7 +349,7 @@ const AdminDashboard = () => {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                    Active Projects
+                    {t('admin.projects')}
                   </span>
                   <FolderGit2 size={16} className="text-slate-400 group-hover:text-indigo-600 transition-colors" />
                 </div>
@@ -361,7 +363,7 @@ const AdminDashboard = () => {
               <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                    Applications
+                    {t('navigation.applications')}
                   </span>
                   <TrendingUp size={16} className="text-slate-400" />
                 </div>
@@ -375,7 +377,7 @@ const AdminDashboard = () => {
               <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                    Roster Hires
+                    {t('epc.activeWorkforce')}
                   </span>
                   <CheckCircle2 size={16} className="text-emerald-600" />
                 </div>

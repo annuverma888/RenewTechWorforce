@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Users, Building2, Briefcase, CheckCircle2, TrendingUp } from 'lucide-react';
 
 const StatCard = ({ icon: Icon, target, suffix = '+', label, subtext, color = '#059669' }) => {
+  const { t } = useTranslation();
   const [count, setCount] = useState(0);
   const ref = useRef(null);
 
@@ -47,7 +49,7 @@ const StatCard = ({ icon: Icon, target, suffix = '+', label, subtext, color = '#
           <Icon size={20} />
         </div>
         <span className="text-[10px] font-semibold text-slate-500 bg-slate-50 px-2 py-0.5 rounded border border-slate-200">
-          Verified
+          {t('common.verified', 'Verified')}
         </span>
       </div>
 

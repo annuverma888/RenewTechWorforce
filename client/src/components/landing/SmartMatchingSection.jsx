@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Sparkles,
   CheckCircle2,
@@ -11,6 +12,7 @@ import {
 } from 'lucide-react';
 
 const SmartMatchingSection = () => {
+  const { t } = useTranslation();
   const matchFactors = [
     { name: 'Required Skills', weight: '40%', desc: 'Direct mapping of technical solar and wind capabilities' },
     { name: 'Certification', weight: '20%', desc: 'Government-verified SCGJ, NSDC, and GWO credentials' },
@@ -54,10 +56,10 @@ const SmartMatchingSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/60 px-3 py-1 rounded-full border border-emerald-200">
-            Smart Matching
+            {t('epc.matchScore', 'Smart Matching')}
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-3 tracking-tight">
-            Transparent Skill & Location Matching
+            {t('landing.smartMatchingTitle', 'Transparent Skill & Location Matching')}
           </h2>
           <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
             No black-box algorithms. We calculate transparent compatibility scores based on verified skills, experience, certifications, and availability.

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Zap,
   Menu,
@@ -11,12 +12,15 @@ import {
   Briefcase,
   Compass,
   User,
+  Building2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import NotificationDropdown from './NotificationDropdown';
+import LanguageSelector from './LanguageSelector';
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const { user, isAuthenticated, isTechnician, isCompany, isAdmin, logout, requestLogout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -88,14 +92,14 @@ const Navbar = () => {
   const navLinks = [
     {
       id: 'home',
-      label: 'Home',
+      label: t('navigation.home', 'Home'),
       type: 'home',
       path: '/',
       isActive: location.pathname === '/' && !activeSection,
     },
     {
       id: 'technicians',
-      label: 'For Technicians',
+      label: t('navigation.forTechnicians', 'For Technicians'),
       type: 'section',
       idVal: 'technicians',
       path: '/#technicians',
@@ -103,7 +107,7 @@ const Navbar = () => {
     },
     {
       id: 'epcs',
-      label: 'For EPCs',
+      label: t('navigation.forEPCs', 'For EPCs'),
       type: 'section',
       idVal: 'epc-companies',
       path: '/#epc-companies',
@@ -111,7 +115,7 @@ const Navbar = () => {
     },
     {
       id: 'how-it-works',
-      label: 'How It Works',
+      label: t('navigation.howItWorks', 'How It Works'),
       type: 'section',
       idVal: 'how-it-works',
       path: '/#how-it-works',
@@ -119,7 +123,7 @@ const Navbar = () => {
     },
     {
       id: 'skill-passport',
-      label: 'Skill Passport',
+      label: t('navigation.skillPassport', 'Skill Passport'),
       type: 'route',
       path: '/verify/skill-passport',
       isActive:
@@ -279,8 +283,11 @@ const Navbar = () => {
           })}
         </div>
 
-        {/* Right: Authentication & Profile Actions */}
+        {/* Right: Authentication, Profile Actions & Global Language Selector */}
         <div className="hidden md:flex items-center gap-2.5 lg:gap-3">
+          {/* Global Language Selector */}
+          <LanguageSelector />
+
           {isAuthenticated ? (
             <div className="flex items-center gap-2 sm:gap-2.5">
               <NotificationDropdown />
@@ -290,7 +297,7 @@ const Navbar = () => {
                 className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold border border-emerald-200/80 shadow-2xs transition-colors focus-ring"
               >
                 <LayoutDashboard size={15} />
-                <span>Dashboard</span>
+                <span>{t('navigation.dashboard', 'Dashboard')}</span>
               </Link>
 
               {/* User Profile Pill */}
@@ -316,9 +323,9 @@ const Navbar = () => {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  title="Sign out of account"
+                  title={t('navigation.logout', 'Logout')}
                   className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer focus-ring"
-                  aria-label="Logout"
+                  aria-label={t('navigation.logout', 'Logout')}
                 >
                   <LogOut size={16} />
                 </button>
@@ -330,13 +337,13 @@ const Navbar = () => {
                 to="/login"
                 className="px-3.5 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors focus-ring"
               >
-                Login
+                {t('navigation.login', 'Login')}
               </Link>
               <Link
                 to="/register"
                 className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-2xs hover:shadow transition-all focus-ring"
               >
-                <span>Get Started</span>
+                <span>{t('navigation.getStarted', 'Get Started')}</span>
                 <ArrowRight size={14} />
               </Link>
             </div>
@@ -411,8 +418,11 @@ const Navbar = () => {
                 })}
               </div>
 
-              {/* Mobile Auth Actions Strip */}
-              <div className="pt-3 border-t border-slate-200/80">
+              {/* Mobile Auth & Language Actions Strip */}
+              <div className="pt-3 border-t border-slate-200/80 space-y-3">
+                {/* Mobile Language Selector */}
+                <LanguageSelector variant="mobile" />
+
                 {isAuthenticated ? (
                   <div className="space-y-2">
                     {/* User Mini Banner */}
@@ -443,7 +453,7 @@ const Navbar = () => {
                       className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-xs sm:text-sm min-h-[44px] shadow-xs hover:bg-emerald-700 active:bg-emerald-800 transition-colors focus-ring"
                     >
                       <LayoutDashboard size={16} />
-                      <span>Go to Dashboard</span>
+                      <span>{t('navigation.dashboard', 'Go to Dashboard')}</span>
                     </Link>
 
                     <button
@@ -452,25 +462,38 @@ const Navbar = () => {
                       className="w-full flex items-center justify-center gap-2 px-4 py-2 text-rose-600 hover:bg-rose-50 rounded-xl text-xs sm:text-sm font-semibold min-h-[44px] transition-colors cursor-pointer focus-ring"
                     >
                       <LogOut size={16} />
-                      <span>Logout</span>
+                      <span>{t('navigation.logout', 'Logout')}</span>
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-2">
                     <Link
-                      to="/login"
+                      to="/register?role=epc_company"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="w-full text-center px-4 py-2.5 min-h-[44px] flex items-center justify-center border border-slate-300 text-slate-700 font-bold rounded-xl text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors focus-ring"
+                      className="w-full text-center px-4 py-2.5 min-h-[44px] flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs shadow-xs transition-colors focus-ring"
                     >
-                      Login
+                      <Building2 size={15} className="text-emerald-400 shrink-0" />
+                      <span>{t('landing.findTalentCta', 'Hire Skilled Technicians')}</span>
+                      <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-800">
+                        EPC
+                      </span>
                     </Link>
-                    <Link
-                      to="/register"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="w-full text-center px-4 py-2.5 min-h-[44px] flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-xl text-xs shadow-2xs transition-colors focus-ring"
-                    >
-                      Get Started
-                    </Link>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Link
+                        to="/login"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="w-full text-center px-4 py-2.5 min-h-[44px] flex items-center justify-center border border-slate-300 text-slate-700 font-bold rounded-xl text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors focus-ring"
+                      >
+                        {t('navigation.login', 'Login')}
+                      </Link>
+                      <Link
+                        to="/register"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="w-full text-center px-4 py-2.5 min-h-[44px] flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-xl text-xs shadow-2xs transition-colors focus-ring"
+                      >
+                        {t('navigation.getStarted', 'Get Started')}
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>

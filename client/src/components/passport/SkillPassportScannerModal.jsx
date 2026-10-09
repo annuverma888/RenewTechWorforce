@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Html5Qrcode } from 'html5-qrcode';
+import { useTranslation } from 'react-i18next';
 import {
   X,
   Camera,
@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 
 const SkillPassportScannerModal = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [status, setStatus] = useState('initializing'); // 'initializing' | 'scanning' | 'permission_denied' | 'no_camera' | 'error' | 'success'
   const [errorMessage, setErrorMessage] = useState('');
@@ -98,6 +99,9 @@ const SkillPassportScannerModal = ({ isOpen, onClose }) => {
     }
 
     try {
+      // Dynamically load html5-qrcode only when scanner is actively invoked
+      const { Html5Qrcode } = await import('html5-qrcode');
+
       // First check for available video cameras
       const devices = await Html5Qrcode.getCameras().catch((err) => {
         console.warn('[QR Scanner] Error checking cameras:', err);

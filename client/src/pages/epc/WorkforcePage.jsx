@@ -34,10 +34,13 @@ import {
 import { workforceAPI, projectAPI, technicianAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel, getProficiencyLabel } from '../../utils/i18nHelpers';
 import PerformanceReviewModal from '../../components/workforce/PerformanceReviewModal';
 import DigitalSkillPassportCard from '../../components/passport/DigitalSkillPassportCard';
 
 const WorkforcePage = () => {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const urlProjectId = searchParams.get('projectId');
 

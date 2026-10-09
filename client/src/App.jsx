@@ -1,47 +1,48 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
-
-// Auth Pages
-import LoginPage from './pages/auth/LoginPage';
-import RegisterPage from './pages/auth/RegisterPage';
-import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
-import ChooseRolePage from './pages/auth/ChooseRolePage';
-
-// Technician Pages
-import TechnicianDashboard from './pages/technician/TechnicianDashboard';
-import TechnicianProfilePage from './pages/technician/TechnicianProfilePage';
-import TechnicianCertificatesPage from './pages/technician/TechnicianCertificatesPage';
-import TechnicianAssessmentsPage from './pages/technician/TechnicianAssessmentsPage';
-import TakeAssessmentPage from './pages/technician/TakeAssessmentPage';
-import RecommendedProjectsPage from './pages/technician/RecommendedProjectsPage';
-import MyApplicationsPage from './pages/technician/MyApplicationsPage';
-import DigitalSkillPassportPage from './pages/technician/DigitalSkillPassportPage';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import PageLoading from './components/common/PageLoading';
 
-// EPC Company Pages
-import EPCDashboard from './pages/epc/EPCDashboard';
-import PostProjectPage from './pages/epc/PostProjectPage';
-import TechnicianSearchPage from './pages/epc/TechnicianSearchPage';
-import EPCProjectsPage from './pages/epc/ProjectsPage';
-import EPCProjectDetailsPage from './pages/epc/ProjectDetailsPage';
-import ApplicationsPage from './pages/epc/ApplicationsPage';
-import WorkforcePage from './pages/epc/WorkforcePage';
+// Auth Pages (Lazy-loaded)
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
+const ChooseRolePage = lazy(() => import('./pages/auth/ChooseRolePage'));
 
-// Public & Project Discovery Pages
-import ProjectListingPage from './pages/projects/ProjectListingPage';
-import ProjectDetailsPage from './pages/projects/ProjectDetailsPage';
-import SkillPassportVerificationPage from './pages/public/SkillPassportVerificationPage';
+// Technician Pages (Lazy-loaded)
+const TechnicianDashboard = lazy(() => import('./pages/technician/TechnicianDashboard'));
+const TechnicianProfilePage = lazy(() => import('./pages/technician/TechnicianProfilePage'));
+const TechnicianCertificatesPage = lazy(() => import('./pages/technician/TechnicianCertificatesPage'));
+const TechnicianAssessmentsPage = lazy(() => import('./pages/technician/TechnicianAssessmentsPage'));
+const TakeAssessmentPage = lazy(() => import('./pages/technician/TakeAssessmentPage'));
+const RecommendedProjectsPage = lazy(() => import('./pages/technician/RecommendedProjectsPage'));
+const MyApplicationsPage = lazy(() => import('./pages/technician/MyApplicationsPage'));
+const DigitalSkillPassportPage = lazy(() => import('./pages/technician/DigitalSkillPassportPage'));
 
-// Admin Pages
-import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminCertificatesPage from './pages/admin/AdminCertificatesPage';
-import AdminTechniciansPage from './pages/admin/AdminTechniciansPage';
-import AdminCompaniesPage from './pages/admin/AdminCompaniesPage';
+// EPC Company Pages (Lazy-loaded)
+const EPCDashboard = lazy(() => import('./pages/epc/EPCDashboard'));
+const PostProjectPage = lazy(() => import('./pages/epc/PostProjectPage'));
+const TechnicianSearchPage = lazy(() => import('./pages/epc/TechnicianSearchPage'));
+const EPCProjectsPage = lazy(() => import('./pages/epc/ProjectsPage'));
+const EPCProjectDetailsPage = lazy(() => import('./pages/epc/ProjectDetailsPage'));
+const ApplicationsPage = lazy(() => import('./pages/epc/ApplicationsPage'));
+const WorkforcePage = lazy(() => import('./pages/epc/WorkforcePage'));
 
-// Landing Page
-import LandingPage from './pages/LandingPage';
+// Public & Project Discovery Pages (Lazy-loaded)
+const ProjectListingPage = lazy(() => import('./pages/projects/ProjectListingPage'));
+const ProjectDetailsPage = lazy(() => import('./pages/projects/ProjectDetailsPage'));
+const SkillPassportVerificationPage = lazy(() => import('./pages/public/SkillPassportVerificationPage'));
+
+// Admin Pages (Lazy-loaded)
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminCertificatesPage = lazy(() => import('./pages/admin/AdminCertificatesPage'));
+const AdminTechniciansPage = lazy(() => import('./pages/admin/AdminTechniciansPage'));
+const AdminCompaniesPage = lazy(() => import('./pages/admin/AdminCompaniesPage'));
+
+// Landing Page (Lazy-loaded)
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles, allowPendingRole = false }) => {
@@ -106,9 +107,10 @@ function App() {
     <Router>
       <AuthProvider>
         <NotificationProvider>
-          <Routes>
-            {/* Public Pages */}
-            <Route path="/" element={<LandingPage />} />
+          <Suspense fallback={<PageLoading />}>
+            <Routes>
+              {/* Public Pages */}
+              <Route path="/" element={<LandingPage />} />
             <Route
               path="/login"
               element={
@@ -362,7 +364,8 @@ function App() {
             {/* Fallback to Home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </NotificationProvider>
+        </Suspense>
+      </NotificationProvider>
       </AuthProvider>
     </Router>
   );

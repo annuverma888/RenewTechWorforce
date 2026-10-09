@@ -1,16 +1,18 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Sun, Wind, CheckCircle2, Zap } from 'lucide-react';
 
 const SolarWindEcosystemSection = () => {
+  const { t } = useTranslation();
   return (
     <section className="py-16 sm:py-24 bg-slate-50 text-slate-900 border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/60 px-3 py-1 rounded-full border border-emerald-200">
-            Solar & Wind Specialization
+            {t('landing.specialization', 'Solar & Wind Specialization')}
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-3 tracking-tight">
-            One Platform. Dual Clean Energy Domains.
+            {t('landing.ecosystemTitle', 'One Platform. Dual Clean Energy Domains.')}
           </h2>
           <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
             Tailored specifically for utility and commercial Solar PV parks and high-altitude Wind Turbine generation assets.
@@ -32,7 +34,7 @@ const SolarWindEcosystemSection = () => {
               </div>
 
               <h3 className="text-xl font-bold text-slate-900">
-                Solar Photovoltaic Ecosystem
+                {t('landing.solarPVSector', 'Solar Photovoltaic Ecosystem')}
               </h3>
               <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
                 From distributed commercial rooftops to 500MW utility parks. Deploy certified wiremen, inverter specialists, and O&M crews with verified string testing credentials.
@@ -70,7 +72,7 @@ const SolarWindEcosystemSection = () => {
               </div>
 
               <h3 className="text-xl font-bold text-slate-900">
-                Wind Energy Ecosystem
+                {t('landing.windEnergySector', 'Wind Energy Ecosystem')}
               </h3>
               <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
                 High-altitude tower climbing and nacelle operations. Deploy certified GWO technicians experienced in hydraulic yaw systems, torque checks, and blade maintenance.

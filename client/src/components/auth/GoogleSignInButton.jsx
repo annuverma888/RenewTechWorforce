@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Loader2 } from 'lucide-react';
 
 export const GoogleIcon = ({ className = 'w-5 h-5' }) => (
@@ -25,11 +26,14 @@ export const GoogleIcon = ({ className = 'w-5 h-5' }) => (
 const GoogleSignInButton = ({
   onClick,
   loading = false,
-  text = 'Continue with Google',
+  text,
   disabled = false,
   className = '',
   id = 'google-signin-btn',
 }) => {
+  const { t } = useTranslation();
+  const label = text || t('auth.continueWithGoogle', 'Continue with Google');
+
   return (
     <button
       id={id}
@@ -43,7 +47,7 @@ const GoogleSignInButton = ({
       ) : (
         <GoogleIcon className="w-5 h-5 flex-shrink-0" />
       )}
-      <span>{loading ? 'Connecting to Google...' : text}</span>
+      <span>{loading ? t('auth.connectingGoogle', 'Connecting to Google...') : label}</span>
     </button>
   );
 };

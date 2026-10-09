@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Zap,
   ShieldCheck,
@@ -15,6 +16,7 @@ import {
 } from 'lucide-react';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const [activeInfoModal, setActiveInfoModal] = useState(null);
 
   const handleInfoClick = (e, title, description) => {
@@ -70,7 +72,7 @@ const Footer = () => {
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-3.5 flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              Platform
+              {t('navigation.dashboard', 'Platform')}
             </h3>
             <ul className="space-y-2.5 text-xs">
               <li>
@@ -78,7 +80,7 @@ const Footer = () => {
                   to="/projects"
                   className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1 focus-ring rounded"
                 >
-                  Jobs & Active Projects
+                  {t('navigation.projects', 'Jobs & Active Projects')}
                 </Link>
               </li>
               <li>
@@ -86,7 +88,7 @@ const Footer = () => {
                   href="/#technicians"
                   className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1 focus-ring rounded"
                 >
-                  Technicians Directory
+                  {t('navigation.technicians', 'Technicians Directory')}
                 </a>
               </li>
               <li>
@@ -94,7 +96,7 @@ const Footer = () => {
                   to="/verify/skill-passport"
                   className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1 focus-ring rounded"
                 >
-                  Skill Passport Verification
+                  {t('navigation.skillPassport', 'Skill Passport Verification')}
                 </Link>
               </li>
               <li>
@@ -102,7 +104,7 @@ const Footer = () => {
                   href="/#how-it-works"
                   className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1 focus-ring rounded"
                 >
-                  How It Works
+                  {t('navigation.howItWorks', 'How It Works')}
                 </a>
               </li>
               <li>
@@ -110,7 +112,7 @@ const Footer = () => {
                   to="/projects"
                   className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1 focus-ring rounded"
                 >
-                  Browse Installations
+                  {t('navigation.allProjects', 'Browse Installations')}
                 </Link>
               </li>
             </ul>
@@ -120,7 +122,7 @@ const Footer = () => {
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-3.5 flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              For Workforce
+              {t('navigation.forTechnicians', 'For Workforce')}
             </h3>
             <ul className="space-y-2.5 text-xs">
               <li>
@@ -128,7 +130,7 @@ const Footer = () => {
                   to="/register?role=technician"
                   className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1 focus-ring rounded font-medium text-slate-300"
                 >
-                  Create Technician Profile
+                  {t('auth.createAccount', 'Create Technician Profile')}
                 </Link>
               </li>
               <li>
@@ -136,7 +138,7 @@ const Footer = () => {
                   to="/login"
                   className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1 focus-ring rounded"
                 >
-                  Technician Sign In
+                  {t('navigation.login', 'Technician Sign In')}
                 </Link>
               </li>
               <li>
@@ -144,7 +146,7 @@ const Footer = () => {
                   to="/technician/assessments"
                   className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1 focus-ring rounded"
                 >
-                  Skill Assessments
+                  {t('navigation.assessments', 'Skill Assessments')}
                 </Link>
               </li>
               <li>
@@ -152,7 +154,7 @@ const Footer = () => {
                   to="/verify/skill-passport"
                   className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1 focus-ring rounded"
                 >
-                  Digital Skill Passport
+                  {t('navigation.skillPassport', 'Digital Skill Passport')}
                 </Link>
               </li>
               <li>
@@ -160,7 +162,7 @@ const Footer = () => {
                   to="/projects"
                   className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1 focus-ring rounded"
                 >
-                  Find Opportunities
+                  {t('navigation.recommendedProjects', 'Find Opportunities')}
                 </Link>
               </li>
             </ul>
@@ -170,7 +172,7 @@ const Footer = () => {
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-3.5 flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              For EPC Companies
+              {t('navigation.forEPCs', 'For EPC Companies')}
             </h3>
             <ul className="space-y-2.5 text-xs">
               <li>

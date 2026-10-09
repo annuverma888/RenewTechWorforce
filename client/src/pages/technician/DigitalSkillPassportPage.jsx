@@ -36,6 +36,8 @@ import { useAuth } from '../../context/AuthContext';
 import { technicianAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel } from '../../utils/i18nHelpers';
 import SkillPassportScannerModal from '../../components/passport/SkillPassportScannerModal';
 import SkillPassportShareModal from '../../components/passport/SkillPassportShareModal';
 
@@ -61,6 +63,7 @@ const getTechIcon = (type) => {
 };
 
 const DigitalSkillPassportPage = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { user, loading: authLoading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);

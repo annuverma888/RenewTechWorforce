@@ -30,55 +30,57 @@ import {
 import { applicationAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel } from '../../utils/i18nHelpers';
 
 // Status badge styling and metadata mapping
-const getStatusMeta = (status) => {
+const getStatusMeta = (status, t = (k, d) => d) => {
   switch (status) {
     case 'Hired':
     case 'Selected':
     case 'Assigned':
     case 'Completed':
       return {
-        label: status === 'Completed' ? 'Completed' : 'Accepted / Hired',
+        label: status === 'Completed' ? getStatusLabel('COMPLETED', t) : t('technician.acceptedHired', 'Accepted / Hired'),
         badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-300 font-bold',
         dotClass: 'bg-emerald-500',
         icon: CheckCircle2,
         stepIndex: 3,
-        description: 'You have been selected and contracted for this project.',
+        description: t('technician.selectedDesc', 'You have been selected and contracted for this project.'),
       };
     case 'Shortlisted':
       return {
-        label: 'Shortlisted',
+        label: getStatusLabel('SHORTLISTED', t),
         badgeClass: 'bg-blue-50 text-blue-700 border-blue-300 font-bold',
         dotClass: 'bg-blue-500',
         icon: Sparkles,
         stepIndex: 2,
-        description: 'Your profile has been shortlisted by the EPC contractor.',
+        description: t('technician.shortlistedDesc', 'Your profile has been shortlisted by the EPC contractor.'),
       };
     case 'Interview':
     case 'Interviewing':
     case 'Under Review':
       return {
-        label: status === 'Interview' || status === 'Interviewing' ? 'Interview Stage' : 'Under Review',
+        label: status === 'Interview' || status === 'Interviewing' ? t('technician.interviewStage', 'Interview Stage') : getStatusLabel('UNDER_REVIEW', t),
         badgeClass: 'bg-amber-50 text-amber-700 border-amber-300 font-bold',
         dotClass: 'bg-amber-500',
         icon: Clock,
         stepIndex: 1,
-        description: 'The EPC team is reviewing your profile and credentials.',
+        description: t('technician.underReviewDesc', 'The EPC team is reviewing your profile and credentials.'),
       };
     case 'Rejected':
       return {
-        label: 'Not Selected',
+        label: getStatusLabel('REJECTED', t),
         badgeClass: 'bg-rose-50 text-rose-700 border-rose-300 font-bold',
         dotClass: 'bg-rose-500',
         icon: XCircle,
         stepIndex: -1,
-        description: 'This position was filled or your application was not chosen.',
+        description: t('technician.rejectedDesc', 'This position was filled or your application was not chosen.'),
       };
     case 'Applied':
     default:
       return {
-        label: 'Applied',
+        label: getStatusLabel('APPLIED', t),
         badgeClass: 'bg-slate-100 text-slate-700 border-slate-300 font-semibold',
         dotClass: 'bg-slate-400',
         icon: FileText,
@@ -115,6 +117,7 @@ const getTechIcon = (type) => {
 };
 
 const MyApplicationsPage = () => {
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -230,8 +233,8 @@ const MyApplicationsPage = () => {
 
       <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
         <Header
-          title="My Applications"
-          subtitle="Track your renewable-energy project applications in one place."
+          title={t('technician.myApplicationsTitle', 'My Applications')}
+          subtitle={t('technician.myApplicationsSubtitle', 'Track your renewable-energy project applications in one place.')}
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
 
@@ -240,10 +243,10 @@ const MyApplicationsPage = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                My Applications
+                {t('technician.myApplicationsTitle', 'My Applications')}
               </h1>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                Track your renewable-energy project applications in one place.
+                {t('technician.myApplicationsSubtitle', 'Track your renewable-energy project applications in one place.')}
               </p>
             </div>
             <div className="flex items-center gap-2 self-start sm:self-auto">
@@ -254,13 +257,13 @@ const MyApplicationsPage = () => {
                 title="Refresh applications"
               >
                 <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
-                <span>Refresh</span>
+                <span>{t('common.refresh', 'Refresh')}</span>
               </button>
               <Link
                 to="/technician/recommended"
                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors shadow-xs flex items-center gap-1.5"
               >
-                <span>Recommended Projects</span>
+                <span>{t('technician.recommendedProjects', 'Recommended Projects')}</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
@@ -270,42 +273,42 @@ const MyApplicationsPage = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
               <div className="flex items-center justify-between text-slate-500">
-                <span className="text-xs font-medium">Total Applications</span>
+                <span className="text-xs font-medium">{t('technician.totalApplications', 'Total Applications')}</span>
                 <FileText size={16} className="text-slate-400" />
               </div>
               <p className="text-2xl font-bold text-slate-900 mt-2 font-mono">{metrics.total}</p>
-              <p className="text-[11px] text-slate-400 mt-0.5">Submitted across projects</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">{t('technician.submittedAcross', 'Submitted across projects')}</p>
             </div>
 
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
               <div className="flex items-center justify-between text-slate-500">
-                <span className="text-xs font-medium">Under Review</span>
+                <span className="text-xs font-medium">{t('technician.underReview', 'Under Review')}</span>
                 <Clock size={16} className="text-amber-500" />
               </div>
               <p className="text-2xl font-bold text-amber-700 mt-2 font-mono">
                 {metrics.underReview}
               </p>
-              <p className="text-[11px] text-slate-400 mt-0.5">In screening or interview</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">{t('technician.inScreening', 'In screening or interview')}</p>
             </div>
 
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
               <div className="flex items-center justify-between text-slate-500">
-                <span className="text-xs font-medium">Shortlisted</span>
+                <span className="text-xs font-medium">{t('status.SHORTLISTED', 'Shortlisted')}</span>
                 <Sparkles size={16} className="text-blue-500" />
               </div>
               <p className="text-2xl font-bold text-blue-700 mt-2 font-mono">
                 {metrics.shortlisted}
               </p>
-              <p className="text-[11px] text-slate-400 mt-0.5">Contractor shortlisted</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">{t('technician.contractorShortlisted', 'Contractor shortlisted')}</p>
             </div>
 
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
               <div className="flex items-center justify-between text-slate-500">
-                <span className="text-xs font-medium">Accepted / Hired</span>
+                <span className="text-xs font-medium">{t('technician.acceptedHired', 'Accepted / Hired')}</span>
                 <CheckCircle2 size={16} className="text-emerald-600" />
               </div>
               <p className="text-2xl font-bold text-emerald-700 mt-2 font-mono">{metrics.hired}</p>
-              <p className="text-[11px] text-slate-400 mt-0.5">Confirmed project roles</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">{t('technician.confirmedRoles', 'Confirmed project roles')}</p>
             </div>
           </div>
 
@@ -316,7 +319,7 @@ const MyApplicationsPage = () => {
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search by project name, EPC contractor, location, technology, or cover note..."
+                placeholder={t('placeholders.searchApplications', 'Search by project name, EPC contractor, location, technology, or cover note...')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
@@ -334,12 +337,12 @@ const MyApplicationsPage = () => {
             {/* Filter Tabs with real live counts */}
             <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-thin">
               {[
-                { id: 'ALL', label: 'All', count: tabCounts.ALL },
-                { id: 'Applied', label: 'Applied', count: tabCounts.Applied },
-                { id: 'Review', label: 'Under Review', count: tabCounts.Review },
-                { id: 'Shortlisted', label: 'Shortlisted', count: tabCounts.Shortlisted },
-                { id: 'Hired', label: 'Accepted / Hired', count: tabCounts.Hired },
-                { id: 'Rejected', label: 'Not Selected', count: tabCounts.Rejected },
+                { id: 'ALL', label: t('common.all', 'All'), count: tabCounts.ALL },
+                { id: 'Applied', label: getStatusLabel('APPLIED', t), count: tabCounts.Applied },
+                { id: 'Review', label: getStatusLabel('UNDER_REVIEW', t), count: tabCounts.Review },
+                { id: 'Shortlisted', label: getStatusLabel('SHORTLISTED', t), count: tabCounts.Shortlisted },
+                { id: 'Hired', label: t('technician.acceptedHired', 'Accepted / Hired'), count: tabCounts.Hired },
+                { id: 'Rejected', label: getStatusLabel('REJECTED', t), count: tabCounts.Rejected },
               ].map((tab) => {
                 const isActive = selectedStatusTab === tab.id;
                 return (
@@ -401,7 +404,7 @@ const MyApplicationsPage = () => {
                 <AlertCircle size={24} />
               </div>
               <div className="max-w-md mx-auto">
-                <h3 className="text-base font-bold text-slate-900">Unable to Load Applications</h3>
+                <h3 className="text-base font-bold text-slate-900">{t('technician.unableToLoad', 'Unable to Load Applications')}</h3>
                 <p className="text-xs text-slate-500 mt-1">{error}</p>
               </div>
               <button
@@ -409,7 +412,7 @@ const MyApplicationsPage = () => {
                 className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
               >
                 <RefreshCw size={13} />
-                <span>Try Again</span>
+                <span>{t('technician.tryAgain', 'Try Again')}</span>
               </button>
             </div>
           ) : applications.length === 0 ? (
@@ -419,9 +422,9 @@ const MyApplicationsPage = () => {
                 <FileText size={26} />
               </div>
               <div className="max-w-md mx-auto">
-                <h3 className="text-base sm:text-lg font-bold text-slate-900">No Applications Yet</h3>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900">{t('technician.noApplicationsTitle', 'No Applications Yet')}</h3>
                 <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                  You haven't applied to any renewable-energy projects yet.
+                  {t('technician.noApplicationsDesc', 'You haven\'t applied to any renewable-energy projects yet.')}
                 </p>
               </div>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -429,14 +432,14 @@ const MyApplicationsPage = () => {
                   to="/technician/recommended"
                   className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors shadow-2xs flex items-center gap-1.5"
                 >
-                  <span>Explore Recommended Projects</span>
+                  <span>{t('technician.exploreProjects', 'Explore Recommended Projects')}</span>
                   <ArrowRight size={13} />
                 </Link>
                 <Link
                   to="/projects"
                   className="px-4 py-2.5 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-bold transition-colors"
                 >
-                  Browse All Projects
+                  {t('technician.browseAllProjects', 'Browse All Projects')}
                 </Link>
               </div>
             </div>
@@ -447,9 +450,9 @@ const MyApplicationsPage = () => {
                 <Search size={22} />
               </div>
               <div className="max-w-md mx-auto">
-                <h3 className="text-base font-bold text-slate-900">No Applications Found</h3>
+                <h3 className="text-base font-bold text-slate-900">{t('empty.noApplications', 'No Applications Found')}</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Try another status filter or clear your search query to see your submitted applications.
+                  {t('empty.tryDifferentFilter', 'Try another status filter or clear your search query to see your submitted applications.')}
                 </p>
               </div>
               <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
@@ -460,13 +463,13 @@ const MyApplicationsPage = () => {
                   }}
                   className="px-3.5 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold transition-colors"
                 >
-                  Reset Filters
+                  {t('technician.resetFilters', 'Reset Filters')}
                 </button>
                 <Link
                   to="/technician/recommended"
                   className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors"
                 >
-                  View Recommended Projects
+                  {t('technician.recommendedProjects', 'View Recommended Projects')}
                 </Link>
               </div>
             </div>
@@ -475,7 +478,7 @@ const MyApplicationsPage = () => {
             <div className="space-y-4">
               {filteredApplications.map((app) => {
                 const proj = app.project || {};
-                const statusMeta = getStatusMeta(app.status);
+                const statusMeta = getStatusMeta(app.status, t);
                 const StatusIcon = statusMeta.icon;
                 const matchScore = typeof app.matchScore === 'number' ? app.matchScore : null;
                 const appliedDate = formatDate(app.appliedAt || app.createdAt);
@@ -525,7 +528,7 @@ const MyApplicationsPage = () => {
                           )}
                           <span className="flex items-center gap-1 text-slate-500">
                             <Calendar size={13} className="text-slate-400" />
-                            Applied {appliedDate}
+                            {t('technician.appliedOn', 'Applied')} {appliedDate}
                           </span>
                         </div>
                       </div>
@@ -621,13 +624,13 @@ const MyApplicationsPage = () => {
                         className="min-h-[44px] px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-colors cursor-pointer focus-ring"
                       >
                         <Eye size={15} />
-                        <span>View Details</span>
+                        <span>{t('common.viewDetails', 'View Details')}</span>
                       </button>
                       <Link
                         to={`/projects/${proj._id}`}
                         className="min-h-[44px] px-3.5 py-2 border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-800 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-colors focus-ring"
                       >
-                        <span>Project Page</span>
+                        <span>{t('projects.projectDetails', 'Project Page')}</span>
                         <ArrowUpRight size={15} />
                       </Link>
                     </div>
@@ -652,8 +655,9 @@ const MyApplicationsPage = () => {
 
 // Modal for deep inspection of application, cover note, match breakdown, and EPC notes
 const ApplicationDetailsModal = ({ application, onClose }) => {
+  const { t } = useTranslation();
   const proj = application.project || {};
-  const statusMeta = getStatusMeta(application.status);
+  const statusMeta = getStatusMeta(application.status, t);
   const StatusIcon = statusMeta.icon;
   const matchScore = typeof application.matchScore === 'number' ? application.matchScore : null;
   const reasons = application.matchBreakdown?.reasons || [];
@@ -701,7 +705,7 @@ const ApplicationDetailsModal = ({ application, onClose }) => {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                  Current Application Status
+                  {t('technician.applicationStatus', 'Current Application Status')}
                 </span>
                 <div className="flex items-center gap-2 mt-1">
                   <span
@@ -720,7 +724,7 @@ const ApplicationDetailsModal = ({ application, onClose }) => {
 
               <div className="text-left sm:text-right text-slate-500">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                  Date Submitted
+                  {t('epc.appliedDate', 'Date Submitted')}
                 </span>
                 <span className="font-mono text-slate-700 mt-1 block font-semibold">
                   {formatDate(application.appliedAt || application.createdAt)}
@@ -738,7 +742,7 @@ const ApplicationDetailsModal = ({ application, onClose }) => {
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                 <FileText size={14} className="text-emerald-600" />
-                <span>Your Submitted Cover Note</span>
+                <span>{t('technician.coverNotePrompt', 'Your Submitted Cover Note')}</span>
               </h4>
               <span className="text-[10px] text-slate-400 font-medium">Provided to Contractor</span>
             </div>
@@ -759,7 +763,7 @@ const ApplicationDetailsModal = ({ application, onClose }) => {
             <div className="space-y-2">
               <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                 <Sparkles size={14} className="text-blue-600" />
-                <span>Match Score Breakdown</span>
+                <span>{t('technician.matchScoreBreakdown', 'Match Score Breakdown')}</span>
               </h4>
               <div className="bg-blue-50/50 rounded-xl p-3.5 border border-blue-100 space-y-1.5">
                 {reasons.map((reason, idx) => (
@@ -777,7 +781,7 @@ const ApplicationDetailsModal = ({ application, onClose }) => {
             <div className="space-y-2">
               <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                 <Clock size={14} className="text-slate-500" />
-                <span>Application History</span>
+                <span>{t('technician.projectHistory', 'Application History')}</span>
               </h4>
               <div className="border border-slate-200 rounded-xl divide-y divide-slate-100 bg-white">
                 {statusHistory.map((hist, i) => (
@@ -799,7 +803,7 @@ const ApplicationDetailsModal = ({ application, onClose }) => {
           <div className="space-y-2">
             <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
               <Building2 size={14} className="text-slate-500" />
-              <span>Project Snapshot</span>
+              <span>{t('projects.overview', 'Project Snapshot')}</span>
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-slate-700">
               <div>
@@ -848,14 +852,14 @@ const ApplicationDetailsModal = ({ application, onClose }) => {
             to={`/projects/${proj._id}`}
             className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xs inline-flex items-center gap-1.5 transition-colors shadow-2xs"
           >
-            <span>View Full Project Listing</span>
+            <span>{t('technician.viewProjectDetails', 'View Full Project Listing')}</span>
             <ExternalLink size={13} />
           </Link>
           <button
             onClick={onClose}
             className="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 rounded-lg font-semibold text-xs transition-colors"
           >
-            Close Details
+            {t('common.close', 'Close Details')}
           </button>
         </div>
       </div>

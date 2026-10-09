@@ -1,9 +1,11 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Sparkles } from 'lucide-react';
 
 const MatchScoreBadge = ({ score = 85, size = 'md', onClick = null, showIcon = true }) => {
+  const { t } = useTranslation();
   let colorClasses = 'bg-emerald-50 text-emerald-800 border-emerald-300 ring-emerald-500/20';
-  let badgeText = `${score}% Match`;
+  let badgeText = `${score}% ${t('epc.matchScore', 'Match')}`;
 
   if (score >= 90) {
     colorClasses = 'bg-emerald-100 text-emerald-900 border-emerald-400 ring-emerald-600/30';

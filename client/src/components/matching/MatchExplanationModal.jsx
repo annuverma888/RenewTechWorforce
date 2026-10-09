@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   X,
   CheckCircle2,
@@ -20,6 +21,8 @@ import {
 } from 'lucide-react';
 
 const MatchExplanationModal = ({
+  /* i18n */
+
   isOpen,
   onClose,
   matchData,
@@ -28,6 +31,7 @@ const MatchExplanationModal = ({
   onAction = null,
   actionLabel = '',
 }) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'skills', 'factors'
 
   if (!isOpen || !matchData) return null;

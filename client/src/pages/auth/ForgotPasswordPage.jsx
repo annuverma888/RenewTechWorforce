@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../../components/common/LanguageSelector';
 import {
   Zap,
   Mail,
@@ -12,6 +14,7 @@ import {
 import { authAPI } from '../../services/api';
 
 const ForgotPasswordPage = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -25,10 +28,10 @@ const ForgotPasswordPage = () => {
       setLoading(true);
       const res = await authAPI.forgotPassword({ email });
       if (res.data.success) {
-        setMessage(res.data.message || 'Password reset link sent to your registered email.');
+        setMessage(res.data.message || t('auth.resetLinkSent'));
       }
     } catch (err) {
-      setErrorMessage(err.response?.data?.message || 'Error requesting password reset. Please try again.');
+      setErrorMessage(err.response?.data?.message || t('errors.somethingWentWrong'));
     } finally {
       setLoading(false);
     }
@@ -36,16 +39,17 @@ const ForgotPasswordPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-8 px-4 sm:px-6 lg:px-8">
-      {/* Top Back to Home */}
-      <div className="max-w-md mx-auto w-full mb-4">
+      {/* Top Bar with Back Link and Language Selector */}
+      <div className="max-w-md mx-auto w-full mb-4 flex items-center justify-between">
         <Link
           to="/"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-emerald-700 transition-colors focus-ring rounded-lg py-1 px-2"
-          aria-label="Back to Home"
+          aria-label={t('auth.backToHome')}
         >
           <ArrowLeft size={14} className="shrink-0" />
-          <span>Back to Home</span>
+          <span>{t('auth.backToHome')}</span>
         </Link>
+        <LanguageSelector />
       </div>
 
       <div className="max-w-md mx-auto w-full">
@@ -61,11 +65,11 @@ const ForgotPasswordPage = () => {
           </Link>
 
           <h1 className="mt-5 text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
-            Reset Your Password
+            {t('auth.resetYourPassword')}
           </h1>
 
           <p className="mt-1.5 text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-            Enter your email and we'll help you regain access to your account.
+            {t('auth.resetPasswordSubtitle')}
           </p>
         </div>
 
@@ -94,7 +98,7 @@ const ForgotPasswordPage = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="forgot-email" className="block text-xs font-bold text-slate-700 mb-1">
-                Email Address
+                {t('auth.email')}
               </label>
               <div className="relative">
                 <Mail size={16} className="absolute left-3.5 top-3 text-slate-400 pointer-events-none" />
@@ -116,7 +120,7 @@ const ForgotPasswordPage = () => {
               disabled={loading}
               className="w-full py-2.5 px-4 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 focus-ring"
             >
-              <span>{loading ? 'Sending Instructions...' : 'Send Reset Link'}</span>
+              <span>{loading ? t('auth.sendingInstructions') : t('auth.sendResetLink')}</span>
               <ArrowRight size={15} />
             </button>
           </form>
@@ -127,7 +131,7 @@ const ForgotPasswordPage = () => {
               className="font-bold text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1.5 focus-ring rounded py-1 px-1.5"
             >
               <ArrowLeft size={13} />
-              <span>Back to Login</span>
+              <span>{t('auth.backToLogin')}</span>
             </Link>
           </div>
         </div>
@@ -135,7 +139,7 @@ const ForgotPasswordPage = () => {
         {/* Security Footer */}
         <div className="mt-8 text-center text-xs text-slate-400 flex items-center justify-center gap-1.5">
           <ShieldCheck size={14} className="text-emerald-600 shrink-0" />
-          <span>Secure Password Recovery • Encrypted Verification</span>
+          <span>{t('auth.secureRecovery')}</span>
         </div>
       </div>
     </div>

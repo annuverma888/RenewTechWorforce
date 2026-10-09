@@ -38,11 +38,14 @@ import {
 import { applicationAPI, projectAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel, getProficiencyLabel } from '../../utils/i18nHelpers';
 import MatchScoreBadge from '../../components/matching/MatchScoreBadge';
 import MatchExplanationModal from '../../components/matching/MatchExplanationModal';
 import HireTechnicianModal from '../../components/workforce/HireTechnicianModal';
 
 const ApplicationsPage = () => {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialProjectId = searchParams.get('projectId') || 'All';
   const initialStatus = searchParams.get('status') || 'All';
@@ -307,7 +310,7 @@ const ApplicationsPage = () => {
       {/* Main Content Area */}
       <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
         <Header
-          title="Candidate Applications"
+          title={t('epc.applicationsTitle', 'Candidate Applications')}
           subtitle="Manage technician applications, review credentials, and advance hiring pipelines"
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />

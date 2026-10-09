@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Zap,
   Lock,
@@ -18,8 +19,10 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import GoogleSignInButton from '../../components/auth/GoogleSignInButton';
+import LanguageSelector from '../../components/common/LanguageSelector';
 
 const RegisterPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const roleParam = searchParams.get('role');
@@ -81,10 +84,10 @@ const RegisterPage = () => {
     if (/[A-Z]/.test(pass) && /[0-9]/.test(pass)) score++;
     if (/[^A-Za-z0-9]/.test(pass)) score++;
 
-    if (score <= 1) return { score: 1, label: 'Weak', color: 'bg-rose-500' };
-    if (score === 2) return { score: 2, label: 'Fair', color: 'bg-amber-500' };
-    if (score === 3) return { score: 3, label: 'Good', color: 'bg-teal-500' };
-    return { score: 4, label: 'Strong', color: 'bg-emerald-600' };
+    if (score <= 1) return { score: 1, label: t('auth.passwordWeak', 'Weak'), color: 'bg-rose-500' };
+    if (score === 2) return { score: 2, label: t('auth.passwordFair', 'Fair'), color: 'bg-amber-500' };
+    if (score === 3) return { score: 3, label: t('auth.passwordGood', 'Good'), color: 'bg-teal-500' };
+    return { score: 4, label: t('auth.passwordStrong', 'Strong'), color: 'bg-emerald-600' };
   };
 
   const passwordStrength = getPasswordStrength(formData.password);
@@ -95,12 +98,12 @@ const RegisterPage = () => {
     setSuccessMessage('');
 
     if (formData.password !== formData.confirmPassword) {
-      setErrorMessage('Passwords do not match. Please re-enter your password.');
+      setErrorMessage(t('errors.passwordsDoNotMatch', 'Passwords do not match. Please re-enter your password.'));
       return;
     }
 
     if (formData.password.length < 6) {
-      setErrorMessage('Password must be at least 6 characters long.');
+      setErrorMessage(t('errors.passwordTooShort', 'Password must be at least 6 characters long.'));
       return;
     }
 
@@ -114,7 +117,7 @@ const RegisterPage = () => {
         role: selectedRole,
       });
 
-      setSuccessMessage('Account created successfully! Redirecting...');
+      setSuccessMessage(t('auth.signUpSuccess', 'Account created successfully! Redirecting...'));
       setTimeout(() => {
         if (registeredUser.role === 'pending_role') {
           navigate(`/choose-role?role=${selectedRole}`, { replace: true });
@@ -123,7 +126,7 @@ const RegisterPage = () => {
         }
       }, 500);
     } catch (err) {
-      setErrorMessage(err.message || 'Registration failed.');
+      setErrorMessage(err.message || t('errors.somethingWentWrong', 'Registration failed.'));
       setLoading(false);
     }
   };
@@ -136,30 +139,31 @@ const RegisterPage = () => {
     try {
       const res = await loginWithGoogle();
       if (res && res.user) {
-        setSuccessMessage('Account connected successfully! Redirecting...');
+        setSuccessMessage(t('auth.signUpSuccess', 'Account connected successfully! Redirecting...'));
         const dest = res.destination || (res.user.role === 'pending_role' ? `/choose-role?role=${selectedRole}` : getDashboardPath(res.user.role));
         console.log('[AUTH] Redirecting to dashboard:', dest);
         navigate(dest, { replace: true });
       }
     } catch (err) {
       console.error('Google Sign-up initiation error:', err);
-      setErrorMessage(err.message || 'Google Sign-In could not be completed. Please try again.');
+      setErrorMessage(err.message || t('errors.somethingWentWrong', 'Google Sign-In could not be completed. Please try again.'));
       setGoogleLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
-      {/* Top Navigation Bar: Back to Home */}
-      <div className="max-w-5xl mx-auto w-full mb-4">
+      {/* Top Navigation Bar: Back to Home & Global Language Selector */}
+      <div className="max-w-5xl mx-auto w-full mb-4 flex items-center justify-between">
         <Link
           to="/"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-emerald-700 transition-colors focus-ring rounded-lg py-1 px-2"
-          aria-label="Back to Home"
+          aria-label={t('auth.backToHome', 'Back to Home')}
         >
           <ArrowLeft size={14} className="shrink-0" />
-          <span>Back to Home</span>
+          <span>{t('auth.backToHome', 'Back to Home')}</span>
         </Link>
+        <LanguageSelector />
       </div>
 
       <div className="max-w-5xl mx-auto w-full bg-white rounded-3xl border border-slate-200/90 shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
@@ -182,13 +186,13 @@ const RegisterPage = () => {
             <div className="mt-8 space-y-3">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-300 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-800">
                 <ShieldCheck size={12} />
-                <span>Verified Clean Energy Network</span>
+                <span>{t('auth.verifiedNetworkBadge', 'Verified Clean Energy Network')}</span>
               </span>
               <h2 className="text-2xl font-black text-white tracking-tight leading-snug">
-                Join India's Leading Renewable Energy Network
+                {t('landing.heroHeading', "Join India's Leading Renewable Energy Network")}
               </h2>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Connect certified field technicians with verified EPC developers and utility-scale projects.
+                {t('auth.brandSubtitle', 'Connect certified field technicians with verified EPC developers and utility-scale projects.')}
               </p>
             </div>
           </div>
@@ -196,37 +200,37 @@ const RegisterPage = () => {
           {/* Role Comparison Visual Card */}
           <div className="relative z-10 my-8 p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm space-y-3.5">
             <div className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
-              {selectedRole === 'technician' ? 'Technician Account' : 'EPC Company Account'}
+              {selectedRole === 'technician' ? t('auth.roleTechnicianTitle', 'Technician Account') : t('auth.roleEpcTitle', 'EPC Company Account')}
             </div>
 
             {selectedRole === 'technician' ? (
               <div className="space-y-2 text-xs text-slate-300">
                 <div className="flex items-center gap-2">
                   <Check size={13} className="text-emerald-400 shrink-0" />
-                  <span>Verified Skill Passport & QR verification</span>
+                  <span>{t('auth.roleTechnicianF1', 'Verified Skill Passport & QR verification')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Check size={13} className="text-emerald-400 shrink-0" />
-                  <span>Access to Solar PV, Wind & BESS projects</span>
+                  <span>{t('auth.roleTechnicianF2', 'Access to Solar PV, Wind & BESS projects')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Check size={13} className="text-emerald-400 shrink-0" />
-                  <span>Direct contractor hiring & transparent terms</span>
+                  <span>{t('auth.roleTechnicianF3', 'Direct contractor hiring & transparent terms')}</span>
                 </div>
               </div>
             ) : (
               <div className="space-y-2 text-xs text-slate-300">
                 <div className="flex items-center gap-2">
                   <Check size={13} className="text-emerald-400 shrink-0" />
-                  <span>Hire pre-screened & certified field specialists</span>
+                  <span>{t('auth.roleEpcF1', 'Hire pre-screened & certified field specialists')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Check size={13} className="text-emerald-400 shrink-0" />
-                  <span>Post and manage multi-MW renewable sites</span>
+                  <span>{t('auth.roleEpcF2', 'Post and manage multi-MW renewable sites')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Check size={13} className="text-emerald-400 shrink-0" />
-                  <span>Milestone tracking & streamlined project rosters</span>
+                  <span>{t('auth.roleEpcF3', 'Milestone tracking & streamlined project rosters')}</span>
                 </div>
               </div>
             )}
@@ -235,7 +239,7 @@ const RegisterPage = () => {
           {/* Bottom Security Note */}
           <div className="relative z-10 text-[11px] text-slate-400 flex items-center gap-2">
             <ShieldCheck size={14} className="text-emerald-400 shrink-0" />
-            <span>Zero Fake Credentials • Encrypted Data Privacy</span>
+            <span>{t('auth.securityNotice', 'Zero Fake Credentials • Encrypted Data Privacy')}</span>
           </div>
         </div>
 
@@ -256,10 +260,10 @@ const RegisterPage = () => {
           <div className="max-w-md w-full mx-auto space-y-6">
             <div>
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                Create Your Account
+                {t('auth.createAccount', 'Create Your Account')}
               </h1>
               <p className="mt-1 text-xs sm:text-sm text-slate-500">
-                Join the renewable-energy workforce network.
+                {t('landing.heroSubtitle', 'Join the renewable-energy workforce network.')}
               </p>
             </div>
 
@@ -287,7 +291,7 @@ const RegisterPage = () => {
             {/* Role Selection Cards */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-2">
-                Choose Account Type
+                {t('auth.chooseRole', 'Choose Account Type')}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {/* Technician Card */}
@@ -307,14 +311,14 @@ const RegisterPage = () => {
                       }`}>
                         <Wrench size={14} />
                       </div>
-                      <span className="text-xs font-bold text-slate-900">I am a Technician</span>
+                      <span className="text-xs font-bold text-slate-900">{t('auth.technicianRoleTitle', 'I am a Technician')}</span>
                     </div>
                     {selectedRole === 'technician' && (
                       <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
                     )}
                   </div>
                   <p className="text-[11px] text-slate-500 leading-snug">
-                    Build my profile, find projects and get hired.
+                    {t('auth.technicianRoleDesc', 'Build my profile, find projects and get hired.')}
                   </p>
                 </button>
 
@@ -335,14 +339,14 @@ const RegisterPage = () => {
                       }`}>
                         <Building2 size={14} />
                       </div>
-                      <span className="text-xs font-bold text-slate-900">I am an EPC Company</span>
+                      <span className="text-xs font-bold text-slate-900">{t('auth.epcRoleTitle', 'I am an EPC Company')}</span>
                     </div>
                     {selectedRole === 'epc_company' && (
                       <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
                     )}
                   </div>
                   <p className="text-[11px] text-slate-500 leading-snug">
-                    Find technicians, post projects and hire workforce.
+                    {t('auth.epcRoleDesc', 'Find technicians, post projects and hire workforce.')}
                   </p>
                 </button>
               </div>
@@ -354,14 +358,14 @@ const RegisterPage = () => {
                 onClick={handleGoogleSignUp}
                 loading={googleLoading}
                 disabled={loading}
-                text="Continue with Google"
+                text={t('auth.continueWithGoogle', 'Continue with Google')}
               />
             </div>
 
             <div className="relative flex items-center justify-center">
               <div className="border-t border-slate-200 w-full" />
               <span className="bg-white px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 absolute">
-                Or register with email
+                {t('auth.orContinueWithEmail', 'Or register with email')}
               </span>
             </div>
 
@@ -369,7 +373,7 @@ const RegisterPage = () => {
             <form onSubmit={handleRegisterSubmit} className="space-y-3.5">
               <div>
                 <label htmlFor="register-name" className="block text-xs font-bold text-slate-700 mb-1">
-                  Full Name *
+                  {t('auth.fullName', 'Full Name')} *
                 </label>
                 <div className="relative">
                   <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
@@ -389,7 +393,7 @@ const RegisterPage = () => {
 
               <div>
                 <label htmlFor="register-email" className="block text-xs font-bold text-slate-700 mb-1">
-                  Email Address *
+                  {t('auth.email', 'Email Address')} *
                 </label>
                 <div className="relative">
                   <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
@@ -409,7 +413,7 @@ const RegisterPage = () => {
 
               <div>
                 <label htmlFor="register-password" className="block text-xs font-bold text-slate-700 mb-1">
-                  Password (minimum 6 characters) *
+                  {t('auth.password', 'Password')} *
                 </label>
                 <div className="relative">
                   <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
@@ -453,7 +457,7 @@ const RegisterPage = () => {
 
               <div>
                 <label htmlFor="register-confirm-password" className="block text-xs font-bold text-slate-700 mb-1">
-                  Confirm Password *
+                  {t('auth.confirmPassword', 'Confirm Password')} *
                 </label>
                 <div className="relative">
                   <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
@@ -485,15 +489,15 @@ const RegisterPage = () => {
                 disabled={loading || googleLoading}
                 className="w-full py-2.5 px-4 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer focus-ring mt-2"
               >
-                <span>{loading ? 'Creating Account...' : 'Create Account'}</span>
+                <span>{loading ? t('auth.signingUp', 'Creating Account...') : t('auth.register', 'Create Account')}</span>
                 <ArrowRight size={15} />
               </button>
             </form>
 
             <div className="text-center pt-2 text-xs text-slate-500">
-              Already have an account?{' '}
+              {t('auth.haveAccount', 'Already have an account?')}{' '}
               <Link to="/login" className="font-bold text-emerald-600 hover:underline">
-                Login
+                {t('auth.login', 'Login')}
               </Link>
             </div>
           </div>

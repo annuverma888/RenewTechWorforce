@@ -1,51 +1,45 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Users,
   Target,
   ShieldCheck,
   Briefcase,
-  UserCheck,
   LayoutDashboard,
   Clock,
   ArrowRight,
-  CheckCircle2,
-  Building2,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const EPCCompaniesSection = () => {
+  const { t } = useTranslation();
   const { isCompany, isAuthenticated } = useAuth();
 
   const epcValueProps = [
     {
-      title: 'Faster Hiring',
-      tagline: 'Reduce recruitment cycle times',
-      desc: 'Find relevant solar and wind technicians quickly instead of searching manually across fragmented channels.',
+      title: t('landing.epcVal1Title', 'Faster Hiring'),
+      desc: t('landing.epcVal1Desc', 'Find relevant solar and wind technicians faster.'),
       icon: Clock,
     },
     {
-      title: 'Skill-Based Matching',
-      tagline: 'Objective technical compatibility',
-      desc: 'Use the platform’s multi-factor matching system to identify suitable technicians aligned with your project requirements.',
+      title: t('landing.epcVal2Title', 'Skill-Based Matching'),
+      desc: t('landing.epcVal2Desc', 'Compare technician skills with project requirements.'),
       icon: Target,
     },
     {
-      title: 'Verified Information',
-      tagline: 'Transparent credential review',
-      desc: 'Review available verification information including certified skills, government accreditations, standardized assessments, and Skill Passports.',
+      title: t('landing.epcVal3Title', 'Verified Information'),
+      desc: t('landing.epcVal3Desc', 'Review certified skills, assessments, and digital Skill Passports.'),
       icon: ShieldCheck,
     },
     {
-      title: 'Project-Based Hiring',
-      tagline: 'Tailored to site specifications',
-      desc: 'Post multi-MW solar arrays, wind turbine sites, or BESS installations and recruit workers based on exact project milestones.',
+      title: t('landing.epcVal4Title', 'Project-Based Hiring'),
+      desc: t('landing.epcVal4Desc', 'Recruit technicians based on site specifications and project milestones.'),
       icon: Briefcase,
     },
     {
-      title: 'Workforce Management',
-      tagline: 'Full visibility after hiring',
-      desc: 'Manage hired technicians through the built-in workforce tools, monitor active project rosters, and track performance.',
+      title: t('landing.epcVal5Title', 'Workforce Management'),
+      desc: t('landing.epcVal5Desc', 'Coordinate hired technicians, monitor project rosters, and track performance.'),
       icon: LayoutDashboard,
     },
   ];
@@ -53,75 +47,71 @@ const EPCCompaniesSection = () => {
   return (
     <section
       id="epc-companies"
-      className="py-16 sm:py-24 bg-slate-50 text-slate-900 scroll-mt-[70px] border-b border-slate-200"
+      className="py-10 sm:py-16 lg:py-20 bg-slate-50 text-slate-900 scroll-mt-[70px] border-b border-slate-200"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+        {/* Section Header */}
+        <div className="text-center max-w-2xl sm:max-w-3xl mx-auto mb-5 sm:mb-6">
           <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/70 px-3 py-1 rounded-full border border-emerald-200">
-            For EPC Companies & Contractors
+            {t('landing.forEpcsBadge', 'FOR EPCS')}
           </span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-3 tracking-tight">
-            Built for Renewable Energy Businesses
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 mt-2.5 tracking-tight">
+            {t('landing.builtForRenewable', 'Built for Renewable Energy Businesses')}
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
-            RenewTech Workforce is designed to help EPC companies find, hire and manage skilled renewable-energy workers more efficiently.
+          <p className="text-xs sm:text-sm lg:text-base text-slate-600 mt-2 sm:mt-2.5 leading-relaxed max-w-xl mx-auto">
+            {t(
+              'landing.builtForRenewableDesc',
+              'Find, hire, and manage skilled renewable-energy technicians in one place.'
+            )}
           </p>
+
+          {/* Simplified EPC Quick-Actions */}
+          <div className="mt-4 sm:mt-5 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full">
+            <Link
+              to={isAuthenticated && isCompany ? '/epc/technicians' : '/register?role=epc_company'}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs hover:shadow transition-all focus-ring group"
+            >
+              <Users size={15} className="text-emerald-400 group-hover:scale-105 transition-transform" />
+              <span>{t('landing.hireVerifiedTechnicians', 'Hire Verified Technicians')}</span>
+              <ArrowRight size={14} className="text-slate-400 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+            </Link>
+            <Link
+              to={isAuthenticated && isCompany ? '/epc/projects/new' : '/register?role=epc_company'}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4.5 py-2.5 bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 rounded-xl text-xs sm:text-sm font-semibold shadow-2xs hover:border-slate-300 transition-all focus-ring"
+            >
+              <Briefcase size={15} className="text-emerald-600" />
+              <span>{t('landing.postProjectRequirements', 'Post Project Requirements')}</span>
+            </Link>
+          </div>
         </div>
 
-        {/* 5 Value Prop Cards + CTA Card */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {epcValueProps.map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={idx}
-                className="bg-white p-6 rounded-2xl border border-slate-200 hover:border-emerald-300 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center mb-4">
-                    <Icon size={20} className="text-emerald-700" />
+        {/* Single Shared Feature Container (Matching Workflow & Technician Row Style) */}
+        <div className="max-w-2xl sm:max-w-3xl mx-auto w-full min-w-0 bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-2xs overflow-hidden">
+          <div className="divide-y divide-slate-100">
+            {epcValueProps.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={idx}
+                  className="p-3.5 sm:p-4 flex items-start gap-3 sm:gap-3.5 hover:bg-slate-50/70 transition-colors"
+                >
+                  {/* Left Column: Aligned Icon */}
+                  <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-200/70 shadow-2xs shrink-0 mt-0.5">
+                    <Icon size={16} />
                   </div>
-                  <h3 className="text-base font-bold text-slate-900 tracking-tight">
-                    {item.title}
-                  </h3>
-                  <div className="text-xs font-semibold text-emerald-700 mt-1">
-                    {item.tagline}
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-                    {item.desc}
-                  </p>
-                </div>
-                <div className="mt-5 pt-3 border-t border-slate-100 flex items-center gap-1.5 text-xs text-slate-500 font-semibold">
-                  <CheckCircle2 size={13} className="text-emerald-600 shrink-0" />
-                  <span>EPC Enterprise Value</span>
-                </div>
-              </div>
-            );
-          })}
 
-          {/* Action Card */}
-          <div className="bg-slate-900 text-white p-6 sm:p-7 rounded-2xl flex flex-col justify-between shadow-xs border border-slate-800">
-            <div>
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded border border-emerald-800/80">
-                Staff Your Project
-              </span>
-              <h3 className="text-lg sm:text-xl font-bold mt-3 leading-snug">
-                Need skilled technicians for your renewable site?
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
-                Connect with technicians across solar PV, wind generation, and substation installations.
-              </p>
-            </div>
-            <div className="mt-6 pt-4 border-t border-slate-800">
-              <Link
-                to={isAuthenticated && isCompany ? '/epc/technicians' : '/register?role=epc_company'}
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs sm:text-sm transition-colors shadow-2xs focus-ring"
-              >
-                <Users size={15} />
-                <span>Find Skilled Technicians</span>
-                <ArrowRight size={14} />
-              </Link>
-            </div>
+                  {/* Text Column: Title + Concise Description */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight leading-snug">
+                      {item.title}
+                    </h3>
+                    <p className="text-[11px] sm:text-xs text-slate-600 mt-0.5 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

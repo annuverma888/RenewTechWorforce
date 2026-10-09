@@ -21,12 +21,15 @@ import {
   X,
   Zap,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { matchingAPI, applicationAPI, technicianAPI, assessmentAPI } from '../../services/api';
+import { getStatusLabel } from '../../utils/i18nHelpers';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
 
 const TechnicianDashboard = () => {
+  const { t } = useTranslation();
   const { user, profile } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -128,7 +131,7 @@ const TechnicianDashboard = () => {
 
   // Time-appropriate greeting
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const greeting = hour < 12 ? t('technician.goodMorning') : hour < 18 ? t('technician.goodAfternoon') : t('technician.goodEvening');
   const technicianName = user?.name || 'Technician';
 
   // Extract missing skills from recommended projects breakdown if available
@@ -152,34 +155,34 @@ const TechnicianDashboard = () => {
   const actionItems = [];
   if (totalSkillsCount < 3) {
     actionItems.push({
-      title: 'Add Renewable Skills',
-      desc: 'Add at least 3 technical skills to enhance algorithmic match scoring.',
+      title: t('technician.addSkillBtn', 'Add Renewable Skills'),
+      desc: t('technician.attentionDesc', 'Add at least 3 technical skills to enhance algorithmic match scoring.'),
       to: '/technician/profile',
-      cta: 'Add Skills',
+      cta: t('common.add', 'Add Skills'),
     });
   }
   if (verifiedCertsCount === 0) {
     actionItems.push({
-      title: 'Upload Certificate',
-      desc: 'Submit SCGJ, GWO, or Wireman licenses for official platform audit.',
+      title: t('technician.uploadCertificate', 'Upload Certificate'),
+      desc: t('technician.auditNotice', 'Submit SCGJ, GWO, or Wireman licenses for official platform audit.'),
       to: '/technician/certificates',
-      cta: 'Upload Certificate',
+      cta: t('technician.uploadCertificate', 'Upload Certificate'),
     });
   }
   if (assessments.length === 0) {
     actionItems.push({
-      title: 'Complete Assessment',
-      desc: 'Take standardized exams to earn verified proficiency badges.',
+      title: t('technician.startAssessmentBtn', 'Complete Assessment'),
+      desc: t('technician.assessmentsSubtitle', 'Take standardized exams to earn verified proficiency badges.'),
       to: '/technician/assessments',
-      cta: 'Take Assessment',
+      cta: t('technician.startAssessmentBtn', 'Take Assessment'),
     });
   }
   if (!profile?.previousProjects || profile.previousProjects.length === 0) {
     actionItems.push({
-      title: 'Add Experience',
-      desc: 'Record commissioned MW and site hours to build contractor trust.',
+      title: t('technician.addProjectBtn', 'Add Experience'),
+      desc: t('technician.projectHistory', 'Record commissioned MW and site hours to build contractor trust.'),
       to: '/technician/profile',
-      cta: 'Add Experience',
+      cta: t('technician.addProjectBtn', 'Add Experience'),
     });
   }
 
@@ -194,8 +197,8 @@ const TechnicianDashboard = () => {
       {/* Main Content */}
       <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
         <Header
-          title="Dashboard"
-          subtitle="Technician Workforce Command Center"
+          title={t('navigation.dashboard')}
+          subtitle={t('technician.dashboard')}
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
 
@@ -234,7 +237,7 @@ const TechnicianDashboard = () => {
                 className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
               >
                 <RefreshCw size={12} />
-                <span>Try Again</span>
+                <span>{t('common.retry')}</span>
               </button>
             </div>
           )}
@@ -258,7 +261,7 @@ const TechnicianDashboard = () => {
                   )}
                   {isVerifiedTechnician && (
                     <div
-                      title="Verified Technician"
+                      title={t('status.VERIFIED')}
                       className="absolute -bottom-1 -right-1 bg-emerald-600 text-white p-1 rounded-full border-2 border-white shadow-xs"
                     >
                       <ShieldCheck size={12} />
@@ -275,12 +278,12 @@ const TechnicianDashboard = () => {
                     {isVerifiedTechnician ? (
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                         <ShieldCheck size={12} className="text-emerald-600" />
-                        <span>Verified</span>
+                        <span>{t('status.VERIFIED')}</span>
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
                         <AlertCircle size={12} className="text-amber-600" />
-                        <span>Needs Verification</span>
+                        <span>{t('technician.pendingStatus')}</span>
                       </span>
                     )}
                   </div>
@@ -297,7 +300,15 @@ const TechnicianDashboard = () => {
                     )}
                     <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold">
                       <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                      <span>{profile?.currentAvailability || 'Available'}</span>
+                      <span>
+                        {profile?.currentAvailability === 'Available'
+                          ? t('technician.available')
+                          : profile?.currentAvailability === 'On Project'
+                          ? t('technician.onProject')
+                          : profile?.currentAvailability === 'Unavailable'
+                          ? t('technician.unavailable')
+                          : (profile?.currentAvailability || t('technician.available'))}
+                      </span>
                     </span>
                   </p>
                 </div>
@@ -310,13 +321,13 @@ const TechnicianDashboard = () => {
                   className="min-h-[44px] px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs hover:shadow transition-all flex items-center justify-center gap-1.5 focus-ring"
                 >
                   <ShieldCheck size={16} />
-                  <span>Skill Passport</span>
+                  <span>{t('navigation.skillPassport')}</span>
                 </Link>
                 <Link
                   to="/technician/profile"
                   className="min-h-[44px] px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center focus-ring"
                 >
-                  Edit Profile
+                  {t('technician.editProfile')}
                 </Link>
               </div>
             </div>
@@ -327,9 +338,9 @@ const TechnicianDashboard = () => {
                 <div className="flex items-start gap-2 text-amber-900">
                   <AlertCircle size={16} className="text-amber-600 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold">Credentials Need Attention:</span>
+                    <span className="font-bold">{t('technician.attentionTitle')}</span>
                     <p className="text-amber-800 text-[11px] sm:text-xs mt-0.5">
-                      Upload your GWO, SCGJ or Wireman certificates to obtain verified technician status and unlock top contractor matches.
+                      {t('technician.attentionDesc')}
                     </p>
                   </div>
                 </div>
@@ -337,7 +348,7 @@ const TechnicianDashboard = () => {
                   to="/technician/certificates"
                   className="min-h-[40px] px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shrink-0 self-start sm:self-center flex items-center justify-center transition-colors"
                 >
-                  Upload Certificate
+                  {t('technician.uploadCertificate')}
                 </Link>
               </div>
             ) : profileCompletion < 80 ? (
@@ -345,9 +356,9 @@ const TechnicianDashboard = () => {
                 <div className="flex items-start gap-2 text-emerald-900">
                   <CheckCircle2 size={16} className="text-emerald-600 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold">Profile {profileCompletion}% Complete:</span>
+                    <span className="font-bold">{t('technician.profileCompletion')} {profileCompletion}%:</span>
                     <p className="text-emerald-800 text-[11px] sm:text-xs mt-0.5">
-                      Add your previous project experience and take a skill assessment to reach 100% verified status.
+                      {t('technician.completeItemsBelow')}
                     </p>
                   </div>
                 </div>
@@ -355,14 +366,14 @@ const TechnicianDashboard = () => {
                   to="/technician/profile"
                   className="min-h-[40px] px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-xs shrink-0 self-start sm:self-center flex items-center justify-center transition-colors"
                 >
-                  Complete Profile
+                  {t('technician.editProfile')}
                 </Link>
               </div>
             ) : (
               <div className="p-3 bg-emerald-50/50 border border-emerald-100 rounded-xl flex items-center gap-2 text-xs text-emerald-800">
                 <ShieldCheck size={16} className="text-emerald-600 shrink-0" />
                 <span className="font-medium text-[11px] sm:text-xs">
-                  Your profile and technical credentials are fully audited and ready for direct EPC mobilization.
+                  {t('technician.profileReadyNotice')}
                 </span>
               </div>
             )}
@@ -382,7 +393,7 @@ const TechnicianDashboard = () => {
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                      Profile Completion
+                      {t('technician.profileCompletion')}
                     </span>
                     <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
                       <CheckCircle2 size={16} />
@@ -400,7 +411,7 @@ const TechnicianDashboard = () => {
                     />
                   </div>
                   <span className="text-[10px] font-semibold text-slate-400 mt-1 block">
-                    {profileCompletion >= 80 ? 'Optimized for matching' : 'Complete items below'}
+                    {profileCompletion >= 80 ? t('technician.optimizedForMatching') : t('technician.completeItemsBelow')}
                   </span>
                 </div>
               </div>
@@ -410,7 +421,7 @@ const TechnicianDashboard = () => {
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                      Verified Skills
+                      {t('technician.verifiedSkills')}
                     </span>
                     <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
                       <Award size={16} />
@@ -423,7 +434,7 @@ const TechnicianDashboard = () => {
                 <div className="mt-3">
                   <span className="text-[10px] font-semibold text-slate-500 block">
                     {verifiedSkillsCount > 0
-                      ? `${verifiedSkillsCount} of ${totalSkillsCount} Skills Audited`
+                      ? `${verifiedSkillsCount} of ${totalSkillsCount} ${t('technician.skillsAudited')}`
                       : `${totalSkillsCount} Listed (${verifiedCertsCount} Certs)`}
                   </span>
                 </div>
@@ -434,7 +445,7 @@ const TechnicianDashboard = () => {
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                      Recommended
+                      {t('technician.recommendedProjects')}
                     </span>
                     <div className="w-8 h-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
                       <Compass size={16} />
@@ -446,7 +457,7 @@ const TechnicianDashboard = () => {
                 </div>
                 <div className="mt-3">
                   <span className="text-[10px] font-semibold text-teal-700 block">
-                    {recommendedProjects.length > 0 ? 'Active matching projects' : 'Browse open catalog'}
+                    {recommendedProjects.length > 0 ? t('technician.activeMatchingProjects') : t('empty.noProjectsFound')}
                   </span>
                 </div>
               </div>
@@ -456,7 +467,7 @@ const TechnicianDashboard = () => {
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                      Applications
+                      {t('navigation.applications')}
                     </span>
                     <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
                       <FileText size={16} />
@@ -468,7 +479,7 @@ const TechnicianDashboard = () => {
                 </div>
                 <div className="mt-3">
                   <span className="text-[10px] font-semibold text-blue-700 block">
-                    {applications.length > 0 ? 'Submissions in pipeline' : 'No applications active'}
+                    {applications.length > 0 ? `${applications.length} ${t('navigation.applications')}` : t('technician.noApplicationsActive')}
                   </span>
                 </div>
               </div>
@@ -485,17 +496,17 @@ const TechnicianDashboard = () => {
                   <div>
                     <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
                       <Sparkles size={17} className="text-emerald-600" />
-                      <span>Recommended for You</span>
+                      <span>{t('technician.recommendedOpportunities')}</span>
                     </h2>
                     <p className="text-xs text-slate-500 mt-0.5">
-                      Opportunities matched against your verified skills, experience, and mobility radius.
+                      {t('technician.recommendedDesc')}
                     </p>
                   </div>
                   <Link
                     to="/technician/recommended"
                     className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 focus-ring rounded"
                   >
-                    <span>View All</span>
+                    <span>{t('technician.viewAll')}</span>
                     <ArrowRight size={13} />
                   </Link>
                 </div>
@@ -513,9 +524,9 @@ const TechnicianDashboard = () => {
                       <Compass size={24} />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900">No matching opportunities yet</h3>
+                      <h3 className="text-sm font-bold text-slate-900">{t('empty.noProjectsFound', 'No matching opportunities yet')}</h3>
                       <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                        Complete your profile and add certifications to improve your match ranking with active EPC developers.
+                        {t('technician.attentionDesc', 'Complete your profile and add certifications to improve your match ranking with active EPC developers.')}
                       </p>
                     </div>
                     <div className="pt-1">
@@ -524,7 +535,7 @@ const TechnicianDashboard = () => {
                         className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors shadow-2xs"
                       >
                         <Wrench size={13} />
-                        <span>Update Profile</span>
+                        <span>{t('technician.editProfile', 'Update Profile')}</span>
                       </Link>
                     </div>
                   </div>
@@ -559,7 +570,7 @@ const TechnicianDashboard = () => {
                                 <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">{companyName}</p>
                               </div>
                               <span className="text-xs sm:text-sm font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0">
-                                {matchScore}% Match
+                                {matchScore}% {t('technician.matchScore', 'Match')}
                               </span>
                             </div>
 
@@ -570,7 +581,7 @@ const TechnicianDashboard = () => {
                                 <span>{locationStr}</span>
                               </span>
                               <span className="inline-flex items-center gap-1 font-semibold text-slate-700">
-                                {isWind ? '💨 Wind' : '☀️ Solar'}
+                                {isWind ? `💨 ${t('sectors.windEnergy', 'Wind')}` : `☀️ ${t('landing.solarPVSector', 'Solar')}`}
                               </span>
                             </div>
 
@@ -578,7 +589,7 @@ const TechnicianDashboard = () => {
                             {requiredSkills.length > 0 && (
                               <div className="pt-1">
                                 <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                                  Key Skills
+                                  {t('epc.requiredSkills', 'Key Skills')}
                                 </div>
                                 <div className="flex flex-wrap gap-1.5">
                                   {requiredSkills.slice(0, 3).map((sk, sIdx) => (
@@ -591,7 +602,7 @@ const TechnicianDashboard = () => {
                                   ))}
                                   {requiredSkills.length > 3 && (
                                     <span className="text-xs font-medium text-slate-400 px-1 py-1">
-                                      +{requiredSkills.length - 3} more
+                                      +{requiredSkills.length - 3} {t('common.seeMore', 'more')}
                                     </span>
                                   )}
                                 </div>
@@ -605,12 +616,12 @@ const TechnicianDashboard = () => {
                               to={proj._id ? `/projects/${proj._id}` : '/projects'}
                               className="min-h-[44px] px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-xl text-xs sm:text-sm border border-slate-300 transition-colors flex items-center justify-center focus-ring"
                             >
-                              View Details
+                              {t('common.viewDetails')}
                             </Link>
 
                             {item.hasApplied ? (
                               <span className="min-h-[44px] px-3 py-2 bg-slate-100 text-slate-500 font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1">
-                                <CheckCircle2 size={14} /> Applied
+                                <CheckCircle2 size={14} /> {t('common.applied')}
                               </span>
                             ) : (
                               <button
@@ -618,7 +629,7 @@ const TechnicianDashboard = () => {
                                 onClick={() => setApplyModalProject(proj)}
                                 className="min-h-[44px] px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs sm:text-sm shadow-xs transition-colors cursor-pointer flex items-center justify-center focus-ring"
                               >
-                                Apply
+                                {t('common.apply')}
                               </button>
                             )}
                           </div>
@@ -635,17 +646,17 @@ const TechnicianDashboard = () => {
                   <div>
                     <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
                       <FileText size={17} className="text-emerald-600" />
-                      <span>Recent Applications</span>
+                      <span>{t('technician.recentApplications')}</span>
                     </h2>
                     <p className="text-xs text-slate-500 mt-0.5">
-                      Your current project submissions and hiring status.
+                      {t('technician.recentApplicationsDesc')}
                     </p>
                   </div>
                   <Link
                     to="/technician/applications"
                     className="min-h-[36px] px-2 text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 focus-ring rounded"
                   >
-                    <span>View All</span>
+                    <span>{t('technician.viewAll')}</span>
                     <ArrowRight size={13} />
                   </Link>
                 </div>
@@ -659,13 +670,13 @@ const TechnicianDashboard = () => {
                 ) : applications.length === 0 ? (
                   /* Empty state for applications */
                   <div className="py-8 text-center space-y-2.5">
-                    <p className="text-xs text-slate-500">No applications submitted yet.</p>
+                    <p className="text-xs text-slate-500">{t('empty.noApplicationsYet')}</p>
                     <Link
                       to="/technician/recommended"
                       className="min-h-[44px] inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold transition-colors shadow-2xs"
                     >
                       <Compass size={14} />
-                      <span>Explore Opportunities</span>
+                      <span>{t('landing.findWorkCta')}</span>
                     </Link>
                   </div>
                 ) : (
@@ -696,11 +707,11 @@ const TechnicianDashboard = () => {
                           <div>
                             <h3 className="font-bold text-slate-900 text-sm">{projName}</h3>
                             <p className="text-slate-500 mt-0.5 text-xs">
-                              {compName} • Applied on {appDate}
+                              {compName} • {t('common.applied')}: {appDate}
                             </p>
                           </div>
                           <span className={`px-2.5 py-1 rounded-md border text-[11px] font-semibold self-start sm:self-center ${statusColors[status] || statusColors.Applied}`}>
-                            {status}
+                            {getStatusLabel(status, t)}
                           </span>
                         </div>
                       );
@@ -713,22 +724,22 @@ const TechnicianDashboard = () => {
             {/* RIGHT 4 COLUMNS: Skill Passport (Priority #4), Next Action (Priority #5), Skills & Gap */}
             <div className="lg:col-span-4 space-y-6">
               {/* 4. DIGITAL SKILL PASSPORT CARD (Mobile Priority #4) */}
-              <div className="bg-gradient-to-br from-slate-900 via-slate-850 to-slate-900 text-white rounded-2xl p-5 sm:p-6 border border-slate-800 shadow-md space-y-3.5">
+              <div className="bg-gradient-to-br from-slate-900 via-slate-855 to-slate-900 text-white rounded-2xl p-5 sm:p-6 border border-slate-800 shadow-md space-y-3.5">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
-                    Credential Hub
+                    {t('skillPassport.registryTitle', 'Credential Hub')}
                   </span>
                   <span className="text-[10px] font-bold text-slate-300 bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700">
-                    QR Ready
+                    {t('skillPassport.verifiedBadge', 'QR Ready')}
                   </span>
                 </div>
                 <div>
                   <h2 className="text-base font-bold text-white flex items-center gap-2">
                     <ShieldCheck size={18} className="text-emerald-400" />
-                    <span>Digital Skill Passport</span>
+                    <span>{t('skillPassport.title')}</span>
                   </h2>
                   <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                    Your tamper-proof QR identity and verified competency benchmarks ready to share with hiring EPC contractors.
+                    {t('technician.passportSubtitle')}
                   </p>
                 </div>
 
@@ -738,7 +749,7 @@ const TechnicianDashboard = () => {
                     className="w-full min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs transition-colors focus-ring"
                   >
                     <ShieldCheck size={16} />
-                    <span>Access Skill Passport</span>
+                    <span>{t('technician.viewFullPassport', 'Access Skill Passport')}</span>
                   </Link>
                 </div>
               </div>
@@ -748,10 +759,10 @@ const TechnicianDashboard = () => {
                 <div className="pb-2 border-b border-slate-100">
                   <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
                     <CheckCircle2 size={16} className="text-emerald-600" />
-                    <span>Next Recommended Action</span>
+                    <span>{t('technician.recommendedOpportunities', 'Next Recommended Action')}</span>
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Clear steps to increase your contractor match score.
+                    {t('technician.recommendedDesc', 'Clear steps to increase your contractor match score.')}
                   </p>
                 </div>
 
@@ -759,17 +770,17 @@ const TechnicianDashboard = () => {
                   <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 space-y-2">
                     <div className="flex items-center gap-2">
                       <ShieldCheck size={18} className="text-emerald-600 shrink-0" />
-                      <span className="font-bold">Profile 100% Ready</span>
+                      <span className="font-bold">{t('technician.profileReadyNotice', 'Profile 100% Ready')}</span>
                     </div>
                     <p className="text-slate-600 text-[11px]">
-                      Your credentials are top-tier. Explore new project openings or manage applications.
+                      {t('technician.profileReadyNotice')}
                     </p>
                     <Link
                       to="/technician/recommended"
                       className="min-h-[44px] w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold transition-colors shadow-2xs"
                     >
                       <Compass size={14} />
-                      <span>View Recommended Projects</span>
+                      <span>{t('technician.recommendedProjects', 'View Recommended Projects')}</span>
                     </Link>
                   </div>
                 ) : (
@@ -800,13 +811,13 @@ const TechnicianDashboard = () => {
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                   <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
                     <Wrench size={16} className="text-emerald-600" />
-                    <span>Your Skills</span>
+                    <span>{t('technician.skillsSectionTitle', 'Your Skills')}</span>
                   </h2>
                   <Link
                     to="/technician/profile"
                     className="min-h-[36px] flex items-center text-xs font-bold text-emerald-700 hover:text-emerald-800 focus-ring rounded"
                   >
-                    View All
+                    {t('technician.viewAll', 'View All')}
                   </Link>
                 </div>
 
@@ -843,12 +854,12 @@ const TechnicianDashboard = () => {
                   </div>
                 ) : (
                   <div className="py-4 text-center space-y-2">
-                    <p className="text-xs text-slate-500">No skills added yet.</p>
+                    <p className="text-xs text-slate-500">{t('technician.noSkillsYet', 'No skills added yet.')}</p>
                     <Link
                       to="/technician/profile"
                       className="min-h-[40px] inline-flex items-center justify-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-700"
                     >
-                      <span>Add Skills</span>
+                      <span>{t('technician.addSkillBtn', 'Add Skills')}</span>
                       <ArrowRight size={12} />
                     </Link>
                   </div>
@@ -979,9 +990,9 @@ const TechnicianDashboard = () => {
               <div className="bg-slate-900 text-white rounded-2xl p-5 sm:p-6 border border-slate-800 shadow-md space-y-4">
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
-                    Quick Navigation
+                    {t('common.actions', 'Quick Navigation')}
                   </span>
-                  <h2 className="text-base font-bold text-white mt-1">Quick Actions</h2>
+                  <h2 className="text-base font-bold text-white mt-1">{t('common.actions', 'Quick Actions')}</h2>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-xs">
@@ -990,7 +1001,7 @@ const TechnicianDashboard = () => {
                     className="p-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl flex flex-col justify-between transition-colors focus-ring"
                   >
                     <ShieldCheck size={16} className="text-emerald-400 mb-1" />
-                    <span className="font-semibold text-white">Skill Passport</span>
+                    <span className="font-semibold text-white">{t('navigation.skillPassport')}</span>
                   </Link>
 
                   <Link
@@ -998,7 +1009,7 @@ const TechnicianDashboard = () => {
                     className="p-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl flex flex-col justify-between transition-colors focus-ring"
                   >
                     <Compass size={16} className="text-teal-400 mb-1" />
-                    <span className="font-semibold text-white">Find Projects</span>
+                    <span className="font-semibold text-white">{t('technician.recommendedProjects')}</span>
                   </Link>
 
                   <Link
@@ -1006,7 +1017,7 @@ const TechnicianDashboard = () => {
                     className="p-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl flex flex-col justify-between transition-colors focus-ring"
                   >
                     <Award size={16} className="text-amber-400 mb-1" />
-                    <span className="font-semibold text-white">Assessments</span>
+                    <span className="font-semibold text-white">{t('navigation.assessments')}</span>
                   </Link>
 
                   <Link
@@ -1014,7 +1025,7 @@ const TechnicianDashboard = () => {
                     className="p-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl flex flex-col justify-between transition-colors focus-ring"
                   >
                     <User size={16} className="text-sky-400 mb-1" />
-                    <span className="font-semibold text-white">Update Profile</span>
+                    <span className="font-semibold text-white">{t('technician.editProfile')}</span>
                   </Link>
                 </div>
               </div>
@@ -1033,14 +1044,14 @@ const TechnicianDashboard = () => {
                   <Briefcase size={16} />
                 </div>
                 <h2 className="text-base font-bold text-slate-900">
-                  Apply to Project
+                  {t('technician.confirmApplication')}
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => setApplyModalProject(null)}
                 className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 rounded-lg focus-ring cursor-pointer"
-                aria-label="Close modal"
+                aria-label={t('common.close')}
               >
                 <X size={20} />
               </button>
@@ -1061,7 +1072,7 @@ const TechnicianDashboard = () => {
             <form onSubmit={handleApply} className="space-y-4">
               <div>
                 <label htmlFor="apply-cover-note" className="block text-xs font-bold text-slate-700 mb-1">
-                  Cover Note & Availability (Optional)
+                  {t('technician.coverNotePrompt')}
                 </label>
                 <textarea
                   id="apply-cover-note"
@@ -1079,14 +1090,14 @@ const TechnicianDashboard = () => {
                   onClick={() => setApplyModalProject(null)}
                   className="min-h-[44px] px-4 py-2 border border-slate-300 text-slate-700 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 cursor-pointer focus-ring flex items-center justify-center"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={applyingId === applyModalProject._id}
                   className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs hover:shadow transition-all disabled:opacity-50 cursor-pointer focus-ring flex items-center justify-center"
                 >
-                  {applyingId === applyModalProject._id ? 'Submitting...' : 'Submit Application'}
+                  {applyingId === applyModalProject._id ? t('common.loading') : t('technician.submitApplication')}
                 </button>
               </div>
             </form>

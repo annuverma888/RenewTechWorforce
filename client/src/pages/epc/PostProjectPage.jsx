@@ -28,6 +28,8 @@ import { useAuth } from '../../context/AuthContext';
 import { projectAPI, technicianAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel, getProficiencyLabel } from '../../utils/i18nHelpers';
 
 const POPULAR_SOLAR_SKILLS = [
   'PV Installation',
@@ -82,6 +84,7 @@ const INDIAN_STATES = [
 ];
 
 const PostProjectPage = () => {
+  const { t } = useTranslation();
   const { user, profile } = useAuth();
   const navigate = useNavigate();
 
@@ -432,7 +435,7 @@ const PostProjectPage = () => {
                   )}
 
                   <form onSubmit={handleSubmit} className="space-y-8">
-                    {/* SECTION 1: Category & Project Title */}
+                    {/* SECTION 1: Category & {t('epc.projectTitle', 'Project Title')} */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
                         <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-black flex items-center justify-center">
@@ -556,7 +559,7 @@ const PostProjectPage = () => {
                       {/* Scope of Work / Description */}
                       <div>
                         <label className="block text-xs font-bold text-slate-700 mb-1">
-                          Scope of Work & Project Description <span className="text-rose-500">*</span>
+                          Scope of Work & {t('epc.projectDescription', 'Project Description')} <span className="text-rose-500">*</span>
                         </label>
                         <textarea
                           rows={4}

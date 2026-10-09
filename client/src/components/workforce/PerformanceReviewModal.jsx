@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   X,
   Star,
@@ -48,6 +49,8 @@ const RatingInput = ({ label, value, onChange, description }) => {
 };
 
 const PerformanceReviewModal = ({
+  /* i18n */
+
   isOpen,
   onClose,
   assignment,
@@ -64,6 +67,7 @@ const PerformanceReviewModal = ({
   const [punctuality, setPunctuality] = useState(5);
   const [qualityOfWork, setQualityOfWork] = useState(5);
   const [feedbackComment, setFeedbackComment] = useState('');
+  const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 

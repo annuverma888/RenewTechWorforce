@@ -25,12 +25,15 @@ import {
 import { projectAPI, matchingAPI, applicationAPI, workforceAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel, getProficiencyLabel } from '../../utils/i18nHelpers';
 import MatchScoreBadge from '../../components/matching/MatchScoreBadge';
 import MatchExplanationModal from '../../components/matching/MatchExplanationModal';
 import HireTechnicianModal from '../../components/workforce/HireTechnicianModal';
 import PerformanceReviewModal from '../../components/workforce/PerformanceReviewModal';
 
 const ProjectDetailsPage = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 

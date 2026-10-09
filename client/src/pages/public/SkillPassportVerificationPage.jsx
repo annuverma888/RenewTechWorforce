@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   ShieldCheck,
   CheckCircle2,
@@ -27,6 +28,7 @@ import {
 } from 'lucide-react';
 import { technicianAPI } from '../../services/api';
 import SkillPassportScannerModal from '../../components/passport/SkillPassportScannerModal';
+import LanguageSelector from '../../components/common/LanguageSelector';
 
 const formatDate = (dateString) => {
   if (!dateString) return 'Official Record';
@@ -50,6 +52,7 @@ const getTechIcon = (type) => {
 };
 
 const SkillPassportVerificationPage = () => {
+  const { t } = useTranslation();
   const { technicianId, id } = useParams();
   const targetId = technicianId || id;
 
@@ -205,16 +208,19 @@ const SkillPassportVerificationPage = () => {
   if (notFound || (!passport && !verificationFailed && !error)) {
     return (
       <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4 sm:p-6">
+        <div className="mb-4">
+          <LanguageSelector />
+        </div>
         <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200 shadow-xl text-center space-y-4">
           <div className="w-16 h-16 rounded-2xl bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center mx-auto">
             <XCircle size={32} />
           </div>
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-              RenewTech Workforce Registry
+              {t('skillPassport.registryTitle', 'RenewTech Workforce Registry')}
             </span>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight mt-1">
-              Skill Passport Not Found
+              {t('empty.noProjectsFound', 'Skill Passport Not Found')}
             </h1>
           </div>
           <p className="text-xs text-slate-600 leading-relaxed">
@@ -222,7 +228,7 @@ const SkillPassportVerificationPage = () => {
           </p>
           {targetId && (
             <div className="p-3 bg-slate-50 rounded-xl font-mono text-xs text-slate-600 border border-slate-200">
-              Queried ID: <span className="font-bold text-slate-900">{targetId}</span>
+              {t('skillPassport.queriedId', 'Queried ID')}: <span className="font-bold text-slate-900">{targetId}</span>
             </div>
           )}
           <div className="pt-2 flex flex-col sm:flex-row gap-2 justify-center">
@@ -231,14 +237,14 @@ const SkillPassportVerificationPage = () => {
               className="min-h-[44px] px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
               <Camera size={14} />
-              <span>Scan Another QR</span>
+              <span>{t('skillPassport.scanAnotherQR', 'Scan Another QR')}</span>
             </button>
             <button
               onClick={fetchPublicVerification}
               className="min-h-[44px] px-4 py-2.5 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
               <RefreshCw size={13} />
-              <span>Retry Search</span>
+              <span>{t('skillPassport.retrySearch', 'Retry Search')}</span>
             </button>
           </div>
         </div>
@@ -255,16 +261,19 @@ const SkillPassportVerificationPage = () => {
   if (verificationFailed) {
     return (
       <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4 sm:p-6">
+        <div className="mb-4">
+          <LanguageSelector />
+        </div>
         <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-amber-200 shadow-xl text-center space-y-4">
           <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center mx-auto">
             <AlertTriangle size={32} />
           </div>
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-              RenewTech Workforce Registry
+              {t('skillPassport.registryTitle', 'RenewTech Workforce Registry')}
             </span>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight mt-1">
-              Passport Verification Inactive
+              {t('skillPassport.inactiveBadge', 'Passport Verification Inactive')}
             </h1>
           </div>
           <p className="text-xs text-slate-600 leading-relaxed">
@@ -272,7 +281,7 @@ const SkillPassportVerificationPage = () => {
           </p>
           {passport?.passportId && (
             <div className="p-3 bg-slate-50 rounded-xl font-mono text-xs text-slate-600 border border-slate-200 break-all">
-              Passport ID: <span className="font-bold text-slate-900">{passport.passportId}</span>
+              {t('skillPassport.queriedId', 'Passport ID')}: <span className="font-bold text-slate-900">{passport.passportId}</span>
             </div>
           )}
           <div className="text-[11px] text-slate-500 border-t border-slate-100 pt-3">
@@ -287,12 +296,15 @@ const SkillPassportVerificationPage = () => {
   if (error && !passport) {
     return (
       <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4 sm:p-6">
+        <div className="mb-4">
+          <LanguageSelector />
+        </div>
         <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-rose-200 shadow-xl text-center space-y-4">
           <div className="w-16 h-16 rounded-2xl bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center mx-auto">
             <AlertTriangle size={32} />
           </div>
           <h1 className="text-xl font-bold text-slate-900 tracking-tight">
-            Unable to Verify Right Now
+            {t('errors.networkError', 'Unable to Verify Right Now')}
           </h1>
           <p className="text-xs text-slate-600 leading-relaxed">{error}</p>
           <button
@@ -300,7 +312,7 @@ const SkillPassportVerificationPage = () => {
             className="min-h-[44px] px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <RefreshCw size={13} />
-            <span>Try Again</span>
+            <span>{t('common.retry', 'Try Again')}</span>
           </button>
         </div>
       </div>
@@ -342,38 +354,41 @@ const SkillPassportVerificationPage = () => {
                 RenewTech Workforce
               </div>
               <div className="text-[11px] text-emerald-400 font-medium">
-                Skill Passport Verification Authority
+                {t('skillPassport.verificationAuthority', 'Skill Passport Verification Authority')}
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 sm:flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2 w-full sm:w-auto">
+            {/* Public Page Language Selector */}
+            <LanguageSelector variant="dark" />
+
             <button
               type="button"
               onClick={() => setScannerModalOpen(true)}
               className="min-h-[44px] px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-              title="Scan another QR"
+              title={t('skillPassport.scanAnotherQR', 'Scan QR')}
             >
               <Camera size={14} className="shrink-0" />
-              <span>Scan QR</span>
+              <span>{t('skillPassport.scanAnotherQR', 'Scan QR')}</span>
             </button>
             <button
               type="button"
               onClick={handleCopyLink}
               className="min-h-[44px] px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-              title="Copy verification link"
+              title={t('common.copyLink', 'Copy Link')}
             >
               {copiedLink ? <Check size={14} className="text-emerald-400 shrink-0" /> : <Copy size={14} className="shrink-0" />}
-              <span>{copiedLink ? 'Copied' : 'Share'}</span>
+              <span>{copiedLink ? t('common.copied', 'Copied') : t('common.share', 'Share')}</span>
             </button>
             <button
               type="button"
               onClick={handlePrint}
               className="min-h-[44px] px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-              title="Print official audit copy"
+              title={t('common.print', 'Print')}
             >
               <Download size={14} className="shrink-0" />
-              <span>Print</span>
+              <span>{t('common.print', 'Print')}</span>
             </button>
           </div>
         </div>

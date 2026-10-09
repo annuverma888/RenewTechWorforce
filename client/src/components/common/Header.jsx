@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Menu, ChevronDown, Check, Clock, AlertCircle, User, ShieldCheck, LogOut, LayoutDashboard, Users, Building } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { technicianAPI } from '../../services/api';
 import NotificationDropdown from './NotificationDropdown';
 import Badge from './Badge';
+import LanguageSelector from './LanguageSelector';
 
 const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const handleMenuToggle = onMenuToggle || onMenuClick || (() => {});
   const { user, profile, isTechnician, isCompany, isAdmin, updateProfileState, logout, requestLogout } = useAuth();
   const [availabilityDropdown, setAvailabilityDropdown] = useState(false);
@@ -57,6 +60,13 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
   };
 
   const currentAvail = profile?.currentAvailability || 'Available';
+
+  const getStatusLabel = (status) => {
+    if (status === 'Available') return t('technician.available', 'Available');
+    if (status === 'On Project') return t('technician.onProject', 'On Project');
+    if (status === 'Unavailable') return t('technician.unavailable', 'Unavailable');
+    return status;
+  };
 
   const handleUpdateAvailability = async (newStatus) => {
     try {
@@ -118,8 +128,11 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
         </div>
       </div>
 
-      {/* Right: Actions, Availability Toggle & Notifications */}
+      {/* Right: Actions, Language Selector, Availability Toggle & Notifications */}
       <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        {/* Global Language Selector */}
+        <LanguageSelector />
+
         {/* Availability Toggle for Technicians */}
         {isTechnician && (
           <div className="relative" ref={availDropdownRef}>
@@ -139,9 +152,9 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     : 'bg-slate-400'
                 }`}
               />
-              <span className="hidden md:inline text-slate-700">Status:</span>
+              <span className="hidden md:inline text-slate-700">{t('technician.statusLabel', 'Status:')}</span>
               <span className="text-[11px] sm:text-xs text-slate-800 font-semibold truncate max-w-[70px] xs:max-w-[80px] sm:max-w-none">
-                {currentAvail}
+                {getStatusLabel(currentAvail)}
               </span>
               <ChevronDown size={13} className="text-slate-400 shrink-0" />
             </button>
@@ -149,7 +162,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
             {availabilityDropdown && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in duration-100">
                 <div className="px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100">
-                  Set Deployment Status
+                  {t('technician.setDeploymentStatus', 'Set Deployment Status')}
                 </div>
                 {['Available', 'On Project', 'Unavailable'].map((status) => (
                   <button
@@ -158,7 +171,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     onClick={() => handleUpdateAvailability(status)}
                     className="w-full text-left px-3.5 py-2.5 min-h-[40px] text-xs sm:text-sm flex items-center justify-between hover:bg-slate-50 font-medium text-slate-700 transition-colors cursor-pointer"
                   >
-                    <span>{status}</span>
+                    <span>{getStatusLabel(status)}</span>
                     {currentAvail === status && (
                       <Check size={14} className="text-emerald-600 font-bold" />
                     )}
@@ -192,7 +205,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                 {user?.name?.split(' ')[0] || 'User'}
               </span>
               <span className="block text-[10px] font-semibold text-emerald-600 uppercase tracking-wider">
-                {user?.role === 'technician' ? 'Technician' : user?.role === 'epc_company' ? 'EPC' : user?.role === 'admin' ? 'Admin' : 'Member'}
+                {user?.role === 'technician' ? t('navigation.technicians', 'Technician') : user?.role === 'epc_company' ? 'EPC' : user?.role === 'admin' ? t('auth.adminRole', 'Admin') : t('auth.member', 'Member')}
               </span>
             </div>
             <ChevronDown size={14} className="text-slate-400 hidden sm:block shrink-0" />
@@ -205,7 +218,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                 <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
                 <div className="mt-1">
                   <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wider">
-                    {user?.role === 'technician' ? 'Technician' : user?.role === 'epc_company' ? 'EPC Contractor' : 'System Admin'}
+                    {user?.role === 'technician' ? t('navigation.technicians', 'Technician') : user?.role === 'epc_company' ? t('auth.epcRoleTitle', 'EPC Contractor') : t('admin.dashboard', 'Admin')}
                   </span>
                 </div>
               </div>
@@ -218,7 +231,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
                   >
                     <User size={14} className="text-slate-400" />
-                    <span>Profile</span>
+                    <span>{t('navigation.profile', 'Profile')}</span>
                   </Link>
                 )}
                 {isTechnician && (
@@ -228,7 +241,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
                   >
                     <ShieldCheck size={14} className="text-slate-400" />
-                    <span>Skill Passport</span>
+                    <span>{t('navigation.skillPassport', 'Skill Passport')}</span>
                   </Link>
                 )}
                 {isCompany && (
@@ -238,7 +251,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
                   >
                     <LayoutDashboard size={14} className="text-slate-400" />
-                    <span>Dashboard</span>
+                    <span>{t('navigation.dashboard', 'Dashboard')}</span>
                   </Link>
                 )}
                 {isCompany && (
@@ -248,7 +261,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
                   >
                     <Users size={14} className="text-slate-400" />
-                    <span>Active Workforce</span>
+                    <span>{t('navigation.workforce', 'Workforce')}</span>
                   </Link>
                 )}
                 {isAdmin && (
@@ -258,7 +271,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
                   >
                     <LayoutDashboard size={14} className="text-slate-400" />
-                    <span>Admin Dashboard</span>
+                    <span>{t('admin.dashboard', 'Admin Dashboard')}</span>
                   </Link>
                 )}
                 {isAdmin && (
@@ -268,7 +281,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
                   >
                     <ShieldCheck size={14} className="text-slate-400" />
-                    <span>Certificate Audits</span>
+                    <span>{t('navigation.certificatesAndAudits', 'Certificate Audits')}</span>
                   </Link>
                 )}
                 {isAdmin && (
@@ -278,7 +291,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
                   >
                     <Users size={14} className="text-slate-400" />
-                    <span>Technicians</span>
+                    <span>{t('navigation.technicians', 'Technicians')}</span>
                   </Link>
                 )}
                 {isAdmin && (
@@ -288,7 +301,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                     className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 font-medium"
                   >
                     <Building size={14} className="text-slate-400" />
-                    <span>EPC Companies</span>
+                    <span>{t('navigation.epcCompanies', 'EPC Companies')}</span>
                   </Link>
                 )}
               </div>
@@ -300,7 +313,7 @@ const Header = ({ title = 'Dashboard', subtitle = '', onMenuToggle, onMenuClick 
                   className="w-full flex items-center gap-2 px-4 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                 >
                   <LogOut size={14} />
-                  <span>Logout</span>
+                  <span>{t('navigation.logout', 'Logout')}</span>
                 </button>
               </div>
             </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   X,
   Copy,
@@ -11,6 +12,7 @@ import {
 } from 'lucide-react';
 
 const SkillPassportShareModal = ({ isOpen, onClose, passport, verificationUrl }) => {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [nativeShareError, setNativeShareError] = useState('');
 

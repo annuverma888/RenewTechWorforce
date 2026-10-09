@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { LogOut, X, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -14,6 +15,7 @@ const LogoutConfirmationModal = ({
   onConfirm,
   onCancel,
 }) => {
+  const { t } = useTranslation();
   // Prevent background scrolling while modal is open
   useEffect(() => {
     if (isOpen) {
@@ -95,14 +97,14 @@ const LogoutConfirmationModal = ({
                   data-testid="logout-modal-title"
                   className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight leading-snug"
                 >
-                  Are you sure you want to log out?
+                  {t('auth.logoutConfirmTitle', 'Are you sure you want to log out?')}
                 </h3>
                 <p
                   id="logout-dialog-description"
                   data-testid="logout-modal-description"
                   className="mt-1.5 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal"
                 >
-                  You will need to log in again to access your dashboard.
+                  {t('auth.logoutConfirmMsg', 'You will need to log in again to access your dashboard.')}
                 </p>
               </div>
             </div>
@@ -116,7 +118,7 @@ const LogoutConfirmationModal = ({
                 disabled={isLoading}
                 className="w-full sm:w-auto px-5 py-2.5 min-h-[44px] rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 active:bg-slate-100 transition-colors shadow-2xs cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-center"
               >
-                Cancel
+                {t('common.cancel', 'Cancel')}
               </button>
 
               <button
@@ -129,10 +131,10 @@ const LogoutConfirmationModal = ({
                 {isLoading ? (
                   <>
                     <Loader2 size={16} className="animate-spin shrink-0" />
-                    <span>Logging out...</span>
+                    <span>{t('auth.loggingOut', 'Logging out...')}</span>
                   </>
                 ) : (
-                  <span>Log Out</span>
+                  <span>{t('navigation.logout', 'Log Out')}</span>
                 )}
               </button>
             </div>

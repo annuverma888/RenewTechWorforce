@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard,
   Compass,
@@ -21,6 +22,7 @@ import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, isTechnician, isCompany, isAdmin, logout, requestLogout } = useAuth();
 
   // Handle escape key and prevent body scrolling when drawer is open on mobile
@@ -54,30 +56,30 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
   };
 
   const technicianLinks = [
-    { to: '/technician/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/technician/profile', label: 'Profile', icon: User },
-    { to: '/technician/certificates', label: 'Certificates', icon: FileCheck },
-    { to: '/technician/assessments', label: 'Assessments', icon: Award },
-    { to: '/technician/recommended', label: 'Recommended Projects', icon: Compass },
-    { to: '/technician/applications', label: 'Applications', icon: FileText },
-    { to: '/technician/skill-passport', label: 'Skill Passport', icon: ShieldCheck },
+    { to: '/technician/dashboard', label: t('navigation.dashboard', 'Dashboard'), icon: LayoutDashboard },
+    { to: '/technician/profile', label: t('navigation.profile', 'Profile'), icon: User },
+    { to: '/technician/certificates', label: t('navigation.certificates', 'Certificates'), icon: FileCheck },
+    { to: '/technician/assessments', label: t('navigation.assessments', 'Assessments'), icon: Award },
+    { to: '/technician/recommended', label: t('navigation.recommendedProjects', 'Recommended Projects'), icon: Compass },
+    { to: '/technician/applications', label: t('navigation.applications', 'Applications'), icon: FileText },
+    { to: '/technician/skill-passport', label: t('navigation.skillPassport', 'Skill Passport'), icon: ShieldCheck },
   ];
 
   const epcLinks = [
-    { to: '/epc/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/epc/post-project', label: 'Post Project', icon: PlusCircle },
-    { to: '/epc/projects', label: 'Projects', icon: Briefcase },
-    { to: '/epc/technicians', label: 'Find Technicians', icon: Compass },
-    { to: '/epc/applications', label: 'Applications', icon: FileText },
-    { to: '/epc/workforce', label: 'Workforce', icon: Users },
+    { to: '/epc/dashboard', label: t('navigation.dashboard', 'Dashboard'), icon: LayoutDashboard },
+    { to: '/epc/post-project', label: t('navigation.postProject', 'Post Project'), icon: PlusCircle },
+    { to: '/epc/projects', label: t('navigation.projects', 'Projects'), icon: Briefcase },
+    { to: '/epc/technicians', label: t('navigation.findTechnicians', 'Find Technicians'), icon: Compass },
+    { to: '/epc/applications', label: t('navigation.applications', 'Applications'), icon: FileText },
+    { to: '/epc/workforce', label: t('navigation.workforce', 'Workforce'), icon: Users },
   ];
 
   const adminLinks = [
-    { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/admin/certificates', label: 'Certificates & Audits', icon: FileCheck },
-    { to: '/admin/technicians', label: 'Technicians', icon: Users },
-    { to: '/admin/companies', label: 'EPC Companies', icon: Briefcase },
-    { to: '/projects', label: 'All Projects', icon: Compass },
+    { to: '/admin/dashboard', label: t('navigation.dashboard', 'Dashboard'), icon: LayoutDashboard },
+    { to: '/admin/certificates', label: t('navigation.certificatesAndAudits', 'Certificates & Audits'), icon: FileCheck },
+    { to: '/admin/technicians', label: t('navigation.technicians', 'Technicians'), icon: Users },
+    { to: '/admin/companies', label: t('navigation.epcCompanies', 'EPC Companies'), icon: Briefcase },
+    { to: '/projects', label: t('navigation.allProjects', 'All Projects'), icon: Compass },
   ];
 
   const currentLinks = isTechnician
@@ -117,7 +119,11 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
                 RenewTech
               </span>
               <span className="block text-[9px] uppercase tracking-wider text-emerald-400 font-semibold">
-                {isTechnician ? 'Technician Portal' : isCompany ? 'EPC Portal' : 'Admin Portal'}
+                {isTechnician
+                  ? t('technician.dashboard', 'Technician Portal')
+                  : isCompany
+                  ? t('epc.dashboard', 'EPC Portal')
+                  : t('admin.dashboard', 'Admin Portal')}
               </span>
             </div>
           </div>
@@ -125,7 +131,7 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
             type="button"
             onClick={onClose}
             className="lg:hidden text-slate-400 hover:text-white min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
-            aria-label="Close sidebar navigation"
+            aria-label={t('common.close', 'Close')}
           >
             <X size={22} />
           </button>
@@ -144,7 +150,7 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
           <div className="overflow-hidden min-w-0">
             <h4 className="text-sm font-bold text-white truncate">{user?.name}</h4>
             <p className="text-xs text-emerald-400 truncate capitalize font-medium">
-              {user?.role === 'epc_company' ? 'EPC Contractor' : user?.role === 'admin' ? 'Administrator' : user?.role}
+              {user?.role === 'epc_company' ? t('auth.epcRoleTitle', 'EPC Contractor') : user?.role === 'admin' ? t('admin.dashboard', 'Administrator') : t('auth.technicianRoleTitle', 'Technician')}
             </p>
           </div>
         </div>
@@ -186,7 +192,7 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
             className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-semibold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl min-h-[44px] transition-colors cursor-pointer"
           >
             <LogOut size={18} className="shrink-0" />
-            <span>Logout</span>
+            <span>{t('navigation.logout', 'Logout')}</span>
           </button>
         </div>
       </aside>

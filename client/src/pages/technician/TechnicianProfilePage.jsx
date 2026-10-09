@@ -38,11 +38,14 @@ import { useAuth } from '../../context/AuthContext';
 import { technicianAPI, assessmentAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel, getProficiencyLabel } from '../../utils/i18nHelpers';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import RatingStars from '../../components/common/RatingStars';
 
 const TechnicianProfilePage = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const {
@@ -238,7 +241,7 @@ const TechnicianProfilePage = () => {
           setUserData((prev) => ({ ...prev, phone: formData.phone }));
         }
         setEditProfileModalOpen(false);
-        showToast('Profile updated successfully!');
+        showToast(t('toasts.profileUpdated', 'Profile updated successfully!'));
       } else {
         showToast(res.data?.message || 'Error saving changes.', 'error');
       }
@@ -488,20 +491,20 @@ const TechnicianProfilePage = () => {
         return {
           bg: 'bg-emerald-50 text-emerald-800 border-emerald-200',
           dot: 'bg-emerald-500',
-          label: 'Available for Work',
+          label: t('technician.available', 'Available for Work'),
         };
       case 'On Project':
         return {
           bg: 'bg-blue-50 text-blue-800 border-blue-200',
           dot: 'bg-blue-500',
-          label: 'On Project',
+          label: t('technician.onProject', 'On Project'),
         };
       case 'Unavailable':
       default:
         return {
           bg: 'bg-slate-100 text-slate-700 border-slate-200',
           dot: 'bg-slate-400',
-          label: 'Unavailable',
+          label: t('technician.unavailable', 'Unavailable'),
         };
     }
   };
@@ -614,12 +617,12 @@ const TechnicianProfilePage = () => {
                     {isVerifiedTechnician ? (
                       <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                         <CheckCircle2 size={12} className="text-emerald-600" />
-                        <span>Verified Technician</span>
+                        <span>{t('common.verifiedTechnician', 'Verified Technician')}</span>
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
                         <Clock size={12} className="text-amber-600" />
-                        <span>Pending Verification</span>
+                        <span>{t('common.pendingVerification', 'Pending Verification')}</span>
                       </span>
                     )}
                   </div>
@@ -632,7 +635,7 @@ const TechnicianProfilePage = () => {
                     {/* Location */}
                     <span className="inline-flex items-center gap-1">
                       <MapPin size={13} className="text-slate-400 shrink-0" />
-                      <span>{city && state ? `${city}, ${state}` : 'Location not specified'}</span>
+                      <span>{city && state ? `${city}, ${state}` : t('technician.locationNotSpecified', 'Location not specified')}</span>
                     </span>
 
                     <span className="text-slate-300">•</span>
@@ -640,7 +643,7 @@ const TechnicianProfilePage = () => {
                     {/* Experience */}
                     <span className="inline-flex items-center gap-1">
                       <Briefcase size={13} className="text-slate-400 shrink-0" />
-                      <span>{experienceYears} Years Experience</span>
+                      <span>{experienceYears} {t('common.yearsExperience', 'Years Experience')}</span>
                     </span>
 
                     <span className="text-slate-300">•</span>
@@ -667,7 +670,7 @@ const TechnicianProfilePage = () => {
                         className="min-h-[44px] px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors inline-flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
                       >
                         <Edit3 size={15} />
-                        <span>Edit Profile</span>
+                        <span>{t('technician.editProfile', 'Edit Profile')}</span>
                       </button>
 
                       {/* Skill Passport CTA */}
@@ -687,7 +690,7 @@ const TechnicianProfilePage = () => {
                         className="min-h-[44px] px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors inline-flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
                       >
                         <Phone size={15} />
-                        <span>Contact Technician</span>
+                        <span>{t('technician.contact', 'Contact Technician')}</span>
                       </button>
 
                       {/* Shortlist Button */}
@@ -707,7 +710,7 @@ const TechnicianProfilePage = () => {
                         }`}
                       >
                         {isShortlisted ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
-                        <span>{isShortlisted ? 'Shortlisted' : 'Shortlist'}</span>
+                        <span>{isShortlisted ? t('common.shortlisted', 'Shortlisted') : t('common.shortlist', 'Shortlist')}</span>
                       </button>
 
                       {/* Public Passport Link */}
@@ -725,7 +728,7 @@ const TechnicianProfilePage = () => {
                 {/* Profile Completion Header Indicator */}
                 <div className="w-full sm:w-48 bg-slate-50 border border-slate-200 rounded-lg p-2.5 space-y-1.5">
                   <div className="flex items-center justify-between text-[11px] font-semibold">
-                    <span className="text-slate-600">Profile Completion</span>
+                    <span className="text-slate-600">{t('technician.profileCompletion', 'Profile Completion')}</span>
                     <span className="text-emerald-700 font-bold font-mono">
                       {profileCompletionPercent}%
                     </span>
@@ -743,7 +746,7 @@ const TechnicianProfilePage = () => {
             {/* Quick Availability Switcher (Own Profile Only) */}
             {isOwnProfile && (
               <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <span className="font-semibold text-slate-600">Work Availability:</span>
+                <span className="font-semibold text-slate-600">{t('technician.workAvailability', 'Work Availability:')}</span>
                 <div className="inline-flex rounded-xl border border-slate-200 p-0.5 bg-slate-50">
                   {['Available', 'On Project', 'Unavailable'].map((opt) => (
                     <button
@@ -873,7 +876,7 @@ const TechnicianProfilePage = () => {
                       className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
                     >
                       <Plus size={13} />
-                      <span>Add Skill</span>
+                      <span>{t('technician.addSkillBtn', 'Add Skill')}</span>
                     </button>
                   )}
                 </div>
@@ -973,7 +976,7 @@ const TechnicianProfilePage = () => {
                       <ShieldCheck size={16} />
                     </div>
                     <div>
-                      <h2 className="text-sm font-bold text-slate-900">Verified Certifications</h2>
+                      <h2 className="text-sm font-bold text-slate-900">{t('technician.certificatesSectionTitle', 'Verified Certifications')}</h2>
                       <p className="text-[11px] text-slate-500">
                         Official trade and safety credentials
                       </p>
@@ -984,7 +987,7 @@ const TechnicianProfilePage = () => {
                     to="/technician/certificates"
                     className="text-xs font-bold text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1"
                   >
-                    <span>View All Certificates</span>
+                    <span>{t('technician.viewAll', 'View All Certificates')}</span>
                     <ChevronRight size={14} />
                   </Link>
                 </div>
@@ -1001,7 +1004,7 @@ const TechnicianProfilePage = () => {
                         className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5"
                       >
                         <Plus size={14} />
-                        <span>Upload Certification</span>
+                        <span>{t('technician.uploadCertBtn', 'Upload Certification')}</span>
                       </Link>
                     )}
                   </div>
@@ -1076,7 +1079,7 @@ const TechnicianProfilePage = () => {
                       <History size={16} />
                     </div>
                     <div>
-                      <h2 className="text-sm font-bold text-slate-900">Project & Work History</h2>
+                      <h2 className="text-sm font-bold text-slate-900">{t('technician.workHistorySectionTitle', 'Project & Work History')}</h2>
                       <p className="text-[11px] text-slate-500">
                         Clean energy installation and commissioning deployments
                       </p>
@@ -1088,7 +1091,7 @@ const TechnicianProfilePage = () => {
                       className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
                     >
                       <Plus size={13} />
-                      <span>Add Project</span>
+                      <span>{t('technician.addProjectBtn', 'Add Project')}</span>
                     </button>
                   )}
                 </div>
@@ -2003,7 +2006,7 @@ const TechnicianProfilePage = () => {
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
           <Header
-            title="Technician Profile"
+            title={t('technician.profileTitle', 'Technician Profile')}
             subtitle={`${name} • Verified Clean Energy Talent`}
             onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
           />

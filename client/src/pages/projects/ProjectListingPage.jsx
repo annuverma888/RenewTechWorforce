@@ -20,6 +20,8 @@ import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel } from '../../utils/i18nHelpers';
 
 const ALL_SKILLS = [
   'All',
@@ -37,6 +39,7 @@ const ALL_SKILLS = [
 const LOCATIONS = ['All', 'Kanpur', 'Noida', 'Lucknow', 'Jaisalmer', 'Bengaluru', 'Gujarat', 'Rajasthan', 'Uttar Pradesh'];
 
 const ProjectListingPage = () => {
+  const { t } = useTranslation();
   const { user, isTechnician, isAuthenticated } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);

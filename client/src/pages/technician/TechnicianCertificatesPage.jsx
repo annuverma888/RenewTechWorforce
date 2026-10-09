@@ -26,8 +26,11 @@ import {
 import { technicianAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel } from '../../utils/i18nHelpers';
 
 const TechnicianCertificatesPage = () => {
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -295,7 +298,7 @@ const TechnicianCertificatesPage = () => {
               className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer focus-ring"
             >
               <Upload size={16} />
-              <span>Upload Certificate</span>
+              <span>{t('technician.uploadCertificate', 'Upload Certificate')}</span>
             </button>
           </div>
 

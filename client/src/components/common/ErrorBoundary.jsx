@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AlertCircle, RefreshCw, LayoutDashboard } from 'lucide-react';
+import i18n from '../../i18n';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -29,10 +30,10 @@ class ErrorBoundary extends React.Component {
               <AlertCircle size={28} />
             </div>
             <h2 className="text-xl font-extrabold text-slate-900 tracking-tight mb-2">
-              Unable to Load Skill Passport
+              {i18n.t('errors.somethingWentWrong', 'Unable to Load Content')}
             </h2>
             <p className="text-xs text-slate-500 mb-6 leading-relaxed">
-              An unexpected error occurred while rendering the verified Skill Passport credentials.
+              {i18n.t('errors.somethingWentWrong', 'An unexpected error occurred while rendering the page.')}
               {this.state.error?.message && (
                 <span className="block mt-2 font-mono text-[11px] text-rose-600 bg-rose-50/60 p-2 rounded-lg break-words">
                   {this.state.error.message}
@@ -46,14 +47,14 @@ class ErrorBoundary extends React.Component {
                 className="w-full sm:w-auto px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <RefreshCw size={14} />
-                <span>Retry</span>
+                <span>{i18n.t('common.retry', 'Retry')}</span>
               </button>
               <Link
                 to="/technician/dashboard"
                 className="w-full sm:w-auto px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1.5"
               >
                 <LayoutDashboard size={14} />
-                <span>Back to Dashboard</span>
+                <span>{i18n.t('navigation.dashboard', 'Back to Dashboard')}</span>
               </Link>
             </div>
           </div>

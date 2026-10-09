@@ -34,6 +34,7 @@ import {
   Edit3,
   Save,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { projectAPI, applicationAPI, technicianAPI, workforceAPI, authAPI } from '../../services/api';
 import Header from '../../components/common/Header';
@@ -87,6 +88,7 @@ const getApplicationStatusBadge = (status) => {
 };
 
 const EPCDashboard = () => {
+  const { t } = useTranslation();
   const { user, profile, updateProfileState, refreshUser } = useAuth();
   const navigate = useNavigate();
 
@@ -380,8 +382,8 @@ const EPCDashboard = () => {
       {/* Main Content Area */}
       <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
         <Header
-          title="EPC Dashboard"
-          subtitle="Renewable Project Operations & Workforce Command Center"
+          title={t('epc.dashboard')}
+          subtitle={t('epc.operationalCommand')}
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
 
@@ -400,7 +402,7 @@ const EPCDashboard = () => {
                 className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
               >
                 <RefreshCw size={13} />
-                <span>Try Again</span>
+                <span>{t('common.retry')}</span>
               </button>
             </div>
           )}
@@ -425,7 +427,7 @@ const EPCDashboard = () => {
                   {companyLocation ? (
                     <span className="text-slate-700 font-semibold">{companyLocation}</span>
                   ) : (
-                    <span className="text-slate-400 italic font-normal">Location not added</span>
+                    <span className="text-slate-400 italic font-normal">{t('common.locationNotAdded')}</span>
                   )}
                 </span>
                 {profile?.registrationNumber && (
@@ -448,35 +450,35 @@ const EPCDashboard = () => {
                 className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer focus-ring"
               >
                 <Edit3 size={15} className="text-slate-500" />
-                <span>Edit Profile</span>
+                <span>{t('technician.editProfile')}</span>
               </button>
               <Link
                 to="/epc/post-project"
                 className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-2xs transition-colors flex items-center gap-2 cursor-pointer focus-ring"
               >
                 <PlusCircle size={16} />
-                <span>Post a Project</span>
+                <span>{t('epc.postProject')}</span>
               </Link>
               <Link
                 to="/epc/technicians"
                 className="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer shadow-2xs focus-ring"
               >
                 <Compass size={16} className="text-slate-500" />
-                <span>Find Technicians</span>
+                <span>{t('epc.findTechnicians')}</span>
               </Link>
               <Link
                 to="/epc/applications"
                 className="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer shadow-2xs focus-ring"
               >
                 <FileText size={16} className="text-slate-500" />
-                <span>Review Applications ({applications.length})</span>
+                <span>{t('epc.reviewApplications')} ({applications.length})</span>
               </Link>
               <Link
                 to="/epc/workforce"
                 className="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer shadow-2xs focus-ring"
               >
                 <Users size={16} className="text-slate-500" />
-                <span>Manage Workforce ({workforce.length})</span>
+                <span>{t('epc.manageWorkforce')} ({workforce.length})</span>
               </Link>
             </div>
           </div>
@@ -501,7 +503,7 @@ const EPCDashboard = () => {
               <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors flex flex-col justify-between">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                    Active Projects
+                    {t('epc.activeProjects')}
                   </span>
                   <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
                     <Briefcase size={16} />
@@ -513,7 +515,7 @@ const EPCDashboard = () => {
                   </div>
                 </div>
                 <div className="text-[11px] text-slate-500 font-medium">
-                  {projects.length} Total Commissioned • {completedProjects.length} Completed
+                  {projects.length} {t('epc.totalCommissioned')} • {completedProjects.length} {t('status.COMPLETED')}
                 </div>
               </div>
 
@@ -521,7 +523,7 @@ const EPCDashboard = () => {
               <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors flex flex-col justify-between">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                    Open Applications
+                    {t('epc.openApplications')}
                   </span>
                   <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
                     <FileText size={16} />
@@ -533,7 +535,7 @@ const EPCDashboard = () => {
                   </div>
                 </div>
                 <div className="text-[11px] text-slate-500 font-medium">
-                  {applications.length} Total Received • Needs Review
+                  {applications.length} {t('navigation.applications')}
                 </div>
               </div>
 
@@ -541,7 +543,7 @@ const EPCDashboard = () => {
               <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors flex flex-col justify-between">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                    Shortlisted Talent
+                    {t('epc.shortlistedTalent')}
                   </span>
                   <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
                     <UserCheck size={16} />
@@ -553,7 +555,7 @@ const EPCDashboard = () => {
                   </div>
                 </div>
                 <div className="text-[11px] text-slate-500 font-medium">
-                  Interview Stage • Deployment Ready
+                  {shortlistedApplications.length} {t('status.SHORTLISTED')}
                 </div>
               </div>
 
@@ -561,7 +563,7 @@ const EPCDashboard = () => {
               <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors flex flex-col justify-between">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                    Active Workforce
+                    {t('epc.activeWorkforce')}
                   </span>
                   <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                     <Users size={16} />
@@ -573,7 +575,7 @@ const EPCDashboard = () => {
                   </div>
                 </div>
                 <div className="text-[11px] text-slate-500 font-medium">
-                  {totalWorkersNeeded} Needed • {openPositions} Open Positions
+                  {totalWorkersNeeded} Needed • {openPositions} Open
                 </div>
               </div>
 
@@ -581,7 +583,7 @@ const EPCDashboard = () => {
               <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors flex flex-col justify-between">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                    Verified Talent Pool
+                    {t('epc.verifiedTalentPool')}
                   </span>
                   <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
                     <ShieldCheck size={16} />
@@ -593,7 +595,7 @@ const EPCDashboard = () => {
                   </div>
                 </div>
                 <div className="text-[11px] text-slate-500 font-medium">
-                  {availableTechnicians.length} Available in Marketplace
+                  {availableTechnicians.length} {t('technician.available')}
                 </div>
               </div>
             </div>
@@ -605,7 +607,7 @@ const EPCDashboard = () => {
               <div className="flex items-center justify-between">
                 <h2 className="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
                   <AlertCircle size={16} className="text-amber-500" />
-                  <span>Operational Priority Actions</span>
+                  <span>{t('epc.operationalPriority')}</span>
                 </h2>
                 <span className="text-xs font-semibold text-slate-500">
                   {priorityActions.length} Pending Task{priorityActions.length > 1 ? 's' : ''}
@@ -1340,7 +1342,7 @@ const EPCDashboard = () => {
               <div>
                 <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                   <Building size={18} className="text-emerald-600" />
-                  <span>Edit Company Profile</span>
+                  <span>{t('epc.editCompanyProfile')}</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
                   Update your organization details and company headquarters location
@@ -1350,6 +1352,7 @@ const EPCDashboard = () => {
                 type="button"
                 onClick={() => setIsEditProfileOpen(false)}
                 className="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer"
+                aria-label={t('common.close')}
               >
                 <X size={18} />
               </button>
@@ -1358,7 +1361,7 @@ const EPCDashboard = () => {
             <form onSubmit={handleSaveProfile} className="space-y-4 text-xs">
               <div className="space-y-1">
                 <label className="font-bold text-slate-700 block">
-                  Company Name <span className="text-rose-500">*</span>
+                  {t('epc.companyName')} <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -1373,7 +1376,7 @@ const EPCDashboard = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="font-bold text-slate-700 block">
-                    City
+                    {t('epc.city')}
                   </label>
                   <input
                     type="text"
@@ -1386,7 +1389,7 @@ const EPCDashboard = () => {
 
                 <div className="space-y-1">
                   <label className="font-bold text-slate-700 block">
-                    State
+                    {t('epc.state')}
                   </label>
                   <input
                     type="text"
@@ -1400,7 +1403,7 @@ const EPCDashboard = () => {
 
               <div className="space-y-1">
                 <label className="font-bold text-slate-700 block">
-                  Office / Registered Address
+                  {t('epc.officeAddress')}
                 </label>
                 <input
                   type="text"
@@ -1414,7 +1417,7 @@ const EPCDashboard = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="font-bold text-slate-700 block">
-                    Corporate Registration / GSTIN
+                    {t('epc.registrationNumber')}
                   </label>
                   <input
                     type="text"
@@ -1427,7 +1430,7 @@ const EPCDashboard = () => {
 
                 <div className="space-y-1">
                   <label className="font-bold text-slate-700 block">
-                    Primary Domain
+                    {t('epc.primaryDomain')}
                   </label>
                   <select
                     value={profileForm.primaryDomain}
@@ -1458,7 +1461,7 @@ const EPCDashboard = () => {
 
               <div className="space-y-1">
                 <label className="font-bold text-slate-700 block">
-                  Company Description
+                  {t('epc.companyBio')}
                 </label>
                 <textarea
                   rows={3}
@@ -1475,7 +1478,7 @@ const EPCDashboard = () => {
                   onClick={() => setIsEditProfileOpen(false)}
                   className="px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
@@ -1485,12 +1488,12 @@ const EPCDashboard = () => {
                   {savingProfile ? (
                     <>
                       <RefreshCw size={14} className="animate-spin" />
-                      <span>Saving...</span>
+                      <span>{t('common.loading')}</span>
                     </>
                   ) : (
                     <>
                       <Save size={14} />
-                      <span>Save Profile</span>
+                      <span>{t('epc.saveProfile')}</span>
                     </>
                   )}
                 </button>

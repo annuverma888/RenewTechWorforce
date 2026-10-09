@@ -27,6 +27,8 @@ import { useAuth } from '../../context/AuthContext';
 import { projectAPI, applicationAPI, workforceAPI } from '../../services/api';
 import Header from '../../components/common/Header';
 import Sidebar from '../../components/common/Sidebar';
+import { useTranslation } from 'react-i18next';
+import { getStatusLabel, getSectorLabel, getProficiencyLabel } from '../../utils/i18nHelpers';
 
 const formatDate = (dateStr) => {
   if (!dateStr) return 'N/A';
@@ -58,6 +60,7 @@ const getStatusBadge = (status) => {
 };
 
 const ProjectsPage = () => {
+  const { t } = useTranslation();
   const { user, profile } = useAuth();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -225,7 +228,7 @@ const ProjectsPage = () => {
                 className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-2xs transition-colors flex items-center gap-2 cursor-pointer"
               >
                 <PlusCircle size={16} />
-                <span>Post New Project</span>
+                <span>{t('epc.postNewProject', 'Post New Project')}</span>
               </Link>
             </div>
           </div>

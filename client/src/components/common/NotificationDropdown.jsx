@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Bell, Check, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useNotifications } from '../../context/NotificationContext';
 
 const NotificationDropdown = () => {
+  const { t } = useTranslation();
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -23,8 +25,9 @@ const NotificationDropdown = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-slate-600 hover:text-emerald-700 hover:bg-slate-100 rounded-full transition-colors"
-        title="Notifications"
+        className="relative p-2 text-slate-600 hover:text-emerald-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
+        title={t('notifications.title', 'Notifications')}
+        aria-label={t('notifications.title', 'Notifications')}
       >
         <Bell size={20} />
         {unreadCount > 0 && (
@@ -38,19 +41,19 @@ const NotificationDropdown = () => {
         <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
           <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-slate-900 text-sm">Notifications</span>
+              <span className="font-semibold text-slate-900 text-sm">{t('notifications.title', 'Notifications')}</span>
               {unreadCount > 0 && (
                 <span className="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-medium">
-                  {unreadCount} new
+                  {unreadCount} {t('notifications.newNotifications', 'new')}
                 </span>
               )}
             </div>
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="text-xs text-emerald-600 hover:text-emerald-700 hover:underline flex items-center gap-1 font-medium"
+                className="text-xs text-emerald-600 hover:text-emerald-700 hover:underline flex items-center gap-1 font-medium cursor-pointer"
               >
-                <Check size={12} /> Mark all read
+                <Check size={12} /> {t('notifications.markAllRead', 'Mark all read')}
               </button>
             )}
           </div>
@@ -58,13 +61,13 @@ const NotificationDropdown = () => {
           <div className="max-h-80 overflow-y-auto divide-y divide-slate-50">
             {notifications.length === 0 ? (
               <div className="px-4 py-8 text-center text-slate-400 text-xs">
-                No notifications right now
+                {t('notifications.noNotifications', 'No notifications right now')}
               </div>
             ) : (
               notifications.map((item) => (
                 <div
                   key={item._id}
-                  className={`px-4 py-3 hover:bg-slate-50 transition-colors ${
+                  className={`px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer ${
                     !item.isRead ? 'bg-emerald-50/40' : ''
                   }`}
                   onClick={() => !item.isRead && markAsRead(item._id)}
@@ -85,7 +88,7 @@ const NotificationDropdown = () => {
                       onClick={() => setIsOpen(false)}
                       className="inline-flex items-center gap-1 text-[11px] text-emerald-600 font-medium mt-1.5 hover:underline"
                     >
-                      View details <ExternalLink size={10} />
+                      {t('notifications.viewDetails', 'View details')} <ExternalLink size={10} />
                     </Link>
                   )}
                 </div>
